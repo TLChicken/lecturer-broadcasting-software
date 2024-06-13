@@ -1,154 +1,68 @@
-const path = require('path');
-var net = process.argv[2];
-var framework = net.charAt(0).toUpperCase() + net.substr(1);
-var namespace = 'QuickStart.' + framework;
-if(net === 'core') net = '';
-var version = net == 'standard' ? '2.0' : '7.0'
+process.env['ELECTRON_DISABLE_SECURITY_WARNINGS']=true
+const {app, BrowserWindow, ipcMain} = require("electron");
+const runner = require('./app.js')
 
-const baseNetAppPath = path.join(__dirname, '/src/'+ namespace +'/bin/Debug/net'+ net + version);
+var edge = require('electron-edge-js');
 
-process.env.EDGE_USE_CORECLR = 1;
-if(net !== 'standard')
-    process.env.EDGE_APP_ROOT = baseNetAppPath;
+var version = process.argv[1].replace('--', '');
 
-var edge = require('edge-js');
+// Keep a global reference of the window object, if you don't, the window will
+// be closed automatically when the JavaScript object is garbage collected.
+let mainWindow;
 
-var baseDll = path.join(baseNetAppPath, namespace + '.dll');
+function createWindow () {
+  // Create the browser window.
+  mainWindow = new BrowserWindow({
+    width: 1024,
+    height: 750,
+    webPreferences:{
+      nodeIntegration: false,
+      nodeIntegrationInWorker: false,
+      contextIsolation: true,
+      preload: `${__dirname}/preload.js`,
+    }
+  });
 
-console.log('### Application base path: '+ baseNetAppPath);
-console.log('### Application dll: '+ baseDll);
-console.log();
-console.log();
+  // and load the index.html of the app.
+  mainWindow.loadURL(`file://${__dirname}/index.html?version=${version}&electron=${process.versions.electron}`);
 
-var localTypeName = 'QuickStart.LocalMethods';
-var externalTypeName = 'QuickStart.ExternalMethods';
+  // Open the DevTools.
+  // mainWindow.webContents.openDevTools()
 
-var getAppDomainDirectory = edge.func({
-    assemblyFile: baseDll,
-    typeName: localTypeName,
-    methodName: 'GetAppDomainDirectory'
-});
-
-var getCurrentTime = edge.func({
-    assemblyFile: baseDll,
-    typeName: localTypeName,
-    methodName: 'GetCurrentTime'
-});
-
-var useDynamicInput = edge.func({
-    assemblyFile: baseDll,
-    typeName: localTypeName,
-    methodName: 'UseDynamicInput'
-});
-
-var handleException = edge.func({
-    assemblyFile: baseDll,
-    typeName: localTypeName,
-    methodName: 'ThrowException'
-});
-
-var getPerson = edge.func({
-    assemblyFile: baseDll,
-    typeName: externalTypeName,
-    methodName: 'GetPersonInfo'
-});
-
-var listCertificates = edge.func({
-    assemblyFile: baseDll,
-    typeName: localTypeName,
-    methodName: 'ListCertificates'
-});
-
-var getInlinePerson = edge.func({
-    source: function () {/* 
-        using System.Threading.Tasks;
-        using System;
-
-        public class Person
-        {
-            public Person(string name, string email, int age)
-            {
-                Id =  Guid.NewGuid();
-                Name = name;
-                Email = email;
-                Age = age;
-            }
-            public Guid Id {get;}
-            public string Name {get;set;}
-            public string Email {get;set;}
-            public int Age {get;set;}
-        }
-
-        public class Startup
-        {
-            public async Task<object> Invoke(dynamic input)
-            {
-                return new Person(input.name, input.email, input.age);
-            }
-        }
-    */}
-});
-
-
-console.log('### Calling inline c# code with multiple parameters')
-console.log();
-getInlinePerson({name: 'Peter Smith', email: 'peter.smith@edge-js-quick-start.com', age: 30}, function(error, result) {
-    if (error) throw error;
-    console.log(result);
-    console.log();
-});
-
-
-console.log();
-console.log('### Calling local methods from ' + namespace +'.dll')
-console.log();
-getAppDomainDirectory('', function(error, result) {
-    if (error) throw error;
-    console.log(localTypeName + '.GetAppDomainDirectory');
-    console.log(result);
-    console.log();
-});
-
-getCurrentTime('', function(error, result) {
-    if (error) throw error;
-    console.log(localTypeName + '.GetCurrentTime');
-    console.log(result);
-    console.log();
-});
-
-useDynamicInput({framework: framework, node: 'Node.Js'}, function(error, result) {
-    if (error) throw error;
-    console.log(localTypeName + '.UseDynamicInput');
-    console.log(result);
-    console.log();
-});
-
-if(process.platform !== 'linux'){
-    listCertificates({ storeName: 'My', storeLocation: 'LocalMachine' }, function(error, result) {
-        if (error) throw error;
-        console.log(localTypeName + '.ListCertificates');
-        console.log(result);
-        console.log();
-    });
+  // Emitted when the window is closed.
+  mainWindow.on('closed', function () {
+    // Dereference the window object, usually you would store windows
+    // in an array if your app supports multi windows, this is the time
+    // when you should delete the corresponding element.
+    mainWindow = null
+  })
 }
 
-console.log();
-console.log('### Handling exception');
-console.log();
-try{
-    handleException('', function(error, result) {
-    });
-}catch(e){
-    console.log('.NET Exception: ' + e.Message);
-}
+// This method will be called when Electron has finished
+// initialization and is ready to create browser windows.
+// Some APIs can only be used after this event occurs.
+app.on('ready', createWindow);
 
-console.log();
-console.log('### Calling external library methods using '+ namespace +'.dll wrapper');
-console.log();
-getPerson({name: 'John Smith', email: 'john.smith@edge-js-quick-start.com', age: 35}, function(error, result) {
-    if (error) throw error;
-    console.log(externalTypeName + '.GetPersonInfo');
-    console.log(result);
+// Quit when all windows are closed.
+app.on('window-all-closed', function () {
+  // On OS X it is common for applications and their menu bar
+  // to stay active until the user quits explicitly with Cmd + Q
+  //if (process.platform !== 'darwin') {
+    app.quit()
+  //}
 });
 
+app.on('activate', function () {
+  // On OS X it's common to re-create a window in the app when the
+  // dock icon is clicked and there are no other windows open.
+  if (mainWindow === null) {
+    createWindow();
+  }
+});
 
+ipcMain.on("run", (event, args) => {
+  runner.run(mainWindow);
+});
+
+// In this file you can include the rest of your app's specific main process
+// code. You can also put them in separate files and require them here.
