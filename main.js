@@ -11,6 +11,13 @@ var version = process.argv[1].replace('--', '');
 let mainWindow;
 let mainOverlayWindow;
 
+let colorKeyBinds = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11]; // Numpad 1 to 0
+let toggleDrawingKeybind = UiohookKey.Backquote; // Backquote, Tilde key
+let toggleEraserKeybind = UiohookKey.E; // E
+let currColor = new Uint8ClampedArray([255, 0, 0, 0]);
+let isDrawing = false;
+
+
 function createWindow () {
   // Create the browser window.
   mainWindow = new BrowserWindow({
@@ -82,8 +89,24 @@ app.on('ready', () => {
 
   // ADD KEYBOARD SHORTCUTS
   uIOhook.on('keydown', (e) => {
-    if (e.keycode === UiohookKey.Q) {
-      console.log('Hello!')
+    if (toggleDrawingKeybind === e.keycode) {
+      if (isDrawing) {
+        drawingModeOff();
+      } else {
+        drawingModeOn();
+      }
+    }
+
+    if (toggleEraserKeybind === e.keycode) {
+      // Toggle Eraser
+      console.log("Eraser Toggled");
+    }
+
+    let colorSelectedCheck = colorKeyBinds.findIndex((n) => n == e.keycode);
+    if (colorSelectedCheck != -1) {
+      // Change color according to selected color index
+
+      console.log("Color changing to index ", colorSelectedCheck);
     }
 
     console.log('Keyboard event detected: ', e);
@@ -94,11 +117,34 @@ app.on('ready', () => {
   // });
 
   uIOhook.on('mousedown', event => {
-    console.log('Mouse down event detected:', event);
+    if (isDrawing) {
+      // Send mouse coordinates to canvas renderer
+      console.log("Drawing pixel at x: ", event.x, " and y: ", event.y);
+    }
   });
 
   uIOhook.start()
 });
+
+function drawingModeOn() {
+  mainOverlayWindow.setIgnoreMouseEvents(false, {
+    forward: false
+  });
+
+  isDrawing = true;
+
+  console.log("Started Drawing Mode");
+}
+
+function drawingModeOff() {
+  mainOverlayWindow.setIgnoreMouseEvents(true, {
+    forward: true
+  });
+
+  isDrawing = false;
+
+  console.log("Stopped Drawing Mode");
+}
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {
