@@ -33,16 +33,19 @@ function createWindow () {
     // Dereference the window object, usually you would store windows
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
-    mainWindow = null
+    mainWindow = null;
+    closeOverlayWindow();
   })
 }
 
 function createOverlayWindow() {
-  const { dispWidth, dispHeight } = screen.getPrimaryDisplay().workAreaSize;
+  const { width, height } = screen.getPrimaryDisplay().workAreaSize;
+
+  console.log(screen.getPrimaryDisplay());
 
   mainOverlayWindow = new BrowserWindow({
-    width: dispWidth,
-    height: dispHeight,
+    width: width,
+    height: height,
     alwaysOnTop: true,
     transparent: true,
     frame: false,
@@ -51,13 +54,22 @@ function createOverlayWindow() {
 
   mainOverlayWindow.loadURL(`file://${__dirname}/overlayStart.html`);
 
+  mainOverlayWindow.setAlwaysOnTop(true, "main-menu");
+  mainOverlayWindow.setMinimizable(false);
   mainOverlayWindow.setIgnoreMouseEvents(true, {
     forward: true
   });
 
   mainOverlayWindow.on('closed', () => { mainOverlayWindow = null });
 
-  console.log(`Overlay size: ${dispWidth}x${dispHeight}`);
+  console.log(`Overlay size: ${width}x${height}`);
+}
+
+function closeOverlayWindow() {
+  if (mainOverlayWindow) {
+    mainOverlayWindow.close();
+    mainOverlayWindow = null;
+  }
 }
 
 // This method will be called when Electron has finished
@@ -96,9 +108,6 @@ ipcMain.on("start-overlay", (event, args) => {
 })
 
 ipcMain.on("close-overlay", (event, args) => {
-  if (mainOverlayWindow) {
-    mainOverlayWindow.close();
-    mainOverlayWindow = null;
-  }
+  closeOverlayWindow();
 })
 
