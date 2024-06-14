@@ -1,14 +1,13 @@
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS']=true
-const {app, BrowserWindow, ipcMain} = require("electron");
+const {app, BrowserWindow, ipcMain, screen} = require("electron");
 const runner = require('./app.js')
-
-var edge = require('electron-edge-js');
 
 var version = process.argv[1].replace('--', '');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
+let mainOverlayWindow;
 
 function createWindow () {
   // Create the browser window.
@@ -36,6 +35,29 @@ function createWindow () {
     // when you should delete the corresponding element.
     mainWindow = null
   })
+}
+
+function createOverlayWindow() {
+  const { dispWidth, dispHeight } = screen.getPrimaryDisplay().workAreaSize;
+
+  mainOverlayWindow = new BrowserWindow({
+    width: dispWidth,
+    height: dispHeight,
+    alwaysOnTop: true,
+    transparent: true,
+    frame: false,
+    hasShadow: false,
+  });
+
+  mainOverlayWindow.loadURL(`file://${__dirname}/overlayStart.html`);
+
+  mainOverlayWindow.setIgnoreMouseEvents(true, {
+    forward: true
+  });
+
+  mainOverlayWindow.on('closed', () => { mainOverlayWindow = null });
+
+  console.log(`Overlay size: ${dispWidth}x${dispHeight}`);
 }
 
 // This method will be called when Electron has finished
@@ -66,3 +88,17 @@ ipcMain.on("run", (event, args) => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+
+ipcMain.on("start-overlay", (event, args) => {
+  if (!mainOverlayWindow) {
+    createOverlayWindow();
+  }
+})
+
+ipcMain.on("close-overlay", (event, args) => {
+  if (mainOverlayWindow) {
+    mainOverlayWindow.close();
+    mainOverlayWindow = null;
+  }
+})
+
