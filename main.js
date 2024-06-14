@@ -15,7 +15,9 @@ let colorKeyBinds = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11]; // Numpad 1 to 0
 let toggleDrawingKeybind = UiohookKey.Backquote; // Backquote, Tilde key
 let toggleEraserKeybind = UiohookKey.E; // E
 let currColor = new Uint8ClampedArray([255, 0, 0, 0]);
-let isDrawing = false;
+let isInDrawingMode = false;
+let isMouseDown = false;
+let lastDrawnCoors = { x: -1, y: -1};
 
 
 function createWindow () {
@@ -59,6 +61,12 @@ function createOverlayWindow() {
     transparent: true,
     frame: false,
     hasShadow: false,
+    webPreferences:{
+      nodeIntegration: false,
+      nodeIntegrationInWorker: false,
+      contextIsolation: true,
+      preload: `${__dirname}/overlayPreload.js`,
+    }
   });
 
   mainOverlayWindow.loadURL(`file://${__dirname}/overlayStart.html`);
@@ -72,12 +80,34 @@ function createOverlayWindow() {
   mainOverlayWindow.on('closed', () => { mainOverlayWindow = null });
 
   console.log(`Overlay size: ${width}x${height}`);
+
+  isInDrawingMode = false;
+  lastDrawnCoors = { x: -1, y: -1};
 }
 
 function closeOverlayWindow() {
   if (mainOverlayWindow) {
     mainOverlayWindow.close();
     mainOverlayWindow = null;
+  }
+}
+
+function drawAt(x, y) {
+  if (isInDrawingMode && isMouseDown && (mainOverlayWindow != null)) {
+    if (lastDrawnCoors.x == x && lastDrawnCoors.y == y) {
+      // Skip drawing on the same coordinate
+      console.log("Same as last coor");
+    } else {
+      // Send mouse coordinates to canvas renderer
+      console.log("SEND pixel event at x: ", x, " and y: ", y);
+
+      mainOverlayWindow.webContents.send('canvas-draw', {
+        x: x,
+        y: y
+      });
+
+      lastDrawnCoors = { x: x, y: y};
+    }
   }
 }
 
@@ -89,39 +119,46 @@ app.on('ready', () => {
 
   // ADD KEYBOARD SHORTCUTS
   uIOhook.on('keydown', (e) => {
-    if (toggleDrawingKeybind === e.keycode) {
-      if (isDrawing) {
-        drawingModeOff();
-      } else {
-        drawingModeOn();
+    if (mainOverlayWindow != null) {
+      if (toggleDrawingKeybind === e.keycode) {
+        if (isInDrawingMode) {
+          drawingModeOff();
+        } else {
+          drawingModeOn();
+        }
       }
+
+      if (toggleEraserKeybind === e.keycode) {
+        // Toggle Eraser
+        console.log("Eraser Toggled");
+      }
+
+      let colorSelectedCheck = colorKeyBinds.findIndex((n) => n == e.keycode);
+      if (colorSelectedCheck != -1) {
+        // Change color according to selected color index
+
+        console.log("Color changing to index ", colorSelectedCheck);
+      }
+
+      console.log('Keyboard event detected: ', e);
     }
-
-    if (toggleEraserKeybind === e.keycode) {
-      // Toggle Eraser
-      console.log("Eraser Toggled");
-    }
-
-    let colorSelectedCheck = colorKeyBinds.findIndex((n) => n == e.keycode);
-    if (colorSelectedCheck != -1) {
-      // Change color according to selected color index
-
-      console.log("Color changing to index ", colorSelectedCheck);
-    }
-
-    console.log('Keyboard event detected: ', e);
   })
 
-  // uIOhook.on('mousemove', event => {
-  //   console.log('Mouse move event detected:', event);
-  // });
-
-  uIOhook.on('mousedown', event => {
-    if (isDrawing) {
-      // Send mouse coordinates to canvas renderer
-      console.log("Drawing pixel at x: ", event.x, " and y: ", event.y);
-    }
+  uIOhook.on('mousemove', (event) => {
+    drawAt(event.x, event.y);
   });
+
+  uIOhook.on('mousedown', (event) => {
+    isMouseDown = true;
+    console.log("Pressed mouse");
+    drawAt(event.x, event.y);
+  });
+
+  uIOhook.on('mouseup', (event) => {
+    isMouseDown = false;
+
+    lastDrawnCoors = { x: -1, y: -1}; // So I can draw on the same location again by clicking again
+  })
 
   uIOhook.start()
 });
@@ -131,7 +168,7 @@ function drawingModeOn() {
     forward: false
   });
 
-  isDrawing = true;
+  isInDrawingMode = true;
 
   console.log("Started Drawing Mode");
 }
@@ -141,7 +178,7 @@ function drawingModeOff() {
     forward: true
   });
 
-  isDrawing = false;
+  isInDrawingMode = false;
 
   console.log("Stopped Drawing Mode");
 }
