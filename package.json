@@ -21,6 +21,22 @@
   "license": "MIT",
   "dependencies": {
     "electron": "^30.1.0",
-    "electron-edge-js": "^30.1.0"
+    "electron-edge-js": "^30.1.0",
+    "uiohook-napi": "^1.5.4"
+  },
+  "iohook": {
+    "targets": [
+      "node-127",
+      "electron-123"
+    ],
+    "platforms": [
+      "win32",
+      "darwin",
+      "linux"
+    ],
+    "arches": [
+      "x64",
+      "ia32"
+    ]
   }
 }

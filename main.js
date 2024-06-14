@@ -2,6 +2,8 @@ process.env['ELECTRON_DISABLE_SECURITY_WARNINGS']=true
 const {app, BrowserWindow, ipcMain, screen} = require("electron");
 const runner = require('./app.js')
 
+const { uIOhook, UiohookKey } = require('uiohook-napi');
+
 var version = process.argv[1].replace('--', '');
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -75,7 +77,28 @@ function closeOverlayWindow() {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow);
+app.on('ready', () => {
+  createWindow();
+
+  // ADD KEYBOARD SHORTCUTS
+  uIOhook.on('keydown', (e) => {
+    if (e.keycode === UiohookKey.Q) {
+      console.log('Hello!')
+    }
+
+    console.log('Keyboard event detected: ', e);
+  })
+
+  // uIOhook.on('mousemove', event => {
+  //   console.log('Mouse move event detected:', event);
+  // });
+
+  uIOhook.on('mousedown', event => {
+    console.log('Mouse down event detected:', event);
+  });
+
+  uIOhook.start()
+});
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {
