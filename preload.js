@@ -25,3 +25,5 @@ contextBridge.exposeInMainWorld("controls", {
         ipcRenderer.send("close-overlay", closeParams);
     }
 })
+
+console.log("Normal Preloader has run");

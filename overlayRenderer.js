@@ -82,13 +82,15 @@ function drawAtCoor(ctx, x, y) {
 
 document.addEventListener('DOMContentLoaded', (event) => {
     const c = document.getElementById('overlayCanvas');
-    const ctx = canvas.getContext('2d');
+    const ctx = c.getContext('2d');``
     c.width = window.innerWidth;
     c.height = window.innerHeight;
 
     window.ipcRender.receive('canvas-draw', ( coors ) => {
         console.log("Canvas Draw Event Received");
         drawAtCoor(ctx, coors.x, coors.y);
-    })
+    });
+
+    console.log("Overlay Render DOMContentLoaded ran");
 
 });

@@ -36,6 +36,7 @@ contextBridge.exposeInMainWorld(
         },
         // From main to render.
         receive: (channel, listener) => {
+            console.log("received an event in overlay preloader");
             let validChannels = ipc.render.receive;
             if (validChannels.includes(channel)) {
                 // Deliberately strip event as it includes `sender`.
@@ -52,4 +53,5 @@ contextBridge.exposeInMainWorld(
     }
 );
 
+console.log("Overlay Preloader has run"); // Works
 
