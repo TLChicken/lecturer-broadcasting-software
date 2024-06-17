@@ -51,12 +51,13 @@ function createWindow () {
 
 function createOverlayWindow() {
   const { width, height } = screen.getPrimaryDisplay().workAreaSize;
+  const dispScaleFactor = screen.getPrimaryDisplay().scaleFactor;
 
   console.log(screen.getPrimaryDisplay());
 
   mainOverlayWindow = new BrowserWindow({
-    width: width,
-    height: height,
+    width: width * dispScaleFactor,
+    height: height * dispScaleFactor,
     alwaysOnTop: true,
     transparent: true,
     frame: false,
@@ -66,12 +67,13 @@ function createOverlayWindow() {
       nodeIntegrationInWorker: false,
       contextIsolation: true,
       preload: `${__dirname}/overlayPreload.js`,
+      zoomFactor: 1.0 / dispScaleFactor,
     }
   });
 
   mainOverlayWindow.loadURL(`file://${__dirname}/overlayStart.html`);
 
-  mainOverlayWindow.setAlwaysOnTop(true, "screen-saver");
+  mainOverlayWindow.setAlwaysOnTop(true, "pop-up-menu");
   mainOverlayWindow.setFullScreen(true);
   mainOverlayWindow.setMinimizable(false);
   mainOverlayWindow.setIgnoreMouseEvents(true, {
@@ -80,7 +82,7 @@ function createOverlayWindow() {
 
   mainOverlayWindow.on('closed', () => { mainOverlayWindow = null });
 
-  console.log(`Overlay size: ${width}x${height}`);
+  console.log(`Overlay size: ${width * dispScaleFactor}x${height * dispScaleFactor}`);
 
   isInDrawingMode = false;
   lastDrawnCoors = { x: -1, y: -1};

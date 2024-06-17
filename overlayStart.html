@@ -7,7 +7,8 @@
         body {
             margin: 0;
             padding: 0;
-            height: 100vh;
+            height: 100%;
+            width: 100%;
             /*box-sizing: border-box;*/
             /*border: 10px solid red;*/
         }
@@ -27,7 +28,7 @@
         }
     </style>
 </head>
-<body>
+<body onload="toggleZoomScreen()">
 <canvas id="overlayCanvas"></canvas>
 </body>
 <script src="./overlayRenderer.js"></script>
