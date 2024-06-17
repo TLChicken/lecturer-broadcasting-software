@@ -23,7 +23,7 @@ class Brush {
 }
 
 class TLCBrush extends Brush {
-    constructor(color = [255, 0, 0, 255], size = 1) {
+    constructor(color = rgba(255, 0, 0, 1), size = 10) {
         super();
         this.color = color;
         this.size = size;
@@ -90,6 +90,15 @@ document.addEventListener('DOMContentLoaded', (event) => {
         console.log("Canvas Draw Event Received");
         drawAtCoor(ctx, coors.x, coors.y);
     });
+
+    // Vertical Bounds
+    drawRectangle(ctx, rgba(255, 0, 0, 1), 0, 0, 10, window.innerHeight);
+    drawRectangle(ctx, rgba(0, 255, 0, 1), window.innerWidth - 10, 0, 10, window.innerHeight);
+
+    // Horizontal Bounds
+    drawRectangle(ctx, rgba(0, 0, 255, 1), 0, 0, window.innerWidth, 10);
+    drawRectangle(ctx, rgba(255, 255, 0, 1), 0, window.innerHeight - 10, window.innerWidth, 10);
+
 
     console.log("Overlay Render DOMContentLoaded ran");
 

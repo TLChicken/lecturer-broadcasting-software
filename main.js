@@ -71,7 +71,8 @@ function createOverlayWindow() {
 
   mainOverlayWindow.loadURL(`file://${__dirname}/overlayStart.html`);
 
-  mainOverlayWindow.setAlwaysOnTop(true, "main-menu");
+  mainOverlayWindow.setAlwaysOnTop(true, "screen-saver");
+  mainOverlayWindow.setFullScreen(true);
   mainOverlayWindow.setMinimizable(false);
   mainOverlayWindow.setIgnoreMouseEvents(true, {
     forward: true
