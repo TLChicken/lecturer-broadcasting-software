@@ -153,6 +153,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
         drawAtCoor(ctx, c, coors.x, coors.y, coors.prevCoors);
     });
 
+    window.ipcRender.receive('canvas-changeColor', ( newColor ) => {
+        console.log('Canvas Change Color Event Received');
+        currBrush.setColor(newColor);
+    })
+
     // Vertical Bounds
     drawRectangle(ctx, rgba(255, 0, 0, 1), 0, 0, 10, window.innerHeight);
     drawRectangle(ctx, rgba(0, 255, 0, 1), window.innerWidth - 10, 0, 10, window.innerHeight);

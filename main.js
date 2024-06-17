@@ -12,6 +12,21 @@ let mainWindow;
 let mainOverlayWindow;
 
 let colorKeyBinds = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11]; // Numpad 1 to 0
+let selectedColors = [rgba(255, 0, 0, 1),
+  rgba(255, 155, 0, 1),
+  rgba(255, 255, 0, 1),
+  rgba(155, 255, 0, 1),
+  rgba(0, 255, 0, 1),
+  rgba(102, 255, 204, 1),
+  rgba(51, 204, 255, 1),
+  rgba(0, 102, 255, 1),
+  rgba(102, 0, 255, 1),
+  rgba(255, 0, 255, 1)];
+
+function rgba(red, green, blue, alpha) {
+  return "rgba(" + red + ","+ green + ","+ blue + ","+ alpha + ")";
+}
+
 let toggleDrawingKeybind = UiohookKey.Backquote; // Backquote, Tilde key
 let toggleEraserKeybind = UiohookKey.E; // E
 let currColor = new Uint8ClampedArray([255, 0, 0, 0]);
@@ -142,6 +157,7 @@ app.on('ready', () => {
         // Change color according to selected color index
 
         console.log("Color changing to index ", colorSelectedCheck);
+        mainOverlayWindow.webContents.send('canvas-changeColor', selectedColors[colorSelectedCheck]);
       }
 
       console.log('Keyboard event detected: ', e);
