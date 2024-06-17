@@ -106,7 +106,8 @@ function drawAt(x, y) {
 
       mainOverlayWindow.webContents.send('canvas-draw', {
         x: x,
-        y: y
+        y: y,
+        prevCoors: lastDrawnCoors
       });
 
       lastDrawnCoors = { x: x, y: y};
@@ -161,7 +162,13 @@ app.on('ready', () => {
     isMouseDown = false;
 
     lastDrawnCoors = { x: -1, y: -1}; // So I can draw on the same location again by clicking again
-  })
+  });
+
+  uIOhook.on('wheel', (event) => {
+    if (isInDrawingMode) {
+      // Maybe change brush size
+    }
+  });
 
   uIOhook.start()
 });
