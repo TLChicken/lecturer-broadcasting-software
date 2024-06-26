@@ -112,6 +112,7 @@ class TLCHighlighter extends Brush {
     }
 
     internalDrawAtCoor(x, y) {
+        // Next time only draw the change in height difference to prevent the lines glitch thing
         return {
             color: this.color,
             x: x,

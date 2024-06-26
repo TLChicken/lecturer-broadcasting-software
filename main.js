@@ -2,7 +2,7 @@ process.env['ELECTRON_DISABLE_SECURITY_WARNINGS']=true
 const {app, BrowserWindow, ipcMain, screen} = require("electron");
 const runner = require('./app.js')
 
-const outsideConsts = require('./const');
+const lbsConsts = require('./const');
 
 const { uIOhook, UiohookKey } = require('uiohook-napi');
 
@@ -13,7 +13,7 @@ var version = process.argv[1].replace('--', '');
 let mainWindow;
 let mainOverlayWindow;
 
-let colorKeyBinds = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11]; // Numpad 1 to 0
+let colorKeyBinds = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, UiohookKey.Backquote, UiohookKey.P, UiohookKey.H, UiohookKey.E]; // Numpad 1 to 0
 let selectedColors = [rgba(255, 0, 0, 1),
   rgba(255, 155, 0, 1),
   rgba(255, 255, 0, 1),
@@ -29,7 +29,7 @@ function rgba(red, green, blue, alpha) {
   return "rgba(" + red + ","+ green + ","+ blue + ","+ alpha + ")";
 }
 
-let toggleDrawingKeybind = UiohookKey.Backquote; // Backquote, Tilde key
+// let toggleDrawingKeybind = UiohookKey.Backquote; // Backquote, Tilde key
 let toggleEraserKeybind = UiohookKey.E; // E
 let currColor = new Uint8ClampedArray([255, 0, 0, 0]);
 let isInDrawingMode = false;
@@ -150,7 +150,7 @@ app.on('ready', () => {
     }
 
     if (mainOverlayWindow != null) {
-      if (toggleDrawingKeybind === e.keycode) {
+      if (colorKeyBinds[lbsConsts.keybindIndex_toggleOverlay] === e.keycode) {
         if (isInDrawingMode) {
           drawingModeOff();
         } else {
@@ -158,7 +158,17 @@ app.on('ready', () => {
         }
       }
 
-      if (toggleEraserKeybind === e.keycode) {
+      if (colorKeyBinds[lbsConsts.keybindIndex_selectPen] === e.keycode) {
+        // Toggle Pen
+        console.log("Pen Toggled");
+      }
+
+      if (colorKeyBinds[lbsConsts.keybindIndex_selectHighlighter] === e.keycode) {
+        // Toggle Highlighter
+        console.log("Highlighter Toggled");
+      }
+
+      if (colorKeyBinds[lbsConsts.keybindIndex_selectEraser] === e.keycode) {
         // Toggle Eraser
         console.log("Eraser Toggled");
       }
@@ -232,9 +242,9 @@ function changeKeybind(keybindIndex, changedSuccessfullyCallback) {
     } else {
       colorKeyBinds[keybindIndex - 1] = detectedKey;
       console.log("Keybind Changed Successfully");
-      console.log(outsideConsts.UiohookKeyREVERSE[detectedKey]);
+      console.log(lbsConsts.UiohookKeyREVERSE[detectedKey]);
 
-      changedSuccessfullyCallback(outsideConsts.UiohookKeyREVERSE[detectedKey]);
+      changedSuccessfullyCallback(lbsConsts.UiohookKeyREVERSE[detectedKey]);
     }
   }
 

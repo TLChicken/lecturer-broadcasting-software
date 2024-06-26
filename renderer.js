@@ -1,4 +1,3 @@
-
 window.api.send("run");
 window.api.receive("fromMain", (documentId, data) => {
     document.getElementById(documentId).innerHTML = data;
@@ -22,6 +21,26 @@ document.addEventListener('DOMContentLoaded', (event) => {
             // Perform actions based on the buttonId
             window.ipcRender.send("change-keybind", { colorIndex: parseInt(buttonId.slice(8), 10), textHtmlEle: buttonId });
         }
+    });
+
+    document.getElementById('kb-toggle-overlay').addEventListener('click', (event) => {
+        const target = event.target;
+        window.ipcRender.send("change-keybind", { colorIndex: 11, textHtmlEle: target.id });
+    });
+
+    document.getElementById('kb-choose-pen').addEventListener('click', (event) => {
+        const target = event.target;
+        window.ipcRender.send("change-keybind", { colorIndex: 12, textHtmlEle: target.id });
+    });
+
+    document.getElementById('kb-choose-highlighter').addEventListener('click', (event) => {
+        const target = event.target;
+        window.ipcRender.send("change-keybind", { colorIndex: 13, textHtmlEle: target.id });
+    });
+
+    document.getElementById('kb-choose-eraser').addEventListener('click', (event) => {
+        const target = event.target;
+        window.ipcRender.send("change-keybind", { colorIndex: 14, textHtmlEle: target.id });
     });
 
     window.ipcRender.receive("response-get-keybind-key", ( keyString, textHtmlEle ) => {
