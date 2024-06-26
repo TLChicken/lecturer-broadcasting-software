@@ -19,8 +19,8 @@ const ipc = {
         ],
         // Main -> Renderer
         'receive': [
-            // 'canvas-draw',
-            // 'canvas-changeColor'
+            'response-get-keybind-key',
+            'response-get-color'
         ],
         // Renderer -> Main -> Renderer
         'sendReceive': []

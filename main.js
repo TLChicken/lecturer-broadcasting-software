@@ -230,13 +230,11 @@ function changeKeybind(keybindIndex, changedSuccessfullyCallback) {
       // Display Error
       console.log("Keybind not changed, CONFLICTING KEY")
     } else {
-      colorKeyBinds[keybindIndex] = detectedKey;
+      colorKeyBinds[keybindIndex - 1] = detectedKey;
       console.log("Keybind Changed Successfully");
-      // Remember update display of key in control panel
-
       console.log(outsideConsts.UiohookKeyREVERSE[detectedKey]);
 
-      // changedSuccessfullyCallback();
+      changedSuccessfullyCallback(outsideConsts.UiohookKeyREVERSE[detectedKey]);
     }
   }
 
@@ -279,7 +277,7 @@ ipcMain.on("close-overlay", (event, args) => {
 ipcMain.on("change-keybind", (event, args) => {
   console.log("Change Keybind Event RECEIVED");
   console.log(args);
-  changeKeybind(args, ( newKeyString ) => {
-
+  changeKeybind(args.colorIndex, ( newKeyString ) => {
+    mainWindow.webContents.send('response-get-keybind-key', newKeyString, args.textHtmlEle)
   });
 })

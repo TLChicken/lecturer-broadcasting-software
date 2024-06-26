@@ -18,9 +18,15 @@ document.addEventListener('DOMContentLoaded', (event) => {
         if (target.tagName === 'BUTTON' && target.id.startsWith('kb-color')) {
             const buttonId = target.id;
             console.log('Button clicked:', buttonId.slice(8));
+
             // Perform actions based on the buttonId
-            window.ipcRender.send("change-keybind", parseInt(buttonId.slice(8), 10));
+            window.ipcRender.send("change-keybind", { colorIndex: parseInt(buttonId.slice(8), 10), textHtmlEle: buttonId });
         }
+    });
+
+    window.ipcRender.receive("response-get-keybind-key", ( keyString, textHtmlEle ) => {
+        console.log("New keystring received: ", keyString);
+        document.getElementById(textHtmlEle).innerText = keyString;
     });
 });
 
