@@ -6,10 +6,10 @@ window.api.receive("fromMain", (documentId, data) => {
 
 document.addEventListener('DOMContentLoaded', (event) => {
     document.getElementById('open-overlay').addEventListener('click', () => {
-        window.controls.startOverlay("test param");
+        window.ipcRender.send("start-overlay");
     })
 
     document.getElementById('close-overlay').addEventListener('click', () => {
-        window.controls.closeOverlay("random param");
+        window.ipcRender.send("close-overlay");
     })
 });
