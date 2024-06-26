@@ -91,6 +91,7 @@ function createOverlayWindow() {
   mainOverlayWindow.setAlwaysOnTop(true, "pop-up-menu");
   mainOverlayWindow.setFullScreen(true);
   mainOverlayWindow.setMinimizable(false);
+  mainOverlayWindow.setResizable(false);
   mainOverlayWindow.setIgnoreMouseEvents(true, {
     forward: true
   });
