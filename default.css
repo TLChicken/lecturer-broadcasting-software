@@ -24,22 +24,42 @@ div{
 .control-panel-region {
     padding: 3px;
     margin: 5px;
-
+    display: flex;
+    flex-direction: row;
 }
 
 .color-key-list {
     display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     flex-direction: column;
+    justify-content: space-around;
+    gap: 4px;
+}
+
+.color-key-title {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    /*margin-top: 2px;*/
 }
 
 .color-key-wrapper {
     display: flex;
     flex-direction: row;
-    margin-top: 2px;
+    justify-content: space-around;
+    /*margin-top: 2px;*/
 }
 
 .color-key-wrapper button {
     margin-right: 10px;
+}
+
+.outer {
+    width: 100%;
+}
+.inner {
+    height: 100%;
 }
 
 table{
