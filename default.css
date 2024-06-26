@@ -24,8 +24,8 @@ div{
 .control-panel-region {
     padding: 3px;
     margin: 5px;
-    display: flex;
-    flex-direction: row;
+    /*display: flex;*/
+    /*flex-direction: row;*/
 }
 
 .color-key-list {
@@ -35,6 +35,7 @@ div{
     flex-direction: column;
     justify-content: space-around;
     gap: 4px;
+    width: 20%;
 }
 
 .color-key-title {
