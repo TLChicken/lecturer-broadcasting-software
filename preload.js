@@ -5,6 +5,24 @@ const {
 } = require("electron");
 
 
+const ipc = {
+    'render': {
+        // Renderer -> Main
+        'send': [
+            'change-keybind',
+            'get-keybind-key',
+
+        ],
+        // Main -> Renderer
+        'receive': [
+            'canvas-draw',
+            'canvas-changeColor'
+        ],
+        // Renderer -> Main -> Renderer
+        'sendReceive': []
+    }
+};
+
 contextBridge.exposeInMainWorld(
     // Correct way is to expose 1 method per IPC message
     "api", {

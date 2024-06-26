@@ -25,7 +25,9 @@ div{
     padding: 3px;
     margin: 5px;
     /*display: flex;*/
-    /*flex-direction: row;*/
+    flex-direction: row;
+    display: flex;
+    /*grid-row: row;*/
 }
 
 .color-key-list {
@@ -33,7 +35,7 @@ div{
     flex-wrap: wrap;
     justify-content: center;
     flex-direction: column;
-    justify-content: space-around;
+    /*justify-content: space-around;*/
     gap: 4px;
     width: 20%;
 }
@@ -54,6 +56,23 @@ div{
 
 .color-key-wrapper button {
     margin-right: 10px;
+}
+
+.other-keybinds-region {
+    display: flex;
+    /*flex-wrap: wrap;*/
+    align-content: flex-start;
+    flex-direction: column;
+    justify-content: space-around;
+    gap: 4px;
+    width: 30%;
+}
+
+.keybind-key-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-content: space-around;
 }
 
 .outer {

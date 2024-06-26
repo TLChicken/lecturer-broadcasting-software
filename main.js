@@ -34,6 +34,8 @@ let isInDrawingMode = false;
 let isMouseDown = false;
 let lastDrawnCoors = { x: -1, y: -1};
 
+let currentlyChangingKeybindCallback = null;
+
 
 function createWindow () {
   // Create the browser window.
@@ -139,6 +141,12 @@ app.on('ready', () => {
 
   // ADD KEYBOARD SHORTCUTS
   uIOhook.on('keydown', (e) => {
+    if (currentlyChangingKeybindCallback != null) {
+      currentlyChangingKeybindCallback(e.keycode);
+
+      return; // Dont trigger actual functions of keybind while setting it
+    }
+
     if (mainOverlayWindow != null) {
       if (toggleDrawingKeybind === e.keycode) {
         if (isInDrawingMode) {
@@ -163,6 +171,7 @@ app.on('ready', () => {
 
       console.log('Keyboard event detected: ', e);
     }
+
   })
 
   uIOhook.on('mousemove', (event) => {
@@ -208,6 +217,22 @@ function drawingModeOff() {
   isInDrawingMode = false;
 
   console.log("Stopped Drawing Mode");
+}
+
+function changeKeybind(keybindIndex) {
+  // Next time pop up a please enter key window
+
+  currentlyChangingKeybindCallback = ( detectedKey ) => {
+    // Put into keybind array
+    if (colorKeyBinds.includes(detectedKey)) {
+      // Display Error
+    } else {
+      colorKeyBinds[keybindIndex] = detectedKey;
+
+      // Remember update display of key in control panel
+    }
+  }
+
 }
 
 // Quit when all windows are closed.
