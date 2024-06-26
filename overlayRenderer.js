@@ -94,8 +94,58 @@ class TLCBrush extends Brush {
 
 }
 
+class TLCHighlighter extends Brush {
+    constructor(color = rgba(255, 0, 0, 0.2), size = 10) {
+        super();
+        this.color = color;
+        this.size = size;
+    }
+
+    setColor(newColor) {
+        // Make lighter color
+        let newColorArr = newColor.replace(/[^\d,]/g, '').split(',');
+        this.color = rgba(newColorArr[0], newColorArr[1], newColorArr[2], 0.2);
+    }
+
+    setSize(newSize) {
+        this.size = newSize;
+    }
+
+    internalDrawAtCoor(x, y) {
+        return {
+            color: this.color,
+            x: x,
+            y: y,
+            w: 1,
+            h: this.size * 2
+        }
+    }
+
+    drawAtCoor(x, y, prevCoors) {
+        if (prevCoors.x == -1 && prevCoors.y == -1) {
+            return [this.internalDrawAtCoor(x, y)];
+        } else {
+            console.log(prevCoors);
+            // Mouse was moved fast, need to fill in the area in between
+            let intermediateCoors = getIntermediateCoordinates(prevCoors, {x: x, y: y}, 1);
+
+            console.log(intermediateCoors);
+
+            let drawCoors = intermediateCoors.map(( coor ) => {
+                return this.internalDrawAtCoor(coor.x, coor.y);
+            });
+
+            console.log(drawCoors);
+
+            return drawCoors;
+        }
+    }
+
+}
+
 let currColor = rgba(255, 0, 0, 0);
-let currBrush = new TLCBrush();
+// let currBrush = new TLCBrush();
+let currBrush = new TLCHighlighter();
 
 function rgba(red, green, blue, alpha) {
     return "rgba(" + red + ","+ green + ","+ blue + ","+ alpha + ")";
