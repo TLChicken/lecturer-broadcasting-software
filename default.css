@@ -3,8 +3,6 @@ body{
     font-size: 14px;
     color: #646464;
     background-color: #fff;
-    display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
@@ -20,6 +18,28 @@ div{
     border: 3px solid red;
     padding: 20px;
     margin: 0;
+    font-weight: bold;
+}
+
+.control-panel-region {
+    padding: 3px;
+    margin: 5px;
+
+}
+
+.color-key-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.color-key-wrapper {
+    display: flex;
+    flex-direction: row;
+    margin-top: 2px;
+}
+
+.color-key-wrapper button {
+    margin-right: 10px;
 }
 
 table{
