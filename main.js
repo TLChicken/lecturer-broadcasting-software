@@ -2,6 +2,8 @@ process.env['ELECTRON_DISABLE_SECURITY_WARNINGS']=true
 const {app, BrowserWindow, ipcMain, screen} = require("electron");
 const runner = require('./app.js')
 
+const outsideConsts = require('./const');
+
 const { uIOhook, UiohookKey } = require('uiohook-napi');
 
 var version = process.argv[1].replace('--', '');
@@ -143,7 +145,7 @@ app.on('ready', () => {
   uIOhook.on('keydown', (e) => {
     if (currentlyChangingKeybindCallback != null) {
       currentlyChangingKeybindCallback(e.keycode);
-
+      currentlyChangingKeybindCallback = null;
       return; // Dont trigger actual functions of keybind while setting it
     }
 
@@ -219,17 +221,22 @@ function drawingModeOff() {
   console.log("Stopped Drawing Mode");
 }
 
-function changeKeybind(keybindIndex) {
+function changeKeybind(keybindIndex, changedSuccessfullyCallback) {
   // Next time pop up a please enter key window
 
   currentlyChangingKeybindCallback = ( detectedKey ) => {
     // Put into keybind array
     if (colorKeyBinds.includes(detectedKey)) {
       // Display Error
+      console.log("Keybind not changed, CONFLICTING KEY")
     } else {
       colorKeyBinds[keybindIndex] = detectedKey;
-
+      console.log("Keybind Changed Successfully");
       // Remember update display of key in control panel
+
+      console.log(outsideConsts.UiohookKeyREVERSE[detectedKey]);
+
+      // changedSuccessfullyCallback();
     }
   }
 
@@ -269,3 +276,10 @@ ipcMain.on("close-overlay", (event, args) => {
   closeOverlayWindow();
 })
 
+ipcMain.on("change-keybind", (event, args) => {
+  console.log("Change Keybind Event RECEIVED");
+  console.log(args);
+  changeKeybind(args, ( newKeyString ) => {
+
+  });
+})
