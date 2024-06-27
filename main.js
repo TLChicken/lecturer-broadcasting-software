@@ -161,16 +161,19 @@ app.on('ready', () => {
       if (colorKeyBinds[lbsConsts.keybindIndex_selectPen] === e.keycode) {
         // Toggle Pen
         console.log("Pen Toggled");
+        mainOverlayWindow.webContents.send('canvas-choose-pen', "param");
       }
 
       if (colorKeyBinds[lbsConsts.keybindIndex_selectHighlighter] === e.keycode) {
         // Toggle Highlighter
         console.log("Highlighter Toggled");
+        mainOverlayWindow.webContents.send('canvas-choose-highlighter', "param");
       }
 
       if (colorKeyBinds[lbsConsts.keybindIndex_selectEraser] === e.keycode) {
         // Toggle Eraser
         console.log("Eraser Toggled");
+        mainOverlayWindow.webContents.send('canvas-choose-eraser', "param");
       }
 
       let colorSelectedCheck = colorKeyBinds.findIndex((n) => n == e.keycode);

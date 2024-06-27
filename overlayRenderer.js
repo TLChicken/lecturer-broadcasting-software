@@ -145,8 +145,7 @@ class TLCHighlighter extends Brush {
 }
 
 let currColor = rgba(255, 0, 0, 0);
-// let currBrush = new TLCBrush();
-let currBrush = new TLCHighlighter();
+let currBrush = new TLCBrush();
 
 function rgba(red, green, blue, alpha) {
     return "rgba(" + red + ","+ green + ","+ blue + ","+ alpha + ")";
@@ -207,7 +206,22 @@ document.addEventListener('DOMContentLoaded', (event) => {
     window.ipcRender.receive('canvas-changeColor', ( newColor ) => {
         console.log('Canvas Change Color Event Received');
         currBrush.setColor(newColor);
-    })
+    });
+
+    window.ipcRender.receive('canvas-choose-pen', ( param ) => {
+        console.log("PEN chosen");
+        currBrush = new TLCBrush();
+    });
+
+    window.ipcRender.receive('canvas-choose-highlighter', ( param ) => {
+        console.log("Highlighter chosen");
+        currBrush = new TLCHighlighter();
+    });
+
+    window.ipcRender.receive('canvas-choose-eraser', ( param ) => {
+        console.log("Eraser chosen");
+        currBrush = new TLCBrush();
+    });
 
     // Vertical Bounds
     drawRectangle(ctx, rgba(255, 0, 0, 1), 0, 0, 10, window.innerHeight);
