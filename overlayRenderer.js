@@ -300,7 +300,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
     window.ipcRender.receive('canvas-choose-pen', ( param ) => {
         console.log("PEN chosen");
-        currBrush = new TLCBrush();
+        currBrush = new TLCBrush(changeAlphaRgba(currBrush.color, 1));
     });
 
     window.ipcRender.receive('canvas-choose-highlighter', ( param ) => {
@@ -310,7 +310,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
     window.ipcRender.receive('canvas-choose-eraser', ( param ) => {
         console.log("Eraser chosen");
-        currBrush = new TLCEraser();
+        currBrush = new TLCEraser(currBrush.color);
     });
 
     // Vertical Bounds

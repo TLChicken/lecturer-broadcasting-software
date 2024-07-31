@@ -177,7 +177,7 @@ app.on('ready', () => {
       }
 
       let colorSelectedCheck = colorKeyBinds.findIndex((n) => n == e.keycode);
-      if (colorSelectedCheck != -1) {
+      if (colorSelectedCheck != -1 && colorSelectedCheck < 10) { // Check less than 10 as we only want to check for color keybinds
         // Change color according to selected color index
 
         console.log("Color changing to index ", colorSelectedCheck);
