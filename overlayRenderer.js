@@ -64,7 +64,10 @@ class Brush {
 class TLCBrush extends Brush {
     constructor(color = rgba(255, 0, 0, 1), size = 10) {
         super();
-        this.color = color;
+
+        let adjustedOpacityColor = changeAlphaRgba(color, 1);
+
+        this.color = adjustedOpacityColor;
         this.size = size;
     }
 
@@ -111,7 +114,10 @@ class TLCBrush extends Brush {
 class TLCHighlighter extends Brush {
     constructor(color = rgba(255, 0, 0, 0.2), size = 10) {
         super();
-        this.color = color;
+
+        let adjustedOpacityColor = changeAlphaRgba(color, 0.2);
+
+        this.color = adjustedOpacityColor;
         this.size = size;
     }
 
@@ -222,6 +228,13 @@ function rgb(red, green, blue) {
     return "rgb(" + red + ","+ green + ","+ blue + ")";
 }
 
+function changeAlphaRgba(rgbaStr, newAlpha) {
+    let alphaCommaIndex = rgbaStr.lastIndexOf(",");
+    let removedOldAlphaRgbaStr = rgbaStr.slice(0, alphaCommaIndex);
+
+    return removedOldAlphaRgbaStr + "," + newAlpha + ")";
+}
+
 function getPointOnCanvas(c, x, y) {
     let box = c.getBoundingClientRect();
 
@@ -292,7 +305,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
     window.ipcRender.receive('canvas-choose-highlighter', ( param ) => {
         console.log("Highlighter chosen");
-        currBrush = new TLCHighlighter();
+        currBrush = new TLCHighlighter(changeAlphaRgba(currBrush.color, 0.2));
     });
 
     window.ipcRender.receive('canvas-choose-eraser', ( param ) => {
