@@ -24,6 +24,16 @@ function getIntermediateCoordinates(coor1, coor2, numPixelsApart) {
     return coordinates;
 }
 
+class BrushType {
+    static get ADD_PIXEL () {
+        return 0;
+    }
+
+    static get REMOVE_PIXEL () {
+        return 1;
+    }
+}
+
 
 class Brush {
     constructor() {
@@ -32,6 +42,10 @@ class Brush {
         }
         this.color = null;
         this.size = null;
+    }
+
+    getBrushType() {
+        return BrushType.ADD_PIXEL;
     }
 
     setColor(newColor) {
@@ -144,6 +158,59 @@ class TLCHighlighter extends Brush {
 
 }
 
+class TLCEraser extends Brush {
+    constructor(color = rgba(0, 0, 0, 0), size = 30) {
+        super();
+        this.color = color;
+        this.size = size;
+    }
+
+    getBrushType() {
+        return BrushType.REMOVE_PIXEL;
+    }
+
+    setColor(newColor) {
+        // Make lighter color
+        let newColorArr = newColor.replace(/[^\d,]/g, '').split(',');
+        this.color = rgba(newColorArr[0], newColorArr[1], newColorArr[2], 0);
+    }
+
+    setSize(newSize) {
+        this.size = newSize;
+    }
+
+    internalDrawAtCoor(x, y) {
+        // Next time only draw the change in height difference to prevent the lines glitch thing
+        return {
+            color: this.color,
+            x: x,
+            y: y,
+            w: this.size,
+            h: this.size
+        }
+    }
+
+    drawAtCoor(x, y, prevCoors) {
+        if (prevCoors.x == -1 && prevCoors.y == -1) {
+            return [this.internalDrawAtCoor(x, y)];
+        } else {
+            console.log(prevCoors);
+            // Mouse was moved fast, need to fill in the area in between
+            let intermediateCoors = getIntermediateCoordinates(prevCoors, {x: x, y: y}, 1);
+
+            console.log(intermediateCoors);
+
+            let drawCoors = intermediateCoors.map(( coor ) => {
+                return this.internalDrawAtCoor(coor.x, coor.y);
+            });
+
+            console.log(drawCoors);
+
+            return drawCoors;
+        }
+    }
+}
+
 let currColor = rgba(255, 0, 0, 0);
 let currBrush = new TLCBrush();
 
@@ -175,11 +242,21 @@ function drawAtCoor(ctx, c, x, y, lastDrawnCoors) {
 
     let brushResults = currBrush.drawAtCoor(canvasCoors.x, canvasCoors.y, lastDrawnCoors);
 
-    brushResults.forEach((brushResult) => {
-        if (brushResult.x >= 0 && brushResult.y >= 0) {
-            drawRectangle(ctx, brushResult.color, brushResult.x, brushResult.y, brushResult.w, brushResult.h);
-        }
-    })
+    if (currBrush.getBrushType() == BrushType.ADD_PIXEL) {
+        brushResults.forEach((brushResult) => {
+            if (brushResult.x >= 0 && brushResult.y >= 0) {
+                drawRectangle(ctx, brushResult.color, brushResult.x, brushResult.y, brushResult.w, brushResult.h);
+            }
+        })
+    } else if (currBrush.getBrushType() == BrushType.REMOVE_PIXEL) {
+        brushResults.forEach((brushResult) => {
+            if (brushResult.x >= 0 && brushResult.y >= 0) {
+                ctx.clearRect(brushResult.x, brushResult.y, brushResult.w, brushResult.h);
+            }
+        })
+    } else {
+        console.log("UNKNOWN Brush Type " + currBrush.getBrushType().toString());
+    }
 
 }
 
@@ -220,7 +297,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
     window.ipcRender.receive('canvas-choose-eraser', ( param ) => {
         console.log("Eraser chosen");
-        currBrush = new TLCBrush();
+        currBrush = new TLCEraser();
     });
 
     // Vertical Bounds
