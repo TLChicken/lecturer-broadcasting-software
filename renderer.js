@@ -23,6 +23,21 @@ document.addEventListener('DOMContentLoaded', (event) => {
         }
     });
 
+
+    // FIX BUG
+    document.querySelector('.color-key-list').addEventListener('click', (event) => {
+        const target = event.target;
+        if (target.tagName === 'INPUT' && target.id.startsWith('color')) {
+            const colorInputId = target.id;
+            console.log('Color Input clicked:', colorInputId.slice(5));
+
+            // Perform actions based on the color input ID
+            window.ipcRender.send("change-color", { colorIndex: parseInt(colorInputId.slice(5), 10), newColor: target.value, textHtmlEle: colorInputId });
+        }
+    });
+
+
+
     document.getElementById('kb-toggle-overlay').addEventListener('click', (event) => {
         const target = event.target;
         window.ipcRender.send("change-keybind", { colorIndex: 11, textHtmlEle: target.id });
@@ -46,6 +61,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
     window.ipcRender.receive("response-get-keybind-key", ( keyString, textHtmlEle ) => {
         console.log("New keystring received: ", keyString);
         document.getElementById(textHtmlEle).innerText = keyString;
+    });
+
+    window.ipcRender.receive("response-get-color", ( colorString, textHtmlEle ) => {
+        console.log("New colorstring received: ", colorString);
+        // document.getElementById(textHtmlEle).value = colorString;
     });
 });
 

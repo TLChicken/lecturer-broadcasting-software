@@ -29,6 +29,20 @@ function rgba(red, green, blue, alpha) {
   return "rgba(" + red + ","+ green + ","+ blue + ","+ alpha + ")";
 }
 
+// hex to RGBA converter from here: https://stackoverflow.com/questions/21646738/convert-hex-to-rgba
+function hexToRgba(hexString){
+  var c;
+  if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hexString)){
+    c= hexString.substring(1).split('');
+    if(c.length== 3){
+      c= [c[0], c[0], c[1], c[1], c[2], c[2]];
+    }
+    c= '0x'+c.join('');
+    return 'rgba('+[(c>>16)&255, (c>>8)&255, c&255].join(',')+',1)';
+  }
+  throw new Error('Hex String not in correct format: ' + hexString);
+}
+
 // let toggleDrawingKeybind = UiohookKey.Backquote; // Backquote, Tilde key
 let toggleEraserKeybind = UiohookKey.E; // E
 let currColor = new Uint8ClampedArray([255, 0, 0, 0]);
@@ -253,6 +267,16 @@ function changeKeybind(keybindIndex, changedSuccessfullyCallback) {
 
 }
 
+function changeColor(colorIndex, newColor, changedSuccessfullyCallback) {
+  // Next time pop up a please enter key window
+
+  selectedColors[colorIndex - 1] = hexToRgba(newColor);
+  console.log("Color " + colorIndex + " Changed Successfully to " + newColor + "   converted: " + hexToRgba(newColor));
+  console.log("New value in arr: " + selectedColors[colorIndex - 1]);
+  changedSuccessfullyCallback(newColor);
+
+}
+
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {
   // On OS X it is common for applications and their menu bar
@@ -292,5 +316,14 @@ ipcMain.on("change-keybind", (event, args) => {
   console.log(args);
   changeKeybind(args.colorIndex, ( newKeyString ) => {
     mainWindow.webContents.send('response-get-keybind-key', newKeyString, args.textHtmlEle)
+  });
+})
+
+
+ipcMain.on("change-color", (event, args) => {
+  console.log("Change Color Event RECEIVED");
+  console.log(args);
+  changeColor(args.colorIndex, args.newColor, ( newColorString ) => {
+    mainWindow.webContents.send('response-get-color', newColorString, args.textHtmlEle)
   });
 })
