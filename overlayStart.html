@@ -29,7 +29,8 @@
     </style>
 </head>
 <body onload="toggleZoomScreen()">
-<canvas id="overlayCanvas"></canvas>
+<canvas id="highlighterCanvas" style="position: absolute; left: 0; top: 0; z-index: 1"></canvas>
+<canvas id="overlayCanvas" style="position: absolute; left: 0; top: 0; z-index: 0"></canvas>
 </body>
 <script src="./overlayRenderer.js"></script>
 </html>

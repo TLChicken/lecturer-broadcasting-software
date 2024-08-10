@@ -34,6 +34,20 @@ class BrushType {
     }
 }
 
+class CanvasLayerOrdering {
+    static get MAIN_LAYER () {
+        return 0;
+    }
+
+    static get HIGHLIGHTER_LAYER () {
+        return 1;
+    }
+
+    static get ALL_LAYERS () {
+        return -1;
+    }
+}
+
 
 class Brush {
     constructor() {
@@ -46,6 +60,10 @@ class Brush {
 
     getBrushType() {
         return BrushType.ADD_PIXEL;
+    }
+
+    getCanvasLayer() {
+        return CanvasLayerOrdering.MAIN_LAYER;
     }
 
     setColor(newColor) {
@@ -121,6 +139,10 @@ class TLCHighlighter extends Brush {
         this.size = size;
     }
 
+    getCanvasLayer() {
+        return CanvasLayerOrdering.HIGHLIGHTER_LAYER;
+    }
+
     setColor(newColor) {
         // Make lighter color
         let newColorArr = newColor.replace(/[^\d,]/g, '').split(',');
@@ -164,6 +186,11 @@ class TLCHighlighter extends Brush {
 
 }
 
+class SingleOpacityHighlighter extends TLCHighlighter {
+
+
+}
+
 class TLCEraser extends Brush {
     constructor(color = rgba(0, 0, 0, 0), size = 30) {
         super();
@@ -173,6 +200,10 @@ class TLCEraser extends Brush {
 
     getBrushType() {
         return BrushType.REMOVE_PIXEL;
+    }
+
+    getCanvasLayer() {
+        return CanvasLayerOrdering.ALL_LAYERS;
     }
 
     setColor(newColor) {
@@ -251,24 +282,54 @@ function drawRectangle(ctx, color, x, y, w, h) {
     ctx.fillRect(x, y, w, h);
 }
 
-function drawAtCoor(ctx, c, x, y, lastDrawnCoors) {
-    let canvasCoors = getPointOnCanvas(c, x, y);
+function drawAtCoor(canvasLayers, x, y, lastDrawnCoors) {
+
+    const c = canvasLayers.mainC;
+    const ctx = c.getContext('2d');
+
+    const highlighterC = canvasLayers.highlighterC;
+    const highlighterCtx = highlighterC.getContext('2d');
+
+    const contextLayers = [ctx, highlighterCtx];
+
+    let canvasCoors = getPointOnCanvas(highlighterC, x, y);
     console.log("Drawing pixel at x: ", canvasCoors.x, "  y: ", canvasCoors.y);
 
     let brushResults = currBrush.drawAtCoor(canvasCoors.x, canvasCoors.y, lastDrawnCoors);
 
     if (currBrush.getBrushType() == BrushType.ADD_PIXEL) {
-        brushResults.forEach((brushResult) => {
-            if (brushResult.x >= 0 && brushResult.y >= 0) {
-                drawRectangle(ctx, brushResult.color, brushResult.x, brushResult.y, brushResult.w, brushResult.h);
-            }
-        })
+        const selectedLayerNo = currBrush.getCanvasLayer();
+
+        if (selectedLayerNo != CanvasLayerOrdering.ALL_LAYERS) {
+            brushResults.forEach((brushResult) => {
+                if (brushResult.x >= 0 && brushResult.y >= 0) {
+                    drawRectangle(contextLayers[selectedLayerNo], brushResult.color, brushResult.x, brushResult.y, brushResult.w, brushResult.h);
+                }
+            })
+        } else {
+            // Draw on all layers (This would never be used)
+
+        }
     } else if (currBrush.getBrushType() == BrushType.REMOVE_PIXEL) {
-        brushResults.forEach((brushResult) => {
-            if (brushResult.x >= 0 && brushResult.y >= 0) {
-                ctx.clearRect(brushResult.x, brushResult.y, brushResult.w, brushResult.h);
-            }
-        })
+        const selectedLayerNo = currBrush.getCanvasLayer();
+
+        if (selectedLayerNo != CanvasLayerOrdering.ALL_LAYERS) {
+            // Erase from 1 layer only - CURRENTLY UNUSED
+            brushResults.forEach((brushResult) => {
+                if (brushResult.x >= 0 && brushResult.y >= 0) {
+                    contextLayers[selectedLayerNo].clearRect(brushResult.x, brushResult.y, brushResult.w, brushResult.h);
+                }
+            })
+
+        } else {
+            // Erase from all layers
+            brushResults.forEach((brushResult) => {
+                if (brushResult.x >= 0 && brushResult.y >= 0) {
+                    ctx.clearRect(brushResult.x, brushResult.y, brushResult.w, brushResult.h);
+                    highlighterCtx.clearRect(brushResult.x, brushResult.y, brushResult.w, brushResult.h);
+                }
+            })
+        }
     } else {
         console.log("UNKNOWN Brush Type " + currBrush.getBrushType().toString());
     }
@@ -308,16 +369,23 @@ function eraseBorder(ctx) {
 document.addEventListener('DOMContentLoaded', (event) => {
 
     const c = document.getElementById('overlayCanvas');
-    const ctx = c.getContext('2d');``
+    const ctx = c.getContext('2d');
     c.width = window.innerWidth;
     c.height = window.innerHeight;
+
+    const highlighterCanvas = document.getElementById('highlighterCanvas');
+    const highlighterCtx = highlighterCanvas.getContext('2d');
+    highlighterCanvas.width = window.innerWidth;
+    highlighterCanvas.height = window.innerHeight;
+
+    const canvasLayers = { mainC: c, highlighterC: highlighterCanvas };
 
     console.log(window);
     console.log(window.innerWidth);
 
     window.ipcRender.receive('canvas-draw', ( coors ) => {
         console.log("Canvas Draw Event Received");
-        drawAtCoor(ctx, c, coors.x, coors.y, coors.prevCoors);
+        drawAtCoor(canvasLayers, coors.x, coors.y, coors.prevCoors);
     });
 
     window.ipcRender.receive('canvas-changeColor', ( newColor ) => {
