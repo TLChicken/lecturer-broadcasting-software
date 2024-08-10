@@ -219,6 +219,8 @@ class TLCEraser extends Brush {
 
 let currColor = rgba(255, 0, 0, 0);
 let currBrush = new TLCBrush();
+let drawingBrushSize = 10;
+let erasingBrushSize = 30;
 
 function rgba(red, green, blue, alpha) {
     return "rgba(" + red + ","+ green + ","+ blue + ","+ alpha + ")";
@@ -325,17 +327,17 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
     window.ipcRender.receive('canvas-choose-pen', ( param ) => {
         console.log("PEN chosen");
-        currBrush = new TLCBrush(changeAlphaRgba(currBrush.color, 1));
+        currBrush = new TLCBrush(changeAlphaRgba(currBrush.color, 1), drawingBrushSize);
     });
 
     window.ipcRender.receive('canvas-choose-highlighter', ( param ) => {
         console.log("Highlighter chosen");
-        currBrush = new TLCHighlighter(changeAlphaRgba(currBrush.color, 0.2));
+        currBrush = new TLCHighlighter(changeAlphaRgba(currBrush.color, 0.2), drawingBrushSize);
     });
 
     window.ipcRender.receive('canvas-choose-eraser', ( param ) => {
         console.log("Eraser chosen");
-        currBrush = new TLCEraser(currBrush.color);
+        currBrush = new TLCEraser(currBrush.color, erasingBrushSize);
     });
 
     window.ipcRender.receive('draw-mode-activated', ( param ) => {
@@ -350,6 +352,21 @@ document.addEventListener('DOMContentLoaded', (event) => {
         const borderColor = rgba(170, 170, 170, 0.5);
         eraseBorder(ctx);
         drawBorder(ctx, borderColor);
+    });
+
+    window.ipcRender.receive('canvas-change-size-by', ( sizeOffset ) => {
+        console.log("Changing size of brush");
+        if (currBrush.getBrushType() == BrushType.ADD_PIXEL) {
+            drawingBrushSize = Math.max(1, drawingBrushSize + sizeOffset);
+            currBrush.setSize(drawingBrushSize);
+        } else if (currBrush.getBrushType() == BrushType.REMOVE_PIXEL) {
+            erasingBrushSize = Math.max(1, erasingBrushSize + sizeOffset);
+            currBrush.setSize(erasingBrushSize);
+        } else {
+            console.log("Unknown Brush Type Detected - Changing size of brush");
+        }
+
+
     });
 
     const borderColor = rgba(170, 170, 170, 0.5);

@@ -20,6 +20,7 @@ const ipc = {
             'canvas-choose-pen',
             'canvas-choose-highlighter',
             'canvas-choose-eraser',
+            'canvas-change-size-by',
 
             'draw-mode-activated',
             'draw-mode-unactivated'

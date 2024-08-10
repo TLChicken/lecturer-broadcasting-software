@@ -4,7 +4,7 @@ const runner = require('./app.js')
 
 const lbsConsts = require('./const');
 
-const { uIOhook, UiohookKey } = require('uiohook-napi');
+const { uIOhook, UiohookKey, WheelDirection} = require('uiohook-napi');
 
 var version = process.argv[1].replace('--', '');
 
@@ -221,7 +221,14 @@ app.on('ready', () => {
 
   uIOhook.on('wheel', (event) => {
     if (isInDrawingMode) {
-      // Maybe change brush size
+      // Change brush size
+      if (event.direction == WheelDirection.VERTICAL) {
+        // console.log("SCROLL Rotation: " + event.rotation);
+        // Scroll UP = -1
+        // Scroll DOWN = 1  (page moves down when u scroll on windows)
+
+        mainOverlayWindow.webContents.send('canvas-change-size-by', -event.rotation);
+      }
     }
   });
 
