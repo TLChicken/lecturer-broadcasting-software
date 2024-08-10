@@ -277,6 +277,31 @@ function toggleZoomScreen() {
     document.body.style.zoom = (1 / window.devicePixelRatio);
 }
 
+function drawBorder(ctx, borderColor) {
+    const borderThickness = 10;
+
+    // Vertical Bounds
+    drawRectangle(ctx, borderColor, 0, 0, borderThickness, window.innerHeight);
+    drawRectangle(ctx, borderColor, window.innerWidth - borderThickness, 0, borderThickness, window.innerHeight);
+
+    // Horizontal Bounds
+    drawRectangle(ctx, borderColor, borderThickness, 0, window.innerWidth - (2 * borderThickness), borderThickness);
+    drawRectangle(ctx, borderColor, borderThickness, window.innerHeight - borderThickness, window.innerWidth - (2 * borderThickness), borderThickness);
+
+}
+
+function eraseBorder(ctx) {
+    const borderThickness = 10;
+
+    // Vertical Bounds
+    ctx.clearRect(0, 0, borderThickness, window.innerHeight);
+    ctx.clearRect(window.innerWidth - borderThickness, 0, borderThickness, window.innerHeight);
+
+    // Horizontal Bounds
+    ctx.clearRect(borderThickness, 0, window.innerWidth - (2 * borderThickness), borderThickness);
+    ctx.clearRect(borderThickness, window.innerHeight - borderThickness, window.innerWidth - (2 * borderThickness), borderThickness);
+
+}
 
 document.addEventListener('DOMContentLoaded', (event) => {
 
@@ -313,17 +338,22 @@ document.addEventListener('DOMContentLoaded', (event) => {
         currBrush = new TLCEraser(currBrush.color);
     });
 
-    const borderThickness = 10;
+    window.ipcRender.receive('draw-mode-activated', ( param ) => {
+        console.log("Draw Mode activated");
+        const borderColor = rgba(0, 165, 255, 0.5);
+        eraseBorder(ctx);
+        drawBorder(ctx, borderColor);
+    });
+
+    window.ipcRender.receive('draw-mode-unactivated', ( param ) => {
+        console.log("Draw Mode UNactivated");
+        const borderColor = rgba(170, 170, 170, 0.5);
+        eraseBorder(ctx);
+        drawBorder(ctx, borderColor);
+    });
+
     const borderColor = rgba(170, 170, 170, 0.5);
-
-    // Vertical Bounds
-    drawRectangle(ctx, borderColor, 0, 0, borderThickness, window.innerHeight);
-    drawRectangle(ctx, borderColor, window.innerWidth - borderThickness, 0, borderThickness, window.innerHeight);
-
-    // Horizontal Bounds
-    drawRectangle(ctx, borderColor, borderThickness, 0, window.innerWidth - (2 * borderThickness), borderThickness);
-    drawRectangle(ctx, borderColor, borderThickness, window.innerHeight - borderThickness, window.innerWidth - (2 * borderThickness), borderThickness);
-
+    drawBorder(ctx, borderColor);
 
     console.log("Overlay Render DOMContentLoaded ran");
 

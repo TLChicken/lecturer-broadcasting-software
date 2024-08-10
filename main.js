@@ -228,6 +228,7 @@ app.on('ready', () => {
   uIOhook.start()
 });
 
+// PRE CONDITIONS: The overlay window is alr open
 function drawingModeOn() {
   mainOverlayWindow.setIgnoreMouseEvents(false, {
     forward: false
@@ -235,15 +236,20 @@ function drawingModeOn() {
 
   isInDrawingMode = true;
 
+  mainOverlayWindow.webContents.send('draw-mode-activated', "param");
+
   console.log("Started Drawing Mode");
 }
 
+// PRE CONDITIONS: The overlay window is alr open
 function drawingModeOff() {
   mainOverlayWindow.setIgnoreMouseEvents(true, {
     forward: true
   });
 
   isInDrawingMode = false;
+
+  mainOverlayWindow.webContents.send('draw-mode-unactivated', "param");
 
   console.log("Stopped Drawing Mode");
 }

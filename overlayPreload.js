@@ -19,7 +19,10 @@ const ipc = {
             'canvas-changeColor',
             'canvas-choose-pen',
             'canvas-choose-highlighter',
-            'canvas-choose-eraser'
+            'canvas-choose-eraser',
+
+            'draw-mode-activated',
+            'draw-mode-unactivated'
         ],
         // Renderer -> Main -> Renderer
         'sendReceive': []
