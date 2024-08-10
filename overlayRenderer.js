@@ -313,13 +313,16 @@ document.addEventListener('DOMContentLoaded', (event) => {
         currBrush = new TLCEraser(currBrush.color);
     });
 
+    const borderThickness = 10;
+    const borderColor = rgba(170, 170, 170, 0.5);
+
     // Vertical Bounds
-    drawRectangle(ctx, rgba(255, 0, 0, 1), 0, 0, 10, window.innerHeight);
-    drawRectangle(ctx, rgba(0, 255, 0, 1), window.innerWidth - 10, 0, 10, window.innerHeight);
+    drawRectangle(ctx, borderColor, 0, 0, borderThickness, window.innerHeight);
+    drawRectangle(ctx, borderColor, window.innerWidth - borderThickness, 0, borderThickness, window.innerHeight);
 
     // Horizontal Bounds
-    drawRectangle(ctx, rgba(0, 0, 255, 1), 0, 0, window.innerWidth, 10);
-    drawRectangle(ctx, rgba(255, 255, 0, 1), 0, window.innerHeight - 10, window.innerWidth, 10);
+    drawRectangle(ctx, borderColor, borderThickness, 0, window.innerWidth - (2 * borderThickness), borderThickness);
+    drawRectangle(ctx, borderColor, borderThickness, window.innerHeight - borderThickness, window.innerWidth - (2 * borderThickness), borderThickness);
 
 
     console.log("Overlay Render DOMContentLoaded ran");
