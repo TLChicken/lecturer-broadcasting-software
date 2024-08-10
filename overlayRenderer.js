@@ -82,8 +82,8 @@ class TLCBrush extends Brush {
     internalDrawAtCoor(x, y) {
         return {
             color: this.color,
-            x: x,
-            y: y,
+            x: Math.floor(x - (this.size / 2)),
+            y: Math.floor(y - (this.size / 2)),
             w: this.size,
             h: this.size
         }
@@ -136,7 +136,7 @@ class TLCHighlighter extends Brush {
         return {
             color: this.color,
             x: x,
-            y: y,
+            y: y - this.size,
             w: 1,
             h: this.size * 2
         }
@@ -189,8 +189,8 @@ class TLCEraser extends Brush {
         // Next time only draw the change in height difference to prevent the lines glitch thing
         return {
             color: this.color,
-            x: x,
-            y: y,
+            x: Math.floor(x - (this.size / 2)),
+            y: Math.floor(y - (this.size / 2)),
             w: this.size,
             h: this.size
         }
