@@ -132,3 +132,56 @@ exports.UiohookKeyREVERSE = {
     0x0046: "ScrollLock",
     0x0E37: "PrintScreen"
 };
+
+function rgba(red, green, blue, alpha) {
+    return "rgba(" + red + ","+ green + ","+ blue + ","+ alpha + ")";
+}
+
+exports.colorThemes_keys = ['original', 'pastel', 'darks'];
+
+exports.colorThemes_themeNames = {
+    'original': "Original",
+
+    'pastel': "Pastel",
+
+    'darks': "Dark Colors",
+};
+
+exports.colorThemes_themeColors = {
+    'original':
+        [rgba(255, 0, 0, 1),
+            rgba(255, 155, 0, 1),
+            rgba(255, 255, 0, 1),
+            rgba(155, 255, 0, 1),
+            rgba(0, 255, 0, 1),
+            rgba(102, 255, 204, 1),
+            rgba(51, 204, 255, 1),
+            rgba(0, 102, 255, 1),
+            rgba(102, 0, 255, 1),
+            rgba(255, 0, 255, 1)],
+
+    'pastel':
+        [rgba(255, 183, 170, 1),
+            rgba(255, 213, 186, 1),
+            rgba(255, 244, 193, 1),
+            rgba(232, 255, 206, 1),
+            rgba(204, 255, 240, 1),
+            rgba(206, 233, 255, 1),
+            rgba(209, 218, 255, 1),
+            rgba(212, 201, 255, 1),
+            rgba(230, 193, 255, 1),
+            rgba(255, 206, 221, 1)],
+
+    'darks':
+        [rgba(155, 12, 0, 1),
+            rgba(188, 132, 0, 1),
+            rgba(188, 176, 0, 1),
+            rgba(172, 188, 0, 1),
+            rgba(113, 188, 0, 1),
+            rgba(0, 188, 84, 1),
+            rgba(0, 188, 176, 1),
+            rgba(0, 141, 188, 1),
+            rgba(0, 47, 188, 1),
+            rgba(182, 0, 188, 1)],
+
+};

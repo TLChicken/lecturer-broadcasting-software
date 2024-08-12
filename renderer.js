@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
     window.ipcRender.receive("response-get-color", ( colorString, textHtmlEle ) => {
         console.log("New colorstring received: ", colorString);
-        // document.getElementById(textHtmlEle).value = colorString;
+        document.getElementById(textHtmlEle).value = colorString;
     });
 });
 

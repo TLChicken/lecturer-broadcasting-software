@@ -1,5 +1,6 @@
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS']=true
-const {app, BrowserWindow, ipcMain, screen} = require("electron");
+const {app, BrowserWindow, ipcMain, screen, Menu, MenuItem} = require("electron");
+const shell = require('electron').shell;
 const runner = require('./app.js')
 
 const lbsConsts = require('./const');
@@ -14,19 +15,16 @@ let mainWindow;
 let mainOverlayWindow;
 
 let colorKeyBinds = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, UiohookKey.Shift, UiohookKey.P, UiohookKey.H, UiohookKey.E]; // Numpad 1 to 0
-let selectedColors = [rgba(255, 0, 0, 1),
-  rgba(255, 155, 0, 1),
-  rgba(255, 255, 0, 1),
-  rgba(155, 255, 0, 1),
-  rgba(0, 255, 0, 1),
-  rgba(102, 255, 204, 1),
-  rgba(51, 204, 255, 1),
-  rgba(0, 102, 255, 1),
-  rgba(102, 0, 255, 1),
-  rgba(255, 0, 255, 1)];
+let selectedColors = lbsConsts.colorThemes_themeColors['original'];
 
 function rgba(red, green, blue, alpha) {
   return "rgba(" + red + ","+ green + ","+ blue + ","+ alpha + ")";
+}
+
+function rgbaToRbg(rgbaStr) {
+  let edited = rgbaStr.replace(/,(?=[^,]+$).*/, ')'); // Regex from me courtesy of CS4248 (might possibly be wrong but I think its correct)
+  edited = edited.replace("rgba", "rgb");
+  return edited;
 }
 
 // hex to RGBA converter from here: https://stackoverflow.com/questions/21646738/convert-hex-to-rgba
@@ -42,6 +40,51 @@ function hexToRgba(hexString){
   }
   throw new Error('Hex String not in correct format: ' + hexString);
 }
+
+// RGBA to hex converter from here: https://stackoverflow.com/questions/49974145/how-to-convert-rgba-to-hex-color-code-using-javascript
+// CURRENTLY UNUSED
+function rgba2hex(orig) {
+  let a,
+      rgb = orig.replace(/\s/g, '').match(/^rgba?\((\d+),(\d+),(\d+),?([^,\s)]+)?/i),
+      alpha = (rgb && rgb[4] || "").trim(),
+      hex = rgb ?
+          (rgb[1] | 1 << 8).toString(16).slice(1) +
+          (rgb[2] | 1 << 8).toString(16).slice(1) +
+          (rgb[3] | 1 << 8).toString(16).slice(1) : orig;
+
+  if (alpha !== "") {
+    a = alpha;
+  } else {
+    a = 0o1;
+  }
+  // multiply before convert to HEX
+  a = ((a * 255) | 1 << 8).toString(16).slice(1)
+  hex = hex + a;
+
+  return hex;
+}
+
+
+// RGB to Hex from here: https://stackoverflow.com/questions/13070054/convert-rgb-strings-to-hex-in-javascript
+function componentFromStr(numStr, percent) {
+  var num = Math.max(0, parseInt(numStr, 10));
+  return percent ?
+      Math.floor(255 * Math.min(100, num) / 100) : Math.min(255, num);
+}
+
+function rgbToHex(rgb) {
+  var rgbRegex = /^rgb\(\s*(-?\d+)(%?)\s*,\s*(-?\d+)(%?)\s*,\s*(-?\d+)(%?)\s*\)$/;
+  var result, r, g, b, hex = "";
+  if ( (result = rgbRegex.exec(rgb)) ) {
+    r = componentFromStr(result[1], result[2]);
+    g = componentFromStr(result[3], result[4]);
+    b = componentFromStr(result[5], result[6]);
+
+    hex = "#" + (0x1000000 + (r << 16) + (g << 8) + b).toString(16).slice(1);
+  }
+  return hex;
+}
+
 
 // let toggleDrawingKeybind = UiohookKey.Backquote; // Backquote, Tilde key
 let toggleEraserKeybind = UiohookKey.E; // E
@@ -233,7 +276,118 @@ app.on('ready', () => {
   });
 
   uIOhook.start()
+
+  const mainMenu = Menu.buildFromTemplate(menuTemplate)
+
+  let colorThemesSubMenuArr = [];
+
+  // Build Color Themes Menu
+  for (let i = 0; i < lbsConsts.colorThemes_keys.length; i++) {
+    const currKey = lbsConsts.colorThemes_keys[i];
+    const themeName = lbsConsts.colorThemes_themeNames[currKey];
+    const themeColors = lbsConsts.colorThemes_themeColors[currKey];
+
+    let currThemeMenuItem = new MenuItem({
+      click(thisMenuItem, thisBrowserWindow, thisKeyboardEvent) {
+        setColorsFromTheme(currKey);
+      },
+      label: themeName
+    });
+
+    colorThemesSubMenuArr.push(currThemeMenuItem);
+  }
+
+  let colorThemesMenu = new MenuItem({
+    label: "Color Themes",
+    type: "submenu",
+    submenu: colorThemesSubMenuArr
+  });
+
+  mainMenu.append(colorThemesMenu);
+
+  Menu.setApplicationMenu(mainMenu)
 });
+
+let menuTemplate = [
+  {
+    label: 'View',
+    submenu: [
+      {
+        role: 'reload'
+      },
+      {
+        role: 'toggledevtools'
+      },
+      {
+        type: 'separator'
+      },
+      {
+        role: 'resetzoom'
+      },
+      {
+        role: 'zoomin'
+      },
+      {
+        role: 'zoomout'
+      },
+      {
+        type: 'separator'
+      },
+      {
+        role: 'togglefullscreen'
+      }
+    ]
+  },
+
+  {
+    role: 'window',
+    submenu: [
+      {
+        role: 'minimize'
+      },
+      {
+        role: 'close'
+      }
+    ]
+  },
+
+  {
+    role: 'Help',
+    submenu: [
+      {
+        label:'Future Homepage',
+        click() {
+          shell.openExternal('https://github.com/')
+        }
+      },
+      {
+        label:'Guide',
+        click() {
+          shell.openExternal('https://tlchicken.github.io/')
+        }
+      }
+    ]
+  }
+];
+
+function setColorsFromTheme(themeKey) {
+  let selectedTheme_colorArray = lbsConsts.colorThemes_themeColors[themeKey];
+  selectedColors = selectedTheme_colorArray;
+
+  // Update display of colors on control panel
+  for (let i = 0; i < selectedColors.length; i++) {
+    let currColor = selectedColors[i];
+    let currColorHex = rgbToHex(rgbaToRbg(currColor));
+    let colorInputHtmlEleName =  "color" + (i + 1).toString();
+
+    console.log("TEST " + rgbaToRbg(currColor));
+
+    console.log("Setting Color " + i + " to " + currColor + " hex: " + currColorHex + "   HTML ELE: " + colorInputHtmlEleName);
+    mainWindow.webContents.send('response-get-color', currColorHex, colorInputHtmlEleName);
+  }
+
+}
+
 
 // PRE CONDITIONS: The overlay window is alr open
 function drawingModeOn() {
@@ -337,6 +491,6 @@ ipcMain.on("change-color", (event, args) => {
   console.log("Change Color Event RECEIVED");
   console.log(args);
   changeColor(args.colorIndex, args.newColor, ( newColorString ) => {
-    mainWindow.webContents.send('response-get-color', newColorString, args.textHtmlEle)
+    mainWindow.webContents.send('response-get-color', rgbToHex(rgbaToRbg(newColorString)), args.textHtmlEle)
   });
 })
