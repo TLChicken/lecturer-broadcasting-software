@@ -30,6 +30,59 @@ div{
     /*grid-row: row;*/
 }
 
+.top-panel-region {
+    /*padding: 5px;*/
+
+}
+
+.top-panel-button {
+    width: 70px;
+    height: 70px;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    font-size: 14px;
+    white-space: pre-wrap;
+}
+
+.brush-size-slider {
+    width: 20vw;
+    margin-left: 20px;
+    appearance: none;
+    height: 8px;
+    background: #ddd;
+    outline: none;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.brush-size-slider:hover {
+    opacity: 1;
+}
+
+.brush-size-slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 15px;
+    height: 15px;
+    background: #4CAF50;
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+.brush-size-slider::-moz-range-thumb {
+    width: 15px;
+    height: 15px;
+    background: #4CAF50;
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+.brush-size-slider-value {
+    margin-left: 10px;
+    font-size: 1.2vw;
+    font-weight: bold;
+}
+
 .color-key-list {
     display: flex;
     flex-wrap: wrap;

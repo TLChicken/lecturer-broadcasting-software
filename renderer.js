@@ -12,6 +12,17 @@ document.addEventListener('DOMContentLoaded', (event) => {
         window.ipcRender.send("close-overlay");
     })
 
+    document.getElementById('pen-brush-size-slider').addEventListener('change', function() {
+        console.log('New Brush Size:', this.value);
+        document.getElementById('pen-brush-size-slider-value').textContent = this.value;
+    });
+
+    document.getElementById('pen-brush-size-slider').addEventListener('input', function() {
+        document.getElementById('pen-brush-size-slider-value').textContent = this.value;
+    });
+
+
+
     document.querySelector('.color-key-list').addEventListener('click', (event) => {
         const target = event.target;
         if (target.tagName === 'BUTTON' && target.id.startsWith('kb-color')) {
@@ -57,6 +68,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
         const target = event.target;
         window.ipcRender.send("change-keybind", { colorIndex: 14, textHtmlEle: target.id });
     });
+
+
+
 
     window.ipcRender.receive("response-get-keybind-key", ( keyString, textHtmlEle ) => {
         console.log("New keystring received: ", keyString);
