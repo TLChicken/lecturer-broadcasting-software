@@ -12,14 +12,16 @@ document.addEventListener('DOMContentLoaded', (event) => {
         window.ipcRender.send("close-overlay");
     })
 
-    document.getElementById('pen-brush-size-slider').addEventListener('change', function() {
-        console.log('New Brush Size:', this.value);
-        document.getElementById('pen-brush-size-slider-value').textContent = this.value;
-    });
-
-    document.getElementById('pen-brush-size-slider').addEventListener('input', function() {
-        document.getElementById('pen-brush-size-slider-value').textContent = this.value;
-    });
+    // document.getElementById('pen-brush-size-slider').addEventListener('change', function() {
+    //     console.log('New Brush Size onCHANGE:', this.value);
+    //     document.getElementById('pen-brush-size-slider-value').textContent = this.value;
+    //     window.ipcRender.send("set-pen-brush-size-absolute", { newBrushSize: this.value });
+    // });
+    //
+    // document.getElementById('pen-brush-size-slider').addEventListener('input', function() {
+    //     console.log('New Brush Size onINPUT:', this.value);
+    //     document.getElementById('pen-brush-size-slider-value').textContent = this.value;
+    // });
 
 
 
@@ -81,5 +83,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
         console.log("New colorstring received: ", colorString);
         document.getElementById(textHtmlEle).value = colorString;
     });
+
+    window.ipcRender.receive("set-pen-brush-size-slider-value-absolute", ( newBrushSize ) => {
+        document.getElementById('pen-brush-size-slider-value').textContent = newBrushSize;
+    })
 });
 

@@ -12,7 +12,9 @@ const {
 const ipc = {
     'render': {
         // Renderer -> Main
-        'send': [],
+        'send': [
+            'set-menu-brush-size-slider-value'
+        ],
         // Main -> Renderer
         'receive': [
             'canvas-draw',
@@ -21,6 +23,7 @@ const ipc = {
             'canvas-choose-highlighter',
             'canvas-choose-eraser',
             'canvas-change-size-by',
+            'canvas-set-brush-size',
 
             'draw-mode-activated',
             'draw-mode-unactivated'

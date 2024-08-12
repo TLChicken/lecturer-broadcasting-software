@@ -86,9 +86,6 @@ function rgbToHex(rgb) {
 }
 
 
-// let toggleDrawingKeybind = UiohookKey.Backquote; // Backquote, Tilde key
-let toggleEraserKeybind = UiohookKey.E; // E
-let currColor = new Uint8ClampedArray([255, 0, 0, 0]);
 let isInDrawingMode = false;
 let isMouseDown = false;
 let lastDrawnCoors = { x: -1, y: -1};
@@ -99,8 +96,8 @@ let currentlyChangingKeybindCallback = null;
 function createWindow () {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 1024,
-    height: 750,
+    width: 600,
+    height: 600,
     webPreferences:{
       nodeIntegration: false,
       nodeIntegrationInWorker: false,
@@ -156,6 +153,8 @@ function createOverlayWindow() {
   mainOverlayWindow.setIgnoreMouseEvents(true, {
     forward: true
   });
+
+  mainOverlayWindow.setFocusable(false);
 
   mainOverlayWindow.on('closed', () => { mainOverlayWindow = null });
 
@@ -270,7 +269,10 @@ app.on('ready', () => {
         // Scroll UP = -1
         // Scroll DOWN = 1  (page moves down when u scroll on windows)
 
-        mainOverlayWindow.webContents.send('canvas-change-size-by', -event.rotation);
+        if (mainOverlayWindow != null) {
+          mainOverlayWindow.webContents.send('canvas-change-size-by', -event.rotation);
+        }
+
       }
     }
   });
@@ -494,3 +496,15 @@ ipcMain.on("change-color", (event, args) => {
     mainWindow.webContents.send('response-get-color', rgbToHex(rgbaToRbg(newColorString)), args.textHtmlEle)
   });
 })
+
+ipcMain.on("set-pen-brush-size-absolute", (event, args) => {
+  console.log("Setting pen brush size from control panel: " + args.newBrushSize);
+  if (mainOverlayWindow != null) {
+    mainOverlayWindow.webContents.send('canvas-set-brush-size', args.newBrushSize);
+  }
+})
+
+ipcMain.on("set-menu-brush-size-slider-value", (event, args) => {
+  mainWindow.webContents.send("set-pen-brush-size-slider-value-absolute", args.newBrushSize);
+})
+

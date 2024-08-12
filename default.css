@@ -32,7 +32,11 @@ div{
 
 .top-panel-region {
     /*padding: 5px;*/
-
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
 }
 
 .top-panel-button {
@@ -43,10 +47,11 @@ div{
     align-items: center;
     font-size: 14px;
     white-space: pre-wrap;
+    margin: 15px;
 }
 
 .brush-size-slider {
-    width: 20vw;
+    width: 30vw;
     margin-left: 20px;
     appearance: none;
     height: 8px;
@@ -90,7 +95,7 @@ div{
     flex-direction: column;
     /*justify-content: space-around;*/
     gap: 4px;
-    width: 20%;
+    width: 40%;
 }
 
 .color-key-title {
@@ -118,7 +123,7 @@ div{
     flex-direction: column;
     justify-content: space-around;
     gap: 4px;
-    width: 40%;
+    width: 60%;
 }
 
 .keybind-key-wrapper {

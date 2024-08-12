@@ -14,13 +14,15 @@ const ipc = {
             'change-color',
             'get-current-color',
             'start-overlay',
-            'close-overlay'
+            'close-overlay',
+            'set-pen-brush-size-absolute'
 
         ],
         // Main -> Renderer
         'receive': [
             'response-get-keybind-key',
-            'response-get-color'
+            'response-get-color',
+            'set-pen-brush-size-slider-value-absolute'
         ],
         // Renderer -> Main -> Renderer
         'sendReceive': []
