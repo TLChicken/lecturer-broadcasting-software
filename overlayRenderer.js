@@ -39,7 +39,7 @@ class CanvasLayerOrdering {
         return 0;
     }
 
-    static get HIGHLIGHTER_LAYER () {
+    static get SINGLE_OPACITY_HIGHLIGHTER_LAYER () {
         return 1;
     }
 
@@ -139,10 +139,6 @@ class TLCHighlighter extends Brush {
         this.size = size;
     }
 
-    getCanvasLayer() {
-        return CanvasLayerOrdering.HIGHLIGHTER_LAYER;
-    }
-
     setColor(newColor) {
         // Make lighter color
         let newColorArr = newColor.replace(/[^\d,]/g, '').split(',');
@@ -187,8 +183,25 @@ class TLCHighlighter extends Brush {
 }
 
 class SingleOpacityHighlighter extends TLCHighlighter {
+    constructor(color = rgba(255, 0, 0, 1), size = 10) {
+        super();
 
+        // Alpha was 0.2
+        let adjustedOpacityColor = changeAlphaRgba(color, 1);
 
+        this.color = adjustedOpacityColor;
+        this.size = size;
+    }
+
+    getCanvasLayer() {
+        return CanvasLayerOrdering.SINGLE_OPACITY_HIGHLIGHTER_LAYER;
+    }
+
+    setColor(newColor) {
+        // Make lighter color
+        let newColorArr = newColor.replace(/[^\d,]/g, '').split(',');
+        this.color = rgba(newColorArr[0], newColorArr[1], newColorArr[2], 1); // Alpha was 0.2
+    }
 }
 
 class TLCEraser extends Brush {
@@ -400,7 +413,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
     window.ipcRender.receive('canvas-choose-highlighter', ( param ) => {
         console.log("Highlighter chosen");
-        currBrush = new TLCHighlighter(changeAlphaRgba(currBrush.color, 0.2), drawingBrushSize);
+        currBrush = new SingleOpacityHighlighter(changeAlphaRgba(currBrush.color, 0.2), drawingBrushSize);
     });
 
     window.ipcRender.receive('canvas-choose-eraser', ( param ) => {
