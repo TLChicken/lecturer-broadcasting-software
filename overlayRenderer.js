@@ -305,7 +305,7 @@ function drawAtCoor(canvasLayers, x, y, lastDrawnCoors) {
 
     const contextLayers = [ctx, highlighterCtx];
 
-    let canvasCoors = getPointOnCanvas(highlighterC, x, y);
+    let canvasCoors = getPointOnCanvas(canvasLayers.topMostLayer, x, y);
     console.log("Drawing pixel at x: ", canvasCoors.x, "  y: ", canvasCoors.y);
 
     let brushResults = currBrush.drawAtCoor(canvasCoors.x, canvasCoors.y, lastDrawnCoors);
@@ -391,7 +391,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     highlighterCanvas.width = window.innerWidth;
     highlighterCanvas.height = window.innerHeight;
 
-    const canvasLayers = { mainC: c, highlighterC: highlighterCanvas };
+    const canvasLayers = { mainC: c, highlighterC: highlighterCanvas, topMostLayer: highlighterCanvas };
 
     console.log(window);
     console.log(window.innerWidth);

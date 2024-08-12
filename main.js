@@ -13,7 +13,7 @@ var version = process.argv[1].replace('--', '');
 let mainWindow;
 let mainOverlayWindow;
 
-let colorKeyBinds = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, UiohookKey.Backquote, UiohookKey.P, UiohookKey.H, UiohookKey.E]; // Numpad 1 to 0
+let colorKeyBinds = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, UiohookKey.Shift, UiohookKey.P, UiohookKey.H, UiohookKey.E]; // Numpad 1 to 0
 let selectedColors = [rgba(255, 0, 0, 1),
   rgba(255, 155, 0, 1),
   rgba(255, 255, 0, 1),
@@ -164,7 +164,7 @@ app.on('ready', () => {
     }
 
     if (mainOverlayWindow != null) {
-      if (colorKeyBinds[lbsConsts.keybindIndex_toggleOverlay] === e.keycode) {
+      if (colorKeyBinds[lbsConsts.keybindIndex_toggleOverlay] === e.keycode && e.ctrlKey) {
         if (isInDrawingMode) {
           drawingModeOff();
         } else {

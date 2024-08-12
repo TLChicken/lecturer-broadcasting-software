@@ -65,7 +65,7 @@ div{
     flex-direction: column;
     justify-content: space-around;
     gap: 4px;
-    width: 30%;
+    width: 40%;
 }
 
 .keybind-key-wrapper {
