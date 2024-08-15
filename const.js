@@ -2,6 +2,7 @@ exports.keybindIndex_toggleOverlay = 10;
 exports.keybindIndex_selectPen = 11;
 exports.keybindIndex_selectHighlighter = 12;
 exports.keybindIndex_selectEraser = 13;
+exports.keybindIndex_nextSlide = 14;
 
 
 exports.UiohookKeyREVERSE = {

@@ -71,6 +71,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
         window.ipcRender.send("change-keybind", { colorIndex: 14, textHtmlEle: target.id });
     });
 
+    document.getElementById('kb-next-slide-passthrough-button').addEventListener('click', (event) => {
+        const target = event.target;
+        window.ipcRender.send("change-keybind", { colorIndex: 15, textHtmlEle: target.id });
+    })
+
 
 
 

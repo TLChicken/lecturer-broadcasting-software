@@ -1,7 +1,8 @@
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS']=true
 const {app, BrowserWindow, ipcMain, screen, Menu, MenuItem} = require("electron");
 const shell = require('electron').shell;
-const runner = require('./app.js')
+const runner = require('./app.js');
+// const robot = require("robotjs");
 
 const lbsConsts = require('./const');
 
@@ -14,7 +15,7 @@ var version = process.argv[1].replace('--', '');
 let mainWindow;
 let mainOverlayWindow;
 
-let colorKeyBinds = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, UiohookKey.Shift, UiohookKey.P, UiohookKey.H, UiohookKey.E]; // Numpad 1 to 0
+let colorKeyBinds = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, UiohookKey.Shift, UiohookKey.P, UiohookKey.H, UiohookKey.E, UiohookKey.ArrowRight]; // Numpad 1 to 0
 let selectedColors = lbsConsts.colorThemes_themeColors['original'];
 
 function rgba(red, green, blue, alpha) {
@@ -230,6 +231,15 @@ app.on('ready', () => {
         // Toggle Eraser
         console.log("Eraser Toggled");
         mainOverlayWindow.webContents.send('canvas-choose-eraser', "param");
+      }
+
+      if (colorKeyBinds[lbsConsts.keybindIndex_nextSlide] === e.keycode) {
+        // Take screenshot
+
+        // Clear Overlay
+
+        // Use automation to go to the next slide
+
       }
 
       let colorSelectedCheck = colorKeyBinds.findIndex((n) => n == e.keycode);

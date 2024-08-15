@@ -22,6 +22,7 @@
   "dependencies": {
     "electron": "^30.1.0",
     "electron-edge-js": "^30.1.0",
+    "robotjs": "^0.6.0",
     "uiohook-napi": "^1.5.4"
   },
   "iohook": {
