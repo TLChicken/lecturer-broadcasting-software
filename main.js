@@ -2,7 +2,7 @@ process.env['ELECTRON_DISABLE_SECURITY_WARNINGS']=true
 const {app, BrowserWindow, ipcMain, screen, Menu, MenuItem} = require("electron");
 const shell = require('electron').shell;
 const runner = require('./app.js');
-// const robot = require("robotjs");
+const robot = require("robotjs");
 
 const lbsConsts = require('./const');
 
@@ -155,7 +155,7 @@ function createOverlayWindow() {
     forward: true
   });
 
-  mainOverlayWindow.setFocusable(false);
+  // mainOverlayWindow.setFocusable(false);
 
   mainOverlayWindow.on('closed', () => { mainOverlayWindow = null });
 
@@ -410,6 +410,14 @@ function drawingModeOn() {
   isInDrawingMode = true;
 
   mainOverlayWindow.webContents.send('draw-mode-activated', "param");
+
+  // Possible fix for Window's 10 dumb focus issue
+  // Not working yet until I get robotjs to work
+  // https://github.com/electron/electron/issues/2867#issuecomment-1685786893
+  // robot.mouseToggle("up");
+  mainOverlayWindow.show();
+  mainOverlayWindow.focus({steal: true});
+
 
   console.log("Started Drawing Mode");
 }
