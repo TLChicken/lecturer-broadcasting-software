@@ -2,7 +2,7 @@ process.env['ELECTRON_DISABLE_SECURITY_WARNINGS']=true
 const {app, BrowserWindow, ipcMain, screen, Menu, MenuItem} = require("electron");
 const shell = require('electron').shell;
 const runner = require('./app.js');
-const robot = require("robotjs");
+// const robot = require("robotjs");
 
 const lbsConsts = require('./const');
 
@@ -412,9 +412,18 @@ function drawingModeOn() {
   mainOverlayWindow.webContents.send('draw-mode-activated', "param");
 
   // Possible fix for Window's 10 dumb focus issue
-  // Not working yet until I get robotjs to work
   // https://github.com/electron/electron/issues/2867#issuecomment-1685786893
-  // robot.mouseToggle("up");
+
+  // Fixed!!!!!!!!!!!!
+  // Windows 10 does not allow apps to steal focus from other windows unless the app that
+  // is stealing the focus is already in focus originally. This causes some user experience issues
+  // EG: Open overlay then change ink color before drawing anything - The ink color keyboard shortcut
+  // will change the ink color but it will also input that key into whatever app was in focus before
+  // the overlay was opened
+
+  // WORKAROUND: Need to have a mouse or keyboard event originating from this app before
+  // it tries to steal focus from other windows
+  uIOhook.keyToggle(UiohookKey.Ctrl, "up");
   mainOverlayWindow.show();
   mainOverlayWindow.focus({steal: true});
 
