@@ -123,6 +123,46 @@ function createWindow () {
   })
 }
 
+function createToolbar() {
+  // Create the browser window.
+  mainWindow = new BrowserWindow({
+    width: 90,
+    height: 650,
+    x: 30,
+    y: 30,
+    minWidth: 90,
+    minHeight: 90,
+    maxWidth: 90,
+    maxHeight: 750,
+    alwaysOnTop: true,
+    frame: false,
+    transparent: true,
+    // resizable: false,
+    hasShadow: false,
+    webPreferences:{
+      nodeIntegration: false,
+      nodeIntegrationInWorker: false,
+      contextIsolation: true,
+      preload: `${__dirname}/mainToolbarPreload.js`,
+    }
+  });
+
+  // and load the index.html of the app.
+  mainWindow.loadURL(`file://${__dirname}/mainToolbar.html`);
+
+  // Open the DevTools.
+  // mainWindow.webContents.openDevTools()
+
+  // Emitted when the window is closed.
+  mainWindow.on('closed', function () {
+    // Dereference the window object, usually you would store windows
+    // in an array if your app supports multi windows, this is the time
+    // when you should delete the corresponding element.
+    mainWindow = null;
+    closeOverlayWindow();
+  })
+}
+
 function createOverlayWindow() {
   const { width, height } = screen.getPrimaryDisplay().workAreaSize;
   const dispScaleFactor = screen.getPrimaryDisplay().scaleFactor;
@@ -196,7 +236,8 @@ function drawAt(x, y) {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', () => {
-  createWindow();
+  // createWindow();
+  createToolbar();
 
   // ADD KEYBOARD SHORTCUTS
   uIOhook.on('keydown', (e) => {
@@ -411,7 +452,7 @@ function drawingModeOn() {
 
   mainOverlayWindow.webContents.send('draw-mode-activated', "param");
 
-  // Possible fix for Window's 10 dumb focus issue
+  // Possible fix for Window's 10 dumb focus issue using robotJS
   // https://github.com/electron/electron/issues/2867#issuecomment-1685786893
 
   // Fixed!!!!!!!!!!!!
@@ -486,7 +527,8 @@ app.on('activate', function () {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (mainWindow === null) {
-    createWindow();
+    // createWindow();
+    createToolbar();
   }
 });
 
@@ -535,3 +577,7 @@ ipcMain.on("set-menu-brush-size-slider-value", (event, args) => {
   mainWindow.webContents.send("set-pen-brush-size-slider-value-absolute", args.newBrushSize);
 })
 
+
+ipcMain.on("close-toolbar", (event, args) => {
+  mainWindow.close();
+})
