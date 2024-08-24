@@ -35,6 +35,11 @@ body {
     -webkit-app-region: no-drag;
 }
 
+.toolbar-button:hover {
+    background-color: #5399A2;
+    transition: background-color 0.2s;
+}
+
 .toolbar-button img {
     width: 100%;
     height: 100%;
