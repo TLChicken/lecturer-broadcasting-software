@@ -266,6 +266,8 @@ let currBrush = new TLCBrush();
 let drawingBrushSize = 10;
 let erasingBrushSize = 30;
 
+let isInDrawingMode = false;
+
 function rgba(red, green, blue, alpha) {
     return "rgba(" + red + ","+ green + ","+ blue + ","+ alpha + ")";
 }
@@ -435,6 +437,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
         const borderColor = rgba(0, 165, 255, 0.5);
         eraseBorder(ctx);
         drawBorder(ctx, borderColor);
+
+        isInDrawingMode = true;
     });
 
     window.ipcRender.receive('draw-mode-unactivated', ( param ) => {
@@ -442,6 +446,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
         const borderColor = rgba(170, 170, 170, 0.5);
         eraseBorder(ctx);
         drawBorder(ctx, borderColor);
+
+        isInDrawingMode = false;
     });
 
     window.ipcRender.receive('canvas-change-size-by', ( sizeOffset ) => {
@@ -494,7 +500,18 @@ document.addEventListener('DOMContentLoaded', (event) => {
     window.ipcRender.receive('canvas-erase-all', () => {
         console.log("Canvas Erase All Event Received");
 
-        
+        const canvasLayersArr = Object.values(canvasLayers);
+        canvasLayersArr.forEach( (currC) => {
+            const currCtx = currC.getContext('2d');
+            currCtx.clearRect(0, 0, currC.width, currC.height);
+
+            let borderColor = rgba(170, 170, 170, 0.5);
+            if (isInDrawingMode) {
+                borderColor = rgba(0, 165, 255, 0.5);
+            }
+            eraseBorder(ctx);
+            drawBorder(ctx, borderColor);
+        })
     });
 
     const borderColor = rgba(170, 170, 170, 0.5);
