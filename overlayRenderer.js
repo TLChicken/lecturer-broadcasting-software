@@ -491,6 +491,12 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
     });
 
+    window.ipcRender.receive('canvas-erase-all', () => {
+        console.log("Canvas Erase All Event Received");
+
+        
+    });
+
     const borderColor = rgba(170, 170, 170, 0.5);
     drawBorder(ctx, borderColor);
 

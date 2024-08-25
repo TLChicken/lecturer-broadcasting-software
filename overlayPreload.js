@@ -25,6 +25,8 @@ const ipc = {
             'canvas-change-size-by',
             'canvas-set-brush-size',
 
+            'canvas-erase-all',
+
             'draw-mode-activated',
             'draw-mode-unactivated'
         ],

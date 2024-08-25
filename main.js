@@ -144,11 +144,14 @@ function createToolbar() {
       nodeIntegrationInWorker: false,
       contextIsolation: true,
       preload: `${__dirname}/mainToolbarPreload.js`,
+      enableBlinkFeatures: 'calculate-native-win-occlusion',
     }
   });
 
   // and load the index.html of the app.
   mainWindow.loadURL(`file://${__dirname}/mainToolbar.html`);
+
+  mainWindow.setAlwaysOnTop(true, "pop-up-menu");
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
@@ -161,6 +164,8 @@ function createToolbar() {
     mainWindow = null;
     closeOverlayWindow();
   })
+
+  createOverlayWindow();
 }
 
 function createOverlayWindow() {
@@ -187,7 +192,7 @@ function createOverlayWindow() {
 
   mainOverlayWindow.loadURL(`file://${__dirname}/overlayStart.html`);
 
-  mainOverlayWindow.setAlwaysOnTop(true, "pop-up-menu");
+  mainOverlayWindow.setAlwaysOnTop(true, "main-menu");
   mainOverlayWindow.setFullScreen(true);
   mainOverlayWindow.setMinimizable(false);
   mainOverlayWindow.setResizable(false);
@@ -259,19 +264,19 @@ app.on('ready', () => {
       if (colorKeyBinds[lbsConsts.keybindIndex_selectPen] === e.keycode) {
         // Toggle Pen
         console.log("Pen Toggled");
-        mainOverlayWindow.webContents.send('canvas-choose-pen', "param");
+        selectPen();
       }
 
       if (colorKeyBinds[lbsConsts.keybindIndex_selectHighlighter] === e.keycode) {
         // Toggle Highlighter
         console.log("Highlighter Toggled");
-        mainOverlayWindow.webContents.send('canvas-choose-highlighter', "param");
+        selectHighlighter();
       }
 
       if (colorKeyBinds[lbsConsts.keybindIndex_selectEraser] === e.keycode) {
         // Toggle Eraser
         console.log("Eraser Toggled");
-        mainOverlayWindow.webContents.send('canvas-choose-eraser', "param");
+        selectEraser();
       }
 
       if (colorKeyBinds[lbsConsts.keybindIndex_nextSlide] === e.keycode) {
@@ -468,6 +473,7 @@ function drawingModeOn() {
   mainOverlayWindow.show();
   mainOverlayWindow.focus({steal: true});
 
+  mainWindow.webContents.send("enter-drawing-mode");
 
   console.log("Started Drawing Mode");
 }
@@ -483,6 +489,34 @@ function drawingModeOff() {
   mainOverlayWindow.webContents.send('draw-mode-unactivated', "param");
 
   console.log("Stopped Drawing Mode");
+
+  // So that ink goes above toolbar while drawing, and then toolbar goes
+  // back above ink after drawing
+  mainWindow.show();
+
+  mainWindow.webContents.send("exit-drawing-mode");
+}
+
+function selectPen() {
+  mainOverlayWindow.webContents.send('canvas-choose-pen', "param");
+
+  mainWindow.webContents.send("activate-pen");
+}
+
+function selectHighlighter() {
+  mainOverlayWindow.webContents.send('canvas-choose-highlighter', "param");
+
+  mainWindow.webContents.send("activate-highlighter");
+}
+
+function selectEraser() {
+  mainOverlayWindow.webContents.send('canvas-choose-eraser', "param");
+
+  mainWindow.webContents.send("activate-eraser");
+}
+
+function selectEraseAll() {
+  mainOverlayWindow.webContents.send('canvas-erase-all');
 }
 
 function changeKeybind(keybindIndex, changedSuccessfullyCallback) {
@@ -575,6 +609,36 @@ ipcMain.on("set-pen-brush-size-absolute", (event, args) => {
 
 ipcMain.on("set-menu-brush-size-slider-value", (event, args) => {
   mainWindow.webContents.send("set-pen-brush-size-slider-value-absolute", args.newBrushSize);
+})
+
+
+
+
+
+
+
+ipcMain.on("toggle-drawing-mode", (event, args) => {
+  if (isInDrawingMode) {
+    drawingModeOff();
+  } else {
+    drawingModeOn();
+  }
+})
+
+ipcMain.on("select-pen", (event, args) => {
+  selectPen();
+})
+
+ipcMain.on("select-highlighter", (event, args) => {
+  selectHighlighter();
+})
+
+ipcMain.on("select-eraser", (event, args) => {
+  selectEraser();
+})
+
+ipcMain.on("select-erase-all", (event, args) => {
+  selectEraseAll();
 })
 
 

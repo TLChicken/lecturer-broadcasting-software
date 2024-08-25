@@ -8,22 +8,36 @@ const ipc = {
     'render': {
         // Renderer -> Main
         'send': [
-            'change-keybind',
-            'get-keybind-key',
-            'change-color',
-            'get-current-color',
-            'start-overlay',
-            'close-overlay',
-            'set-pen-brush-size-absolute',
+            // 'change-keybind',
+            // 'get-keybind-key',
+            // 'change-color',
+            // 'get-current-color',
+            // 'start-overlay',
+            // 'close-overlay',
+            // 'set-pen-brush-size-absolute',
+
+            'toggle-drawing-mode',
+            'select-pen',
+            'select-highlighter',
+            'select-eraser',
+
+            'select-erase-all',
 
             'close-toolbar'
 
         ],
         // Main -> Renderer
         'receive': [
-            'response-get-keybind-key',
-            'response-get-color',
-            'set-pen-brush-size-slider-value-absolute'
+            // 'response-get-keybind-key',
+            // 'response-get-color',
+            // 'set-pen-brush-size-slider-value-absolute',
+
+            'enter-drawing-mode',
+            'exit-drawing-mode',
+
+            'activate-pen',
+            'activate-highlighter',
+            'activate-eraser'
         ],
         // Renderer -> Main -> Renderer
         'sendReceive': []
