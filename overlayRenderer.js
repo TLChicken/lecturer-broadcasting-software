@@ -356,7 +356,7 @@ function toggleZoomScreen() {
 }
 
 function drawBorder(ctx, borderColor) {
-    const borderThickness = 10;
+    const borderThickness = 5;
 
     // Vertical Bounds
     drawRectangle(ctx, borderColor, 0, 0, borderThickness, window.innerHeight);
@@ -369,7 +369,7 @@ function drawBorder(ctx, borderColor) {
 }
 
 function eraseBorder(ctx) {
-    const borderThickness = 10;
+    const borderThickness = 5;
 
     // Vertical Bounds
     ctx.clearRect(0, 0, borderThickness, window.innerHeight);
@@ -434,7 +434,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
     window.ipcRender.receive('draw-mode-activated', ( param ) => {
         console.log("Draw Mode activated");
-        const borderColor = rgba(0, 165, 255, 0.5);
+        const borderColor = rgba(0, 165, 255, 0.3);
         eraseBorder(ctx);
         drawBorder(ctx, borderColor);
 
@@ -443,7 +443,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
     window.ipcRender.receive('draw-mode-unactivated', ( param ) => {
         console.log("Draw Mode UNactivated");
-        const borderColor = rgba(170, 170, 170, 0.5);
+        const borderColor = rgba(170, 170, 170, 0.3);
         eraseBorder(ctx);
         drawBorder(ctx, borderColor);
 
@@ -505,16 +505,16 @@ document.addEventListener('DOMContentLoaded', (event) => {
             const currCtx = currC.getContext('2d');
             currCtx.clearRect(0, 0, currC.width, currC.height);
 
-            let borderColor = rgba(170, 170, 170, 0.5);
+            let borderColor = rgba(170, 170, 170, 0.3);
             if (isInDrawingMode) {
-                borderColor = rgba(0, 165, 255, 0.5);
+                borderColor = rgba(0, 165, 255, 0.3);
             }
             eraseBorder(ctx);
             drawBorder(ctx, borderColor);
         })
     });
 
-    const borderColor = rgba(170, 170, 170, 0.5);
+    const borderColor = rgba(170, 170, 170, 0.3);
     drawBorder(ctx, borderColor);
 
     console.log("Overlay Render DOMContentLoaded ran");
