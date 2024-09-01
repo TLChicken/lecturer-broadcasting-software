@@ -1,14 +1,14 @@
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS']=true
 const {app, BrowserWindow, ipcMain, screen, Menu, MenuItem} = require("electron");
 const shell = require('electron').shell;
-const runner = require('./app.js');
+// const runner = require('./app.js');
 // const robot = require("robotjs");
 
 const lbsConsts = require('./const');
 
 const { uIOhook, UiohookKey, WheelDirection} = require('uiohook-napi');
 
-var version = process.argv[1].replace('--', '');
+// var version = process.argv[1].replace('--', '');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -192,7 +192,7 @@ function createOverlayWindow() {
 
   mainOverlayWindow.loadURL(`file://${__dirname}/overlayStart.html`);
 
-  mainOverlayWindow.setAlwaysOnTop(true, "main-menu");
+  mainOverlayWindow.setAlwaysOnTop(true, "pop-up-menu");
   mainOverlayWindow.setFullScreen(true);
   mainOverlayWindow.setMinimizable(false);
   mainOverlayWindow.setResizable(false);
@@ -236,6 +236,8 @@ function drawAt(x, y) {
     }
   }
 }
+
+let mouseMoveTriggerOverlayMovedOnTop = false;
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -303,18 +305,45 @@ app.on('ready', () => {
 
   uIOhook.on('mousemove', (event) => {
     drawAt(event.x, event.y);
+
+
+    if (!mouseMoveTriggerOverlayMovedOnTop && isInDrawingMode) {
+      uIOhook.keyToggle(UiohookKey.Ctrl, "up");
+      mainWindow.show();
+      // mainOverlayWindow.show();
+      // mainOverlayWindow.moveTop();
+      // mainWindow.moveTop();
+
+      mouseMoveTriggerOverlayMovedOnTop = true;
+    }
+
   });
 
   uIOhook.on('mousedown', (event) => {
     isMouseDown = true;
     console.log("Pressed mouse");
     drawAt(event.x, event.y);
+
+    uIOhook.keyToggle(UiohookKey.Ctrl, "up");
+    // mainWindow.show();
+    // mainOverlayWindow.show();
+    // mainOverlayWindow.moveTop();
+    mainWindow.moveTop();
+
   });
 
   uIOhook.on('mouseup', (event) => {
     isMouseDown = false;
 
     lastDrawnCoors = { x: -1, y: -1}; // So I can draw on the same location again by clicking again
+
+    uIOhook.keyToggle(UiohookKey.Ctrl, "up");
+    // mainWindow.show();
+    // mainOverlayWindow.show();
+    // mainOverlayWindow.moveTop();
+    mainWindow.moveTop();
+
+    mouseMoveTriggerOverlayMovedOnTop = false;
   });
 
   uIOhook.on('wheel', (event) => {
@@ -475,6 +504,8 @@ function drawingModeOn() {
 
   mainWindow.webContents.send("enter-drawing-mode");
 
+  mainWindow.show();
+
   console.log("Started Drawing Mode");
 }
 
@@ -566,9 +597,9 @@ app.on('activate', function () {
   }
 });
 
-ipcMain.on("run", (event, args) => {
-  runner.run(mainWindow);
-});
+// ipcMain.on("run", (event, args) => {
+//   runner.run(mainWindow);
+// });
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.

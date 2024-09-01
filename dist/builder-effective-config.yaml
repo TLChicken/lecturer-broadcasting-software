@@ -1,0 +1,9 @@
+directories:
+  output: dist
+  buildResources: build
+appId: com.tlc.live-annotation-tools
+productName: Live Annotation Tools
+win:
+  target: portable
+files: []
+electronVersion: 30.4.0

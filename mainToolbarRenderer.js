@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.ipcRender.receive("exit-drawing-mode", () => {
         const button = document.getElementById("mouse");
         if (button) {
-            button.style.backgroundColor = "#396E55";
+            button.style.backgroundColor = "#2B4D3C";
         }
     })
 

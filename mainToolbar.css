@@ -41,11 +41,16 @@ body {
 }
 
 .drawing-mode-button {
-    background-color: #396E55;
+    background-color: #2B4D3C;
 }
 
 .drawing-mode-button:hover {
     background-color: #5399A2;
+    transition: background-color 0.2s;
+}
+
+.disabled-toolbar-button:hover {
+    background-color: #000000;
     transition: background-color 0.2s;
 }
 
