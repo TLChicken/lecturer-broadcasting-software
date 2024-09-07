@@ -9,41 +9,109 @@
     <link rel="stylesheet" href="mainToolbar.css">
 </head>
 <body>
-<div class="toolbar">
-    <button id="mouse" class="toolbar-button drawing-mode-button">
-        <img src="assets/icons/toolbar/mouse-tool-1.png" alt="Select">
-    </button>
-    <button id="pen" class="toolbar-button">
-        <img src="assets/icons/toolbar/pen-1.png" alt="Pen">
-    </button>
-    <button id="highlighter" class="toolbar-button">
-        <img src="assets/icons/toolbar/highlighter-1.png" alt="Highlighter">
-    </button>
-    <button id="eraser" class="toolbar-button">
-        <img src="assets/icons/toolbar/eraser-1.png" alt="Eraser">
-    </button>
-    <button id="startPresentation" class="toolbar-button disabled-toolbar-button" disabled>
-        <img src="assets/icons/toolbar/start-recording-presentation-1.png" alt="Start Recording Presentation">
-    </button>
-    <button id="colorOptions" class="toolbar-button disabled-toolbar-button" disabled>
-        <img src="assets/icons/toolbar/color-options-1.png" alt="Color Options">
-    </button>
-    <button id="clearAll" class="toolbar-button">
-        <img src="assets/icons/toolbar/dustbin-1.png" alt="Clear All">
-    </button>
-    <button id="save" class="toolbar-button disabled-toolbar-button" disabled>
-        <img src="assets/icons/toolbar/save-1.png" alt="Save">
-    </button>
-    <button id="keybindSettings" class="toolbar-button disabled-toolbar-button" disabled>
-        <img src="assets/icons/toolbar/keybind-options-1.png" alt="Keybind Settings">
-    </button>
-    <button id="minimiseToolbar" class="toolbar-button disabled-toolbar-button" disabled>
-        <img src="assets/icons/toolbar/minimize-1.png" alt="Minimize">
-    </button>
-    <button id="exit" class="toolbar-button">
+<div id="toolbar-container">
+    <div class="toolbar">
+        <button id="mouse" class="toolbar-button drawing-mode-button">
+            <img src="assets/icons/toolbar/mouse-tool-1.png" alt="Select">
+        </button>
+        <button id="pen" class="toolbar-button">
+            <img src="assets/icons/toolbar/pen-1.png" alt="Pen">
+        </button>
+        <button id="highlighter" class="toolbar-button">
+            <img src="assets/icons/toolbar/highlighter-1.png" alt="Highlighter">
+        </button>
+        <button id="eraser" class="toolbar-button">
+            <img src="assets/icons/toolbar/eraser-1.png" alt="Eraser">
+        </button>
+        <button id="startPresentation" class="toolbar-button disabled-toolbar-button" disabled>
+            <img src="assets/icons/toolbar/start-recording-presentation-1.png" alt="Start Recording Presentation">
+        </button>
+        <button id="colorOptions" class="toolbar-button disabled-toolbar-button" disabled>
+            <img src="assets/icons/toolbar/color-options-1.png" alt="Color Options">
+        </button>
+        <button id="clearAll" class="toolbar-button">
+            <img src="assets/icons/toolbar/dustbin-1.png" alt="Clear All">
+        </button>
+        <button id="save" class="toolbar-button disabled-toolbar-button" disabled>
+            <img src="assets/icons/toolbar/save-1.png" alt="Save">
+        </button>
+        <button id="keybindSettings" class="toolbar-button">
+            <img src="assets/icons/toolbar/keybind-options-1.png" alt="Keybind Settings">
+        </button>
+        <button id="minimiseToolbar" class="toolbar-button disabled-toolbar-button" disabled>
+            <img src="assets/icons/toolbar/minimize-1.png" alt="Minimize">
+        </button>
+        <button id="exit" class="toolbar-button">
+            <img src="assets/icons/close-btn-1.png" alt="Exit">
+        </button>
+    </div>
+</div>
+
+<div id="settings-container">
+    <button class="close-button" onclick="closeSettings()">
         <img src="assets/icons/close-btn-1.png" alt="Exit">
     </button>
+    <h2>Colors and Keybinds</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Color / Action</th>
+            <th>Keybind</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Color 8 row -->
+        <tr>
+            <td>
+                Color 8: <div class="color-box" id="color8" style="background-color: #00FFFF;" onclick="openColorPicker(8)"></div>
+            </td>
+            <td>
+                <button class="keybind-btn" id="kb-color-8" onclick="changeColorKeybind('kb-color-8')">8</button>
+            </td>
+        </tr>
+        <!-- Color 9 row -->
+        <tr>
+            <td>
+                Color 9: <div class="color-box" id="color9" style="background-color: #FFA500;" onclick="openColorPicker(9)"></div>
+            </td>
+            <td>
+                <button class="keybind-btn" id="kb-color-9" onclick="changeColorKeybind('kb-color-9')">9</button>
+            </td>
+        </tr>
+        <!-- Color 10 row -->
+        <tr>
+            <td>
+                Color 10: <div class="color-box" id="color10" style="background-color: #FFFFFF;" onclick="openColorPicker(10)"></div>
+            </td>
+            <td>
+                <button class="keybind-btn" id="kb-color-10" onclick="changeColorKeybind('kb-color-10')">0</button>
+            </td>
+        </tr>
+        <!-- Add other color rows as necessary -->
+
+        <!-- Other Actions -->
+        <tr>
+            <td>Toggle Drawing Mode:</td>
+            <td>
+                <span style="font-family: Ubuntu-Bold">CTRL + </span>
+                <button class="keybind-btn" id="kb-toggle-drawing" onclick="changeKeybind('kb-toggle-drawing', 11)">Shift</button></td>
+        </tr>
+        <tr>
+            <td>Select Pen:</td>
+            <td><button class="keybind-btn" id="kb-select-pen" onclick="changeKeybind('kb-select-pen', 12)">P</button></td>
+        </tr>
+        <tr>
+            <td>Select Highlighter:</td>
+            <td><button class="keybind-btn" id="kb-select-highlighter" onclick="changeKeybind('kb-select-highlighter', 13)">H</button></td>
+        </tr>
+        <tr>
+            <td>Select Eraser:</td>
+            <td><button class="keybind-btn" id="kb-select-eraser" onclick="changeKeybind('kb-select-eraser', 14)">E</button></td>
+        </tr>
+        </tbody>
+    </table>
 </div>
+
 </body>
 </html>
 

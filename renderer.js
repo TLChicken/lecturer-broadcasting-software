@@ -31,7 +31,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
             const buttonId = target.id;
             console.log('Button clicked:', buttonId.slice(8));
 
-            // Perform actions based on the buttonId
             window.ipcRender.send("change-keybind", { colorIndex: parseInt(buttonId.slice(8), 10), textHtmlEle: buttonId });
         }
     });
@@ -44,7 +43,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
             const colorInputId = target.id;
             console.log('Color Input clicked:', colorInputId.slice(5));
 
-            // Perform actions based on the color input ID
             window.ipcRender.send("change-color", { colorIndex: parseInt(colorInputId.slice(5), 10), newColor: target.value, textHtmlEle: colorInputId });
         }
     });

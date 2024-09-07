@@ -9,9 +9,37 @@ body {
     align-items: center;
     height: 100vh;
 
-    -webkit-user-select: none;
-    -webkit-app-region: drag;
 }
+
+#toolbar-container {
+    display: block;
+    padding: 10px;
+    border-radius: 8px;
+    width: 70px;
+    background-color: #505050;
+    border: 2px solid #3b3b3b;
+
+    -webkit-app-region: drag;
+    -webkit-user-select: none;
+}
+
+#settings-container {
+    display: none;
+    padding: 20px;
+    border-radius: 8px;
+    width: 300px;
+    background-color: #505050;
+    border: 2px solid #3b3b3b;
+
+    color: #CACACA;
+}
+
+@font-face {
+    font-family: Ubuntu-Bold;
+    src: url("assets/fonts/Ubuntu-Bold.ttf");
+}
+
+/* Toolbar Styles */
 
 .toolbar {
     display: flex;
@@ -66,6 +94,60 @@ body {
     -webkit-user-select: none;
     -ms-user-select: none;
 }
+
+
+
+/* Settings Window Styles */
+
+table {
+    width: 100%;
+    border-spacing: 10px;
+}
+
+h2 {
+    font-family: Ubuntu-Bold;
+}
+
+th, td {
+    padding: 8px;
+    text-align: left;
+
+    font-family: Ubuntu-Bold;
+}
+
+.keybind-btn {
+    padding: 8px;
+    background-color: #333;
+    border: 1px solid #555;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.keybind-btn:hover {
+    background-color: #5399A2;
+    transition: background-color 0.2s;
+}
+
+.color-box {
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: transparent;
+    border: none;
+    font-size: 20px;
+    color: #fff;
+    cursor: pointer;
+}
+
 
 
 

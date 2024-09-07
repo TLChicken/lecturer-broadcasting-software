@@ -23,7 +23,14 @@ const ipc = {
 
             'select-erase-all',
 
-            'close-toolbar'
+            'close-toolbar',
+
+            'resize-window-absolute',
+
+            'change-keybind',
+            'get-keybind-key',
+            'change-color',
+            'get-current-color'
 
         ],
         // Main -> Renderer
@@ -37,7 +44,10 @@ const ipc = {
 
             'activate-pen',
             'activate-highlighter',
-            'activate-eraser'
+            'activate-eraser',
+
+            'response-get-keybind-key',
+            'response-get-color',
         ],
         // Renderer -> Main -> Renderer
         'sendReceive': []

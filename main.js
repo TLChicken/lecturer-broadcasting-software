@@ -130,10 +130,11 @@ function createToolbar() {
     height: 650,
     x: 30,
     y: 30,
-    minWidth: 90,
-    minHeight: 90,
-    maxWidth: 90,
-    maxHeight: 750,
+    // minWidth: 90,
+    // minHeight: 90,
+    // maxWidth: 90,
+    // maxHeight: 750,
+    resizable: false,
     alwaysOnTop: true,
     frame: false,
     transparent: true,
@@ -675,4 +676,17 @@ ipcMain.on("select-erase-all", (event, args) => {
 
 ipcMain.on("close-toolbar", (event, args) => {
   mainWindow.close();
+})
+
+ipcMain.on("resize-window-absolute", (event, args) => {
+  console.log("Main Toolbar Window Resize Event RECEIVED");
+  console.log(args);
+
+  // BrowserWindow set size cannot shrink resizable window but can grow it - Weird Electron Bug
+  // https://github.com/electron/electron/issues/15560
+  // Workaround is to make the window resizable first then set it then make it unresizable again
+  mainWindow.setResizable(true);
+  mainWindow.setSize(args.width, args.height);
+  // mainWindow.setResizable(false);
+
 })

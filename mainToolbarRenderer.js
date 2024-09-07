@@ -19,7 +19,9 @@ document.addEventListener('DOMContentLoaded', () => {
             window.ipcRender.send("select-erase-all");
         },
         save: () => console.log('Save action initiated'),
-        keybindSettings: () => console.log('Settings opened'),
+        keybindSettings: () => {
+            openSettings();
+        },
         minimiseToolbar: () => console.log('Minimize Toolbar activated'),
         exit: () => {
             window.ipcRender.send("close-toolbar");
@@ -67,6 +69,11 @@ document.addEventListener('DOMContentLoaded', () => {
         toggleButtonOn("eraser");
     })
 
+    window.ipcRender.receive("response-get-keybind-key", ( keyString, textHtmlEle ) => {
+        console.log("New keystring received: ", keyString);
+        document.getElementById(textHtmlEle).innerText = keyString;
+    });
+
 
     // SET UP TOOLBAR
     // toggleButtonOn("mouse");
@@ -86,4 +93,44 @@ function toggleButtonOff(buttonId) {
     if (button) {
         button.style.backgroundColor = "transparent";
     }
+}
+
+function openSettings() {
+    document.getElementById('toolbar-container').style.display = 'none';
+    document.getElementById('settings-container').style.display = 'block';
+
+    window.ipcRender.send("resize-window-absolute", { width: 400, height: 600 });
+
+}
+
+function closeSettings() {
+    document.getElementById('settings-container').style.display = 'none';
+    document.getElementById('toolbar-container').style.display = 'block';
+
+
+    window.ipcRender.send("resize-window-absolute", { width: 90, height: 650 });
+}
+
+function changeColorKeybind(htmlIndexEle) {
+    const buttonId = htmlIndexEle;
+    console.log('Color Keybind Button clicked:', buttonId.slice(9));
+
+    changeKeybind(htmlIndexEle, parseInt(buttonId.slice(9), 10));
+}
+
+function changeKeybind(htmlIndexEle, keybindArrIndexPlusOne) {
+    console.log('Changing Keybind: ', keybindArrIndexPlusOne);
+    window.ipcRender.send("change-keybind", { colorIndex: keybindArrIndexPlusOne, textHtmlEle: htmlIndexEle });
+}
+
+function openColorPicker(colorId) {
+    const colorPicker = document.createElement('input');
+    colorPicker.type = 'color';
+    colorPicker.addEventListener('input', (event) => {
+        const colorBox = document.getElementById(`color${colorId}`);
+        colorBox.style.backgroundColor = event.target.value;
+        console.log(`Selected color for color ${colorId}: ${event.target.value}`);
+
+    });
+    colorPicker.click();
 }
