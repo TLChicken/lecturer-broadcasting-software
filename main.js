@@ -202,6 +202,7 @@ function createOverlayWindow() {
   });
 
   // mainOverlayWindow.setFocusable(false);
+  mainOverlayWindow.setSkipTaskbar(true);
 
   mainOverlayWindow.on('closed', () => { mainOverlayWindow = null });
 
@@ -219,7 +220,7 @@ function closeOverlayWindow() {
 }
 
 function drawAt(x, y) {
-  if (isInDrawingMode && isMouseDown && (mainOverlayWindow != null)) {
+  if (isInDrawingMode && isMouseDown && (mainOverlayWindow.isFocused())) {
     if (lastDrawnCoors.x == x && lastDrawnCoors.y == y) {
       // Skip drawing on the same coordinate
       console.log("Same as last coor");
@@ -258,14 +259,15 @@ app.on('ready', () => {
       return; // Dont trigger actual functions of keybind while setting it
     }
 
-    if (mainOverlayWindow != null) {
-      if (colorKeyBinds[lbsConsts.keybindIndex_toggleOverlay] === e.keycode && e.ctrlKey) {
-        if (isInDrawingMode) {
-          drawingModeOff();
-        } else {
-          drawingModeOn();
-        }
+    if (colorKeyBinds[lbsConsts.keybindIndex_toggleOverlay] === e.keycode && e.ctrlKey) {
+      if (isInDrawingMode) {
+        drawingModeOff();
+      } else {
+        drawingModeOn();
       }
+    }
+
+    if (isInDrawingMode) {
 
       if (colorKeyBinds[lbsConsts.keybindIndex_selectPen] === e.keycode) {
         // Toggle Pen
