@@ -72,6 +72,12 @@ document.addEventListener('DOMContentLoaded', () => {
     window.ipcRender.receive("response-get-keybind-key", ( keyString, textHtmlEle ) => {
         console.log("New keystring received: ", keyString);
         document.getElementById(textHtmlEle).innerText = keyString;
+
+        // Re-enable button since new key was chosen
+        let kbBtnList = Array.from(document.querySelectorAll('.keybind-btn'));
+        kbBtnList.forEach(btn => btn.disabled = false);
+
+        document.getElementById(textHtmlEle).style.backgroundColor = "inherit";
     });
 
 
@@ -121,6 +127,12 @@ function changeColorKeybind(htmlIndexEle) {
 function changeKeybind(htmlIndexEle, keybindArrIndexPlusOne) {
     console.log('Changing Keybind: ', keybindArrIndexPlusOne);
     window.ipcRender.send("change-keybind", { colorIndex: keybindArrIndexPlusOne, textHtmlEle: htmlIndexEle });
+
+    // Make button not clickable while choosing key
+    let kbBtnList = Array.from(document.querySelectorAll('.keybind-btn'));
+    kbBtnList.forEach(btn => btn.disabled = true);
+
+    document.getElementById(htmlIndexEle).style.backgroundColor = "#FF0000";
 }
 
 function openColorPicker(colorId) {

@@ -250,8 +250,11 @@ app.on('ready', () => {
   // ADD KEYBOARD SHORTCUTS
   uIOhook.on('keydown', (e) => {
     if (currentlyChangingKeybindCallback != null) {
-      currentlyChangingKeybindCallback(e.keycode);
-      currentlyChangingKeybindCallback = null;
+      let changedSuccessfully = currentlyChangingKeybindCallback(e.keycode);
+
+      if (changedSuccessfully) {
+        currentlyChangingKeybindCallback = null;
+      }
       return; // Dont trigger actual functions of keybind while setting it
     }
 
@@ -559,12 +562,15 @@ function changeKeybind(keybindIndex, changedSuccessfullyCallback) {
     if (colorKeyBinds.includes(detectedKey)) {
       // Display Error
       console.log("Keybind not changed, CONFLICTING KEY")
+      return false;
+
     } else {
       colorKeyBinds[keybindIndex - 1] = detectedKey;
       console.log("Keybind Changed Successfully");
       console.log(lbsConsts.UiohookKeyREVERSE[detectedKey]);
 
       changedSuccessfullyCallback(lbsConsts.UiohookKeyREVERSE[detectedKey]);
+      return true;
     }
   }
 
@@ -618,6 +624,7 @@ ipcMain.on("close-overlay", (event, args) => {
 ipcMain.on("change-keybind", (event, args) => {
   console.log("Change Keybind Event RECEIVED");
   console.log(args);
+
   changeKeybind(args.colorIndex, ( newKeyString ) => {
     mainWindow.webContents.send('response-get-keybind-key', newKeyString, args.textHtmlEle)
   });

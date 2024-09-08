@@ -217,6 +217,13 @@ table td {
     transition: background-color 0.2s;
 }
 
+.keybind-btn:disabled {
+    /*background-color: #FF0000;*/
+    /*transition: background-color 0.1s;*/
+
+    cursor: not-allowed;
+}
+
 .color-box {
     width: 20px;
     height: 20px;
@@ -234,6 +241,8 @@ table td {
     font-size: 20px;
     color: #fff;
     cursor: pointer;
+
+    -webkit-app-region: no-drag;
 }
 
 
