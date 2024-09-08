@@ -18,7 +18,7 @@ body {
     display: block;
     padding: 10px;
     border-radius: 8px;
-    width: 70px;
+    width: 90px;
     background-color: #505050;
     border: 2px solid #3b3b3b;
 
@@ -37,6 +37,17 @@ body {
     -webkit-app-region: no-drag;
     /*-webkit-user-select: text;  Enable if u want the user to be able to highlight the text, which I most likely dont want*/
 }
+
+#minimized-container {
+    display: none;
+    padding: 10px;
+    border-radius: 8px;
+    width: 90px;
+    background-color: #505050;
+    border: 2px solid #3b3b3b;
+
+}
+
 
 @font-face {
     font-family: Ubuntu-Bold;
@@ -212,7 +223,7 @@ table td {
     cursor: pointer;
 }
 
-.keybind-btn:hover {
+.keybind-btn:hover:enabled {
     background-color: #5399A2;
     transition: background-color 0.2s;
 }

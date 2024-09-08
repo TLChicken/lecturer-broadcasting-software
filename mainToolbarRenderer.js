@@ -22,9 +22,14 @@ document.addEventListener('DOMContentLoaded', () => {
         keybindSettings: () => {
             openSettings();
         },
-        minimiseToolbar: () => console.log('Minimize Toolbar activated'),
+        minimiseToolbar: () => {
+            minimiseToolbar();
+        },
         exit: () => {
             window.ipcRender.send("close-toolbar");
+        },
+        maximiseToolbar: () => {
+            maximiseToolbar();
         }
     };
 
@@ -38,17 +43,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     window.ipcRender.receive("enter-drawing-mode", () => {
-        const button = document.getElementById("mouse");
-        if (button) {
-            button.style.backgroundColor = "#3F986D";
-        }
+        let buttonsToUpdId = ["mouse", "maximiseToolbar"];
+
+        buttonsToUpdId.forEach((eleId) => {
+            const button = document.getElementById(eleId);
+            if (button) {
+                button.style.backgroundColor = "#3F986D";
+            }
+        })
     })
 
     window.ipcRender.receive("exit-drawing-mode", () => {
-        const button = document.getElementById("mouse");
-        if (button) {
-            button.style.backgroundColor = "#2B4D3C";
-        }
+        let buttonsToUpdId = ["mouse", "maximiseToolbar"];
+
+        buttonsToUpdId.forEach((eleId) => {
+            const button = document.getElementById(eleId);
+            if (button) {
+                button.style.backgroundColor = "#2B4D3C";
+            }
+        })
     })
 
     window.ipcRender.receive("activate-pen", () => {
@@ -113,6 +126,20 @@ function closeSettings() {
     document.getElementById('settings-container').style.display = 'none';
     document.getElementById('toolbar-container').style.display = 'block';
 
+
+    window.ipcRender.send("resize-window-absolute", { width: 90, height: 650 });
+}
+
+function minimiseToolbar() {
+    document.getElementById('toolbar-container').style.display = 'none';
+    document.getElementById('minimized-container').style.display = 'block';
+
+    window.ipcRender.send("resize-window-absolute", { width: 90, height: 70 });
+}
+
+function maximiseToolbar() {
+    document.getElementById('toolbar-container').style.display = 'block';
+    document.getElementById('minimized-container').style.display = 'none';
 
     window.ipcRender.send("resize-window-absolute", { width: 90, height: 650 });
 }
