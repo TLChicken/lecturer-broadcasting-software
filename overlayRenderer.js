@@ -1,4 +1,21 @@
 
+
+function rgba(red, green, blue, alpha) {
+    return "rgba(" + red + ","+ green + ","+ blue + ","+ alpha + ")";
+}
+
+function rgb(red, green, blue) {
+    return "rgb(" + red + ","+ green + ","+ blue + ")";
+}
+
+function changeAlphaRgba(rgbaStr, newAlpha) {
+    let alphaCommaIndex = rgbaStr.lastIndexOf(",");
+    let removedOldAlphaRgbaStr = rgbaStr.slice(0, alphaCommaIndex);
+
+    return removedOldAlphaRgbaStr + "," + newAlpha + ")";
+}
+
+
 function getIntermediateCoordinates(coor1, coor2, numPixelsApart) {
     let x1 = coor1.x;
     let x2 = coor2.x;
@@ -268,20 +285,6 @@ let erasingBrushSize = 30;
 
 let isInDrawingMode = false;
 
-function rgba(red, green, blue, alpha) {
-    return "rgba(" + red + ","+ green + ","+ blue + ","+ alpha + ")";
-}
-
-function rgb(red, green, blue) {
-    return "rgb(" + red + ","+ green + ","+ blue + ")";
-}
-
-function changeAlphaRgba(rgbaStr, newAlpha) {
-    let alphaCommaIndex = rgbaStr.lastIndexOf(",");
-    let removedOldAlphaRgbaStr = rgbaStr.slice(0, alphaCommaIndex);
-
-    return removedOldAlphaRgbaStr + "," + newAlpha + ")";
-}
 
 function getPointOnCanvas(c, x, y) {
     let box = c.getBoundingClientRect();
