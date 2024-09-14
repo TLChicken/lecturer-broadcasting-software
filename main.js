@@ -8,6 +8,7 @@ const lbsConsts = require('./const');
 const { rgba, rgbaToRbg, hexToRgba, rgba2hex, rgbToHex } = require("./models/colorUtils")
 
 const { uIOhook, UiohookKey, WheelDirection} = require('uiohook-napi');
+const { UserSettings } = require('./models/userSettings');
 
 // var version = process.argv[1].replace('--', '');
 
@@ -16,8 +17,10 @@ const { uIOhook, UiohookKey, WheelDirection} = require('uiohook-napi');
 let mainWindow;
 let mainOverlayWindow;
 
-let colorKeyBinds = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, UiohookKey.Shift, UiohookKey.P, UiohookKey.H, UiohookKey.E, UiohookKey.ArrowRight]; // Numpad 1 to 0
-let selectedColors = lbsConsts.colorThemes_themeColors['original'];
+let userSettings = new UserSettings();
+
+// let userSettings.colorKeyBinds = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, UiohookKey.Shift, UiohookKey.P, UiohookKey.H, UiohookKey.E, UiohookKey.ArrowRight]; // Numpad 1 to 0
+// let userSettings.selectedColors = lbsConsts.colorThemes_themeColors['original'];
 
 let isInDrawingMode = false;
 let isMouseDown = false;
@@ -192,7 +195,7 @@ app.on('ready', () => {
       return; // Dont trigger actual functions of keybind while setting it
     }
 
-    if (colorKeyBinds[lbsConsts.keybindIndex_toggleOverlay] === e.keycode && e.ctrlKey) {
+    if (userSettings.colorKeyBinds[lbsConsts.keybindIndex_toggleOverlay] === e.keycode && e.ctrlKey) {
       if (isInDrawingMode) {
         drawingModeOff();
       } else {
@@ -202,25 +205,25 @@ app.on('ready', () => {
 
     if (isInDrawingMode) {
 
-      if (colorKeyBinds[lbsConsts.keybindIndex_selectPen] === e.keycode) {
+      if (userSettings.colorKeyBinds[lbsConsts.keybindIndex_selectPen] === e.keycode) {
         // Toggle Pen
         console.log("Pen Toggled");
         selectPen();
       }
 
-      if (colorKeyBinds[lbsConsts.keybindIndex_selectHighlighter] === e.keycode) {
+      if (userSettings.colorKeyBinds[lbsConsts.keybindIndex_selectHighlighter] === e.keycode) {
         // Toggle Highlighter
         console.log("Highlighter Toggled");
         selectHighlighter();
       }
 
-      if (colorKeyBinds[lbsConsts.keybindIndex_selectEraser] === e.keycode) {
+      if (userSettings.colorKeyBinds[lbsConsts.keybindIndex_selectEraser] === e.keycode) {
         // Toggle Eraser
         console.log("Eraser Toggled");
         selectEraser();
       }
 
-      if (colorKeyBinds[lbsConsts.keybindIndex_nextSlide] === e.keycode) {
+      if (userSettings.colorKeyBinds[lbsConsts.keybindIndex_nextSlide] === e.keycode) {
         // Take screenshot
 
         // Clear Overlay
@@ -229,12 +232,12 @@ app.on('ready', () => {
 
       }
 
-      let colorSelectedCheck = colorKeyBinds.findIndex((n) => n == e.keycode);
+      let colorSelectedCheck = userSettings.colorKeyBinds.findIndex((n) => n == e.keycode);
       if (colorSelectedCheck != -1 && colorSelectedCheck < 10) { // Check less than 10 as we only want to check for color keybinds
         // Change color according to selected color index
 
         console.log("Color changing to index ", colorSelectedCheck);
-        mainOverlayWindow.webContents.send('canvas-changeColor', selectedColors[colorSelectedCheck]);
+        mainOverlayWindow.webContents.send('canvas-changeColor', userSettings.selectedColors[colorSelectedCheck]);
       }
 
       console.log('Keyboard event detected: ', e);
@@ -294,7 +297,17 @@ app.on('ready', () => {
         // Scroll DOWN = 1  (page moves down when u scroll on windows)
 
         if (mainOverlayWindow != null) {
-          mainOverlayWindow.webContents.send('canvas-change-size-by', -event.rotation);
+          if (-event.rotation > 0) {
+            let newBrushSize = userSettings.brushSizeUp();
+            mainOverlayWindow.webContents.send('canvas-set-brush-size', newBrushSize);
+          } else if (-event.rotation < 0) {
+            let newBrushSize = userSettings.brushSizeDown();
+            mainOverlayWindow.webContents.send('canvas-set-brush-size', newBrushSize);
+          } else {
+            console.log("Wheel event with 0 vertical rotation")
+          }
+
+          // mainOverlayWindow.webContents.send('canvas-change-size-by', -event.rotation);
         }
 
       }
@@ -398,11 +411,11 @@ let menuTemplate = [
 
 function setColorsFromTheme(themeKey) {
   let selectedTheme_colorArray = lbsConsts.colorThemes_themeColors[themeKey];
-  selectedColors = selectedTheme_colorArray;
+  userSettings.selectedColors = selectedTheme_colorArray;
 
   // Update display of colors on control panel
-  for (let i = 0; i < selectedColors.length; i++) {
-    let currColor = selectedColors[i];
+  for (let i = 0; i < userSettings.selectedColors.length; i++) {
+    let currColor = userSettings.selectedColors[i];
     let currColorHex = rgbToHex(rgbaToRbg(currColor));
     let colorInputHtmlEleName =  "color" + (i + 1).toString();
 
@@ -471,18 +484,24 @@ function selectPen() {
   mainOverlayWindow.webContents.send('canvas-choose-pen', "param");
 
   mainWindow.webContents.send("activate-pen");
+
+  userSettings.brushType = 0;
 }
 
 function selectHighlighter() {
   mainOverlayWindow.webContents.send('canvas-choose-highlighter', "param");
 
   mainWindow.webContents.send("activate-highlighter");
+
+  userSettings.brushType = 0;
 }
 
 function selectEraser() {
   mainOverlayWindow.webContents.send('canvas-choose-eraser', "param");
 
   mainWindow.webContents.send("activate-eraser");
+
+  userSettings.brushType = 1;
 }
 
 function selectEraseAll() {
@@ -494,13 +513,13 @@ function changeKeybind(keybindIndex, changedSuccessfullyCallback) {
 
   currentlyChangingKeybindCallback = ( detectedKey ) => {
     // Put into keybind array
-    if (colorKeyBinds.includes(detectedKey)) {
+    if (userSettings.colorKeyBinds.includes(detectedKey)) {
       // Display Error
       console.log("Keybind not changed, CONFLICTING KEY")
       return false;
 
     } else {
-      colorKeyBinds[keybindIndex - 1] = detectedKey;
+      userSettings.colorKeyBinds[keybindIndex - 1] = detectedKey;
       console.log("Keybind Changed Successfully");
       console.log(lbsConsts.UiohookKeyREVERSE[detectedKey]);
 
@@ -514,9 +533,9 @@ function changeKeybind(keybindIndex, changedSuccessfullyCallback) {
 function changeColor(colorIndex, newColor, changedSuccessfullyCallback) {
   // Next time pop up a please enter key window
 
-  selectedColors[colorIndex - 1] = hexToRgba(newColor);
+  userSettings.selectedColors[colorIndex - 1] = hexToRgba(newColor);
   console.log("Color " + colorIndex + " Changed Successfully to " + newColor + "   converted: " + hexToRgba(newColor));
-  console.log("New value in arr: " + selectedColors[colorIndex - 1]);
+  console.log("New value in arr: " + userSettings.selectedColors[colorIndex - 1]);
   changedSuccessfullyCallback(newColor);
 
 }

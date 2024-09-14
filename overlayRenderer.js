@@ -453,38 +453,38 @@ document.addEventListener('DOMContentLoaded', (event) => {
         isInDrawingMode = false;
     });
 
-    window.ipcRender.receive('canvas-change-size-by', ( sizeOffset ) => {
-        console.log("Changing size of brush");
-        if (currBrush.getBrushType() == BrushType.ADD_PIXEL) {
-            drawingBrushSize = Math.max(1, drawingBrushSize + sizeOffset);
-            drawingBrushSize = Math.min(200, drawingBrushSize);
-            currBrush.setSize(drawingBrushSize);
-
-            window.ipcRender.send("set-menu-brush-size-slider-value", { newBrushSize: drawingBrushSize });
-
-        } else if (currBrush.getBrushType() == BrushType.REMOVE_PIXEL) {
-
-            const oldSize = erasingBrushSize;
-
-            erasingBrushSize = Math.max(1, erasingBrushSize + sizeOffset);
-            erasingBrushSize = Math.min(200, erasingBrushSize);
-
-            if (isNaN(erasingBrushSize)) {
-                erasingBrushSize = oldSize;
-            }
-
-            currBrush.setSize(erasingBrushSize);
-
-            console.log("ERASER Size Offset: " + sizeOffset + "   Old Size: " + oldSize + "   New Size: " + erasingBrushSize);
-
-            window.ipcRender.send("set-menu-brush-size-slider-value", { newBrushSize: erasingBrushSize });
-
-        } else {
-            console.log("Unknown Brush Type Detected - Changing size of brush");
-        }
-
-
-    });
+    // window.ipcRender.receive('canvas-change-size-by', ( sizeOffset ) => {
+    //     console.log("Changing size of brush");
+    //     if (currBrush.getBrushType() == BrushType.ADD_PIXEL) {
+    //         drawingBrushSize = Math.max(1, drawingBrushSize + sizeOffset);
+    //         drawingBrushSize = Math.min(200, drawingBrushSize);
+    //         currBrush.setSize(drawingBrushSize);
+    //
+    //         window.ipcRender.send("set-menu-brush-size-slider-value", { newBrushSize: drawingBrushSize });
+    //
+    //     } else if (currBrush.getBrushType() == BrushType.REMOVE_PIXEL) {
+    //
+    //         const oldSize = erasingBrushSize;
+    //
+    //         erasingBrushSize = Math.max(1, erasingBrushSize + sizeOffset);
+    //         erasingBrushSize = Math.min(200, erasingBrushSize);
+    //
+    //         if (isNaN(erasingBrushSize)) {
+    //             erasingBrushSize = oldSize;
+    //         }
+    //
+    //         currBrush.setSize(erasingBrushSize);
+    //
+    //         console.log("ERASER Size Offset: " + sizeOffset + "   Old Size: " + oldSize + "   New Size: " + erasingBrushSize);
+    //
+    //         window.ipcRender.send("set-menu-brush-size-slider-value", { newBrushSize: erasingBrushSize });
+    //
+    //     } else {
+    //         console.log("Unknown Brush Type Detected - Changing size of brush");
+    //     }
+    //
+    //
+    // });
 
     window.ipcRender.receive('canvas-set-brush-size', ( newBrushSize ) => {
         console.log("Changing size of brush ABSOLUTE");
