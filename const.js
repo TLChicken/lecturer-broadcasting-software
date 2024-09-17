@@ -4,6 +4,7 @@ exports.keybindIndex_selectHighlighter = 12;
 exports.keybindIndex_selectEraser = 13;
 exports.keybindIndex_nextSlide = 14;
 
+exports.saveFileName = "lbs_save_v1.5.json";
 
 exports.UiohookKeyREVERSE = {
     0x000E: "Backspace",

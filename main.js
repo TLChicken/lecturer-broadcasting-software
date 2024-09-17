@@ -9,6 +9,7 @@ const { rgba, rgbaToRbg, hexToRgba, rgba2hex, rgbToHex } = require("./models/col
 
 const { uIOhook, UiohookKey, WheelDirection} = require('uiohook-napi');
 const { UserSettings } = require('./models/userSettings');
+const { readUserData, writeUserData } = require('./models/persistence')
 
 // var version = process.argv[1].replace('--', '');
 
@@ -17,7 +18,9 @@ const { UserSettings } = require('./models/userSettings');
 let mainWindow;
 let mainOverlayWindow;
 
-let userSettings = new UserSettings();
+let userSettings = new UserSettings(readUserData());
+
+console.log(userSettings.convertToSaveJson());
 
 // let userSettings.colorKeyBinds = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, UiohookKey.Shift, UiohookKey.P, UiohookKey.H, UiohookKey.E, UiohookKey.ArrowRight]; // Numpad 1 to 0
 // let userSettings.selectedColors = lbsConsts.colorThemes_themeColors['original'];
@@ -99,6 +102,8 @@ function createToolbar() {
     // when you should delete the corresponding element.
     mainWindow = null;
     closeOverlayWindow();
+
+    writeUserData(userSettings.convertToSaveJson());
   })
 
   createOverlayWindow();
@@ -126,7 +131,7 @@ function createOverlayWindow() {
     }
   });
 
-  mainOverlayWindow.loadURL(`file://${__dirname}/overlayStart.html`);
+  mainOverlayWindow.loadURL(`file://${__dirname}/overlayStart.html?beginBrushColor=${userSettings.currColor}&beginBrushSize=${userSettings.brushSizes[0]}`);
 
   mainOverlayWindow.setAlwaysOnTop(true, "pop-up-menu");
   mainOverlayWindow.setFullScreen(true);
@@ -146,6 +151,12 @@ function createOverlayWindow() {
 
   isInDrawingMode = false;
   lastDrawnCoors = { x: -1, y: -1};
+
+  // Set up Overlay Window vars from UserSettings
+  for (let i = 0; i < userSettings.brushSizes.length; i++) {
+    mainOverlayWindow.webContents.send('canvas-set-brush-size', userSettings.brushSizes[i], i);
+  }
+
 }
 
 function closeOverlayWindow() {
@@ -299,10 +310,10 @@ app.on('ready', () => {
         if (mainOverlayWindow != null) {
           if (-event.rotation > 0) {
             let newBrushSize = userSettings.brushSizeUp();
-            mainOverlayWindow.webContents.send('canvas-set-brush-size', newBrushSize);
+            mainOverlayWindow.webContents.send('canvas-set-brush-size', newBrushSize, null);
           } else if (-event.rotation < 0) {
             let newBrushSize = userSettings.brushSizeDown();
-            mainOverlayWindow.webContents.send('canvas-set-brush-size', newBrushSize);
+            mainOverlayWindow.webContents.send('canvas-set-brush-size', newBrushSize, null);
           } else {
             console.log("Wheel event with 0 vertical rotation")
           }
@@ -596,7 +607,7 @@ ipcMain.on("change-color", (event, args) => {
 ipcMain.on("set-pen-brush-size-absolute", (event, args) => {
   console.log("Setting pen brush size from control panel: " + args.newBrushSize);
   if (mainOverlayWindow != null) {
-    mainOverlayWindow.webContents.send('canvas-set-brush-size', args.newBrushSize);
+    mainOverlayWindow.webContents.send('canvas-set-brush-size', args.newBrushSize, null);
   }
 })
 

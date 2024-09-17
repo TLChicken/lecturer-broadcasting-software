@@ -16,19 +16,36 @@ class SettingsBrushType {
 
 class UserSettings {
 
-    constructor() {
+    constructor(saveFileJson) {
+        if (saveFileJson == null) {
+            this.colorKeyBinds = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, UiohookKey.Shift, UiohookKey.P, UiohookKey.H, UiohookKey.E, UiohookKey.ArrowRight]; // Numpad 1 to 0
+            this.selectedColors = lbsConsts.colorThemes_themeColors['original'];
 
-        this.colorKeyBinds = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, UiohookKey.Shift, UiohookKey.P, UiohookKey.H, UiohookKey.E, UiohookKey.ArrowRight]; // Numpad 1 to 0
-        this.selectedColors = lbsConsts.colorThemes_themeColors['original'];
+            this.currColor = rgba(255, 0, 0, 0);
+            this.brushSizes = [10, 30];
+        } else {
+            this.colorKeyBinds = saveFileJson.colorKeyBinds;
+            this.selectedColors = saveFileJson.selectedColors;
 
+            this.currColor = saveFileJson.currColor;
+            this.brushSizes = saveFileJson.brushSizes;
+        }
 
         this.isInDrawingMode = false;
-        this.currColor = rgba(255, 0, 0, 0);
 
         this.brushType = SettingsBrushType.ADD_PIXEL;
         this.brushSizeScrollWheelOffset = 1;
 
-        this.brushSizes = [10, 30];
+    }
+
+    convertToSaveJson() {
+        return {
+            colorKeyBinds: this.colorKeyBinds,
+            selectedColors: this.selectedColors,
+
+            currColor: this.currColor,
+            brushSizes: this.brushSizes
+        }
     }
 
     brushSizeUp() {

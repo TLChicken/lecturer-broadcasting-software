@@ -278,8 +278,10 @@ class TLCEraser extends Brush {
     }
 }
 
+const params = new URLSearchParams(window.location.search);
+
 let currColor = rgba(255, 0, 0, 0);
-let currBrush = new TLCBrush();
+let currBrush = new TLCBrush(params.get("beginBrushColor"), params.get("beginBrushSize"));
 let drawingBrushSize = 10;
 let erasingBrushSize = 30;
 
@@ -367,7 +369,7 @@ function drawBorder(ctx, borderColor) {
 
     // Horizontal Bounds
     drawRectangle(ctx, borderColor, borderThickness, 0, window.innerWidth - (2 * borderThickness), borderThickness);
-    drawRectangle(ctx, borderColor, borderThickness, window.innerHeight - borderThickness, window.innerWidth - (2 * borderThickness), borderThickness);
+    // drawRectangle(ctx, borderColor, borderThickness, window.innerHeight - borderThickness, window.innerWidth - (2 * borderThickness), borderThickness);
 
 }
 
@@ -486,14 +488,26 @@ document.addEventListener('DOMContentLoaded', (event) => {
     //
     // });
 
-    window.ipcRender.receive('canvas-set-brush-size', ( newBrushSize ) => {
+    window.ipcRender.receive('canvas-set-brush-size', ( newBrushSize, brushType ) => {
+        let considerationBrushType = currBrush.getBrushType();
+
+        if (brushType != null) {
+            considerationBrushType = brushType;
+        }
+
         console.log("Changing size of brush ABSOLUTE");
-        if (currBrush.getBrushType() == BrushType.ADD_PIXEL) {
+        if (considerationBrushType == BrushType.ADD_PIXEL) {
             drawingBrushSize = newBrushSize;
-            currBrush.setSize(drawingBrushSize);
-        } else if (currBrush.getBrushType() == BrushType.REMOVE_PIXEL) {
+
+            if (currBrush.getBrushType() == BrushType.ADD_PIXEL) {
+                currBrush.setSize(drawingBrushSize);
+            }
+        } else if (considerationBrushType == BrushType.REMOVE_PIXEL) {
             erasingBrushSize = newBrushSize;
-            currBrush.setSize(erasingBrushSize);
+
+            if (currBrush.getBrushType() == BrushType.REMOVE_PIXEL) {
+                currBrush.setSize(erasingBrushSize);
+            }
         } else {
             console.log("Unknown Brush Type Detected - Changing size of brush");
         }
