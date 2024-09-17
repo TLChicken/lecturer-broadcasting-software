@@ -280,7 +280,6 @@ class TLCEraser extends Brush {
 
 const params = new URLSearchParams(window.location.search);
 
-let currColor = rgba(255, 0, 0, 0);
 let currBrush = new TLCBrush(params.get("beginBrushColor"), params.get("beginBrushSize"));
 let drawingBrushSize = 10;
 let erasingBrushSize = 30;

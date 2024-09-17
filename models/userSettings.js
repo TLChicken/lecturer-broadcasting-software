@@ -72,6 +72,10 @@ class UserSettings {
         }
     }
 
+    setColor(rgbaStr) {
+        this.currColor = rgbaStr;
+    }
+
 }
 
 module.exports = { UserSettings };

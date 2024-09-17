@@ -157,6 +157,8 @@ function createOverlayWindow() {
     mainOverlayWindow.webContents.send('canvas-set-brush-size', userSettings.brushSizes[i], i);
   }
 
+  mainOverlayWindow.webContents.send('canvas-changeColor', userSettings.currColor);
+
 }
 
 function closeOverlayWindow() {
@@ -248,7 +250,9 @@ app.on('ready', () => {
         // Change color according to selected color index
 
         console.log("Color changing to index ", colorSelectedCheck);
-        mainOverlayWindow.webContents.send('canvas-changeColor', userSettings.selectedColors[colorSelectedCheck]);
+        let newColor = userSettings.selectedColors[colorSelectedCheck];
+        mainOverlayWindow.webContents.send('canvas-changeColor', newColor);
+        userSettings.setColor(newColor);
       }
 
       console.log('Keyboard event detected: ', e);
