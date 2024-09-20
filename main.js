@@ -31,6 +31,9 @@ let lastDrawnCoors = { x: -1, y: -1};
 
 let currentlyChangingKeybindCallback = null;
 
+let dynamicToolbarWidth = 0;
+let dynamicToolbarHeight = 0;
+
 
 function createWindow () {
   // Create the browser window.
@@ -62,11 +65,18 @@ function createWindow () {
 }
 
 function createToolbar() {
+
+  const { width, height } = screen.getPrimaryDisplay().workAreaSize;
+  const dispScaleFactor = screen.getPrimaryDisplay().scaleFactor;
+
+  dynamicToolbarWidth = width * dispScaleFactor / 30;   // 64
+  dynamicToolbarHeight = height * dispScaleFactor / 2;   // 500 (540)
+
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 90,
-    height: 650,
-    x: 30,
+    width: dynamicToolbarWidth,
+    height: dynamicToolbarHeight,
+    x: 10,
     y: 30,
     // minWidth: 90,
     // minHeight: 90,
@@ -88,7 +98,7 @@ function createToolbar() {
   });
 
   // and load the index.html of the app.
-  mainWindow.loadURL(`file://${__dirname}/mainToolbar.html`);
+  mainWindow.loadURL(`file://${__dirname}/mainToolbar.html?dispWidth=${width * dispScaleFactor}&dispHeight=${height * dispScaleFactor}`);
 
   mainWindow.setAlwaysOnTop(true, "pop-up-menu");
 

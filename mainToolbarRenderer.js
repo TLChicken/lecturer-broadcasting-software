@@ -1,4 +1,16 @@
 
+
+const params = new URLSearchParams(window.location.search);
+
+let dispWidth = params.get("dispWidth");
+let dispHeight = params.get("dispHeight");
+
+let dynamicToolbarWidth = Math.floor(dispWidth / 30);
+let dynamicToolbarHeight = Math.floor(dispHeight / 2);
+let settingsWidth = Math.floor(dispWidth / 5);
+let settingsHeight = Math.floor(dispHeight / 1.8);
+let dynamicToolbarMinimizedHeight = Math.floor(dynamicToolbarWidth * 0.8);
+
 document.addEventListener('DOMContentLoaded', () => {
     const buttonActions = {
         mouse: () => {
@@ -118,7 +130,7 @@ function openSettings() {
     document.getElementById('toolbar-container').style.display = 'none';
     document.getElementById('settings-container').style.display = 'block';
 
-    window.ipcRender.send("resize-window-absolute", { width: 400, height: 600 });
+    window.ipcRender.send("resize-window-absolute", { width: settingsWidth, height: settingsHeight });
 
 }
 
@@ -127,21 +139,21 @@ function closeSettings() {
     document.getElementById('toolbar-container').style.display = 'block';
 
 
-    window.ipcRender.send("resize-window-absolute", { width: 90, height: 650 });
+    window.ipcRender.send("resize-window-absolute", { width: dynamicToolbarWidth, height: dynamicToolbarHeight });
 }
 
 function minimiseToolbar() {
     document.getElementById('toolbar-container').style.display = 'none';
     document.getElementById('minimized-container').style.display = 'block';
 
-    window.ipcRender.send("resize-window-absolute", { width: 90, height: 70 });
+    window.ipcRender.send("resize-window-absolute", { width: dynamicToolbarWidth, height: dynamicToolbarMinimizedHeight });
 }
 
 function maximiseToolbar() {
     document.getElementById('toolbar-container').style.display = 'block';
     document.getElementById('minimized-container').style.display = 'none';
 
-    window.ipcRender.send("resize-window-absolute", { width: 90, height: 650 });
+    window.ipcRender.send("resize-window-absolute", { width: dynamicToolbarWidth, height: dynamicToolbarHeight });
 }
 
 function changeColorKeybind(htmlIndexEle) {
