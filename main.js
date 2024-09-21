@@ -34,6 +34,8 @@ let currentlyChangingKeybindCallback = null;
 let dynamicToolbarWidth = 0;
 let dynamicToolbarHeight = 0;
 
+let isFullMinimized = false;
+
 
 function createWindow () {
   // Create the browser window.
@@ -226,6 +228,22 @@ app.on('ready', () => {
       }
     }
 
+    if (userSettings.colorKeyBinds[lbsConsts.keybindIndex_minimizeToolbar] === e.keycode && e.ctrlKey) {
+      console.log(" ALT M detected ");
+      if (isFullMinimized) {
+        mainWindow.restore();
+        mainWindow.setMinimizable(false);
+        isFullMinimized = false;
+        mainOverlayWindow.moveTop();
+        mainWindow.moveTop();
+      } else {
+        mainWindow.setMinimizable(true);
+        mainWindow.minimize();
+        isFullMinimized = true;
+        mainOverlayWindow.moveTop();
+      }
+    }
+
     if (isInDrawingMode) {
 
       if (userSettings.colorKeyBinds[lbsConsts.keybindIndex_selectPen] === e.keycode) {
@@ -276,7 +294,11 @@ app.on('ready', () => {
 
     if (!mouseMoveTriggerOverlayMovedOnTop && isInDrawingMode) {
       uIOhook.keyToggle(UiohookKey.Ctrl, "up");
-      mainWindow.show();
+
+      if (!isFullMinimized) {
+        mainWindow.show();
+      }
+
       // mainOverlayWindow.show();
       // mainOverlayWindow.moveTop();
       // mainWindow.moveTop();
@@ -295,7 +317,9 @@ app.on('ready', () => {
     // mainWindow.show();
     // mainOverlayWindow.show();
     // mainOverlayWindow.moveTop();
-    mainWindow.moveTop();
+    if (!isFullMinimized) {
+      mainWindow.moveTop();
+    }
 
   });
 
@@ -308,7 +332,9 @@ app.on('ready', () => {
     // mainWindow.show();
     // mainOverlayWindow.show();
     // mainOverlayWindow.moveTop();
-    mainWindow.moveTop();
+    if (!isFullMinimized) {
+      mainWindow.moveTop();
+    }
 
     mouseMoveTriggerOverlayMovedOnTop = false;
   });
@@ -481,7 +507,9 @@ function drawingModeOn() {
 
   mainWindow.webContents.send("enter-drawing-mode");
 
-  mainWindow.show();
+  if (!isFullMinimized) {
+    mainWindow.show();
+  }
 
   console.log("Started Drawing Mode");
 }
@@ -500,7 +528,9 @@ function drawingModeOff() {
 
   // So that ink goes above toolbar while drawing, and then toolbar goes
   // back above ink after drawing
-  mainWindow.show();
+  if (!isFullMinimized) {
+    mainWindow.show();
+  }
 
   mainWindow.webContents.send("exit-drawing-mode");
 }
