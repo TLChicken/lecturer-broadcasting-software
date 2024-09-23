@@ -30,7 +30,11 @@ const ipc = {
             'change-keybind',
             'get-keybind-key',
             'change-color',
-            'get-current-color'
+            'get-current-color',
+
+            'get-user-settings',
+            'change-drawing-mode-color',
+            'save-curr-screenshot',
 
         ],
         // Main -> Renderer
@@ -48,6 +52,8 @@ const ipc = {
 
             'response-get-keybind-key',
             'response-get-color',
+
+            'response-get-user-settings',
         ],
         // Renderer -> Main -> Renderer
         'sendReceive': []

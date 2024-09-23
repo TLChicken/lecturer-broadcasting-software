@@ -118,6 +118,9 @@ function createToolbar() {
     writeUserData(userSettings.convertToSaveJson());
   })
 
+  mainWindow.setResizable(true);
+  // mainWindow.openDevTools();
+
   createOverlayWindow();
 }
 
@@ -279,8 +282,8 @@ app.on('ready', () => {
 
         console.log("Color changing to index ", colorSelectedCheck);
         let newColor = userSettings.selectedColors[colorSelectedCheck];
-        mainOverlayWindow.webContents.send('canvas-changeColor', newColor);
-        userSettings.setColor(newColor);
+
+        changeCurrDrawingModeColor(newColor);
       }
 
       console.log('Keyboard event detected: ', e);
@@ -559,6 +562,11 @@ function selectEraser() {
   userSettings.brushType = 1;
 }
 
+function changeCurrDrawingModeColor(newColorRgba) {
+  mainOverlayWindow.webContents.send('canvas-changeColor', newColorRgba);
+  userSettings.setColor(newColorRgba);
+}
+
 function selectEraseAll() {
   mainOverlayWindow.webContents.send('canvas-erase-all');
 }
@@ -594,6 +602,11 @@ function changeColor(colorIndex, newColor, changedSuccessfullyCallback) {
   changedSuccessfullyCallback(newColor);
 
 }
+
+function screenshotAndSave() {
+  
+}
+
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {
@@ -646,6 +659,27 @@ ipcMain.on("change-color", (event, args) => {
   changeColor(args.colorIndex, args.newColor, ( newColorString ) => {
     mainWindow.webContents.send('response-get-color', rgbToHex(rgbaToRbg(newColorString)), args.textHtmlEle)
   });
+})
+
+ipcMain.on("get-user-settings", (event, args) => {
+  console.log("Getting User Settings Event RECEIVED");
+
+  mainWindow.webContents.send('response-get-user-settings', userSettings);
+})
+
+ipcMain.on("change-drawing-mode-color", (event, args) => {
+  console.log("Changing current drawing mode color Event RECEIVED");
+  console.log(args);
+
+  let selectedColor = userSettings.selectedColors[args - 1];
+
+  changeCurrDrawingModeColor(selectedColor);
+})
+
+ipcMain.on("save-curr-screenshot", (event, args) => {
+  console.log("Saving Screenshot Event RECEIVED");
+
+  screenshotAndSave();
 })
 
 ipcMain.on("set-pen-brush-size-absolute", (event, args) => {

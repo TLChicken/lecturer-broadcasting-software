@@ -7,7 +7,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    /*height: 100vh;*/
 
     -webkit-app-region: drag;
     -webkit-user-select: none;
@@ -23,6 +23,15 @@ body {
     background-color: #505050;
     border: 2px solid #3b3b3b;
 
+}
+
+#colors-container {
+    display: none;
+    padding: 0% 10% 0% 10%; /* T R B L */
+    border-radius: 8px;
+
+    background-color: #505050;
+    border: 2px solid #3b3b3b;
 }
 
 #settings-container {
@@ -64,9 +73,10 @@ body {
     background-color: #383838;
     /*padding: 10px 2px 2px 10px;*/
     margin: 13px 0px 13px 0px;
-    height: 100vh;
+    /*height: 100vh;*/
     /*width: 90px;*/
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+
 }
 
 .toolbar-button {
@@ -115,6 +125,44 @@ body {
     -ms-user-select: none;
 }
 
+
+/* Color Palette Styles */
+
+.select-color-button {
+    border: 1px solid #3b3b3b;
+    margin: 3px;
+    padding: 3px;
+    cursor: pointer;
+    background-color: transparent;
+
+    max-width: 100%;
+    height: auto;
+
+    -webkit-app-region: no-drag;
+}
+
+
+/*.select-color-button:hover {*/
+/*    background-color: #5399A2;*/
+/*    transition: background-color 0.2s;*/
+/*}*/
+
+.select-color-button div {
+    transition: transform 0.3s ease;
+}
+
+.select-color-button:hover div {
+    transform: scale(1.1); /* Increase size on hover */
+}
+
+.select-color-button-color-div {
+    /*postiion: relative;*/
+    /*width: 90%;*/
+    width: 30px;
+    height: 0; /* Together with padding-btm makes height = width */
+    padding-bottom: 100%;
+    border-radius: 4px;
+}
 
 
 /* Settings Window Styles */

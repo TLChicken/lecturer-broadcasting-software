@@ -1,5 +1,4 @@
 
-
 const params = new URLSearchParams(window.location.search);
 
 let dispWidth = params.get("dispWidth");
@@ -10,6 +9,8 @@ let dynamicToolbarHeight = Math.floor(dispHeight / 2);
 let settingsWidth = Math.floor(dispWidth / 5);
 let settingsHeight = Math.floor(dispHeight / 1.8);
 let dynamicToolbarMinimizedHeight = Math.floor(dynamicToolbarWidth * 0.8);
+
+let afterGetUserSettingsCallback = null;
 
 document.addEventListener('DOMContentLoaded', () => {
     const buttonActions = {
@@ -26,11 +27,15 @@ document.addEventListener('DOMContentLoaded', () => {
             window.ipcRender.send("select-eraser");
         },
         startPresentation: () => console.log('Screen capture tool activated'),
-        colorOptions: () => console.log('Palette opened'),
+        colorOptions: () => {
+            openColorPaletteToolbar();
+        },
         clearAll: () => {
             window.ipcRender.send("select-erase-all");
         },
-        save: () => console.log('Save action initiated'),
+        save: () => {
+            saveScreenshot();
+        }
         keybindSettings: () => {
             openSettings();
         },
@@ -105,6 +110,18 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById(textHtmlEle).style.backgroundColor = "inherit";
     });
 
+    window.ipcRender.receive("response-get-user-settings", ( userSettings ) => {
+        console.log("Got user settings: ", userSettings);
+
+        if (afterGetUserSettingsCallback != null) {
+            afterGetUserSettingsCallback(userSettings)
+            afterGetUserSettingsCallback = null
+        } else {
+            console.log("WARNING: But no user settings received callback present!")
+        }
+
+    });
+
 
     // SET UP TOOLBAR
     // toggleButtonOn("mouse");
@@ -124,6 +141,54 @@ function toggleButtonOff(buttonId) {
     if (button) {
         button.style.backgroundColor = "transparent";
     }
+}
+
+function openColorPaletteToolbar() {
+    document.getElementById('toolbar-container').style.display = 'none';
+    document.getElementById("colors-container").style.display = 'block';
+
+    const colorPaletteToolbar = document.querySelector('.color-palette-toolbar');
+
+    while (afterGetUserSettingsCallback != null) {
+        console.log("Waiting for previous user settings request to finish")
+    }
+
+    afterGetUserSettingsCallback = ( newUserSettings ) => {
+        let currColors = newUserSettings.selectedColors;
+
+        for (let i = 1; i <= 10; i++) {
+            const colorButton = document.createElement('button');
+
+            colorButton.classList.add('select-color-button');
+            colorButton.id = `select-color${i}`;
+
+            // Create color box in button
+            const colorBox = document.createElement('div');
+            colorBox.classList.add('select-color-button-color-div');
+            colorBox.style.backgroundColor = currColors[i - 1];
+
+            colorButton.addEventListener('click', () => {
+                window.ipcRender.send("change-drawing-mode-color", i);
+
+                // Change back from palette mode to toolbar mode
+                document.getElementById('toolbar-container').style.display = 'block';
+                document.getElementById("colors-container").style.display = 'none';
+
+                // Remove all color buttons from palette toolbar so we can make enw buttons later
+                colorPaletteToolbar.innerHTML = '';
+            });
+
+            colorButton.appendChild(colorBox);
+            colorPaletteToolbar.appendChild(colorButton);
+        }
+    }
+
+    window.ipcRender.send("get-user-settings");
+
+}
+
+function saveScreenshot() {
+    window.ipcRender.send("save-curr-screenshot");
 }
 
 function openSettings() {

@@ -18,7 +18,7 @@ class UserSettings {
 
     constructor(saveFileJson) {
         if (saveFileJson == null) {
-            this.colorKeyBinds = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, UiohookKey.Shift, UiohookKey.P, UiohookKey.H, UiohookKey.E, UiohookKey.ArrowRight]; // Numpad 1 to 0
+            this.colorKeyBinds = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, UiohookKey.Shift, UiohookKey.P, UiohookKey.H, UiohookKey.E, UiohookKey.ArrowRight, UiohookKey.M]; // Numpad 1 to 0
             this.selectedColors = lbsConsts.colorThemes_themeColors['original'];
 
             this.currColor = rgba(255, 0, 0, 0);
