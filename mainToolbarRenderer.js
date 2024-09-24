@@ -8,7 +8,7 @@ let dynamicToolbarWidth = Math.floor(dispWidth / 30);
 let dynamicToolbarHeight = Math.floor(dispHeight / 2);
 let settingsWidth = Math.floor(dispWidth / 5);
 let settingsHeight = Math.floor(dispHeight / 1.8);
-let dynamicToolbarMinimizedHeight = Math.floor(dynamicToolbarWidth * 0.8);
+let dynamicToolbarMinimizedHeight = Math.floor(dynamicToolbarWidth * 1);
 
 let afterGetUserSettingsCallback = null;
 

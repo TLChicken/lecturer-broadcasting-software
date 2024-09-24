@@ -7,7 +7,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    /*height: 100vh;*/
+    height: 100%;
 
     -webkit-app-region: drag;
     -webkit-user-select: none;
@@ -50,9 +50,9 @@ body {
 
 #minimized-container {
     display: none;
-    padding: 10px;
+    padding: 0% 10% 0% 10%;
     border-radius: 8px;
-    width: 90px;
+    /*width: 90px;*/
     background-color: #505050;
     border: 2px solid #3b3b3b;
 

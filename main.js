@@ -118,7 +118,7 @@ function createToolbar() {
     writeUserData(userSettings.convertToSaveJson());
   })
 
-  mainWindow.setResizable(true);
+  // mainWindow.setResizable(true);
   // mainWindow.openDevTools();
 
   createOverlayWindow();
@@ -826,6 +826,6 @@ ipcMain.on("resize-window-absolute", (event, args) => {
   // Workaround is to make the window resizable first then set it then make it unresizable again
   mainWindow.setResizable(true);
   mainWindow.setSize(args.width, args.height);
-  // mainWindow.setResizable(false);
+  mainWindow.setResizable(false);
 
 })
