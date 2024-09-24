@@ -1,5 +1,5 @@
 
-<img src="./assets/docs/Live%20Annotation%20Tools%20Logo.png">
+<img src="../assets/docs/Live%20Annotation%20Tools%20Logo.png">
 
 # Draw anywhere on your screen! 
 ## Upgrade your presentations.
