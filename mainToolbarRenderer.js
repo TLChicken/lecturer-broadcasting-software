@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         save: () => {
             saveScreenshot();
-        }
+        },
         keybindSettings: () => {
             openSettings();
         },

@@ -20,4 +20,26 @@ function writeUserData(data) {
     fs.writeFileSync(LBS_USER_DATA_PATH, JSON.stringify(data));
 }
 
-module.exports = { readUserData, writeUserData };
+function getTimestampedFilename() {
+    const now = new Date();
+
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+
+    // yyyy-mm-dd-hh-mm-ss
+    return `${year}-${month}-${day}-${hours}-${minutes}-${seconds}.png`;
+}
+
+function saveInDownloadsFolder(screenshot) {
+    const filePath = path.join(app.getPath('downloads'), getTimestampedFilename());
+    fs.writeFile(filePath, screenshot, (err) => {
+        if (err) throw err;
+        console.log('Screenshot saved to', filePath);
+    });
+}
+
+module.exports = { readUserData, writeUserData, saveInDownloadsFolder };

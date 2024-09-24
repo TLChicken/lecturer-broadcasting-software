@@ -1,5 +1,5 @@
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS']=true
-const {app, BrowserWindow, ipcMain, screen, Menu, MenuItem} = require("electron");
+const {app, BrowserWindow, ipcMain, screen, Menu, MenuItem, desktopCapturer} = require("electron");
 const shell = require('electron').shell;
 // const runner = require('./app.js');
 // const robot = require("robotjs");
@@ -9,7 +9,7 @@ const { rgba, rgbaToRbg, hexToRgba, rgba2hex, rgbToHex } = require("./models/col
 
 const { uIOhook, UiohookKey, WheelDirection} = require('uiohook-napi');
 const { UserSettings } = require('./models/userSettings');
-const { readUserData, writeUserData } = require('./models/persistence')
+const { readUserData, writeUserData, saveInDownloadsFolder } = require('./models/persistence')
 
 // var version = process.argv[1].replace('--', '');
 
@@ -603,8 +603,97 @@ function changeColor(colorIndex, newColor, changedSuccessfullyCallback) {
 
 }
 
-function screenshotAndSave() {
-  
+async function getScreenshotFromVideo() {
+  const stream = await navigator.mediaDevices.getUserMedia({
+    audio: false,
+    video: {
+      mandatory: {
+        chromeMediaSource: 'desktop',
+        // chromeMediaSourceId: screenSource.id,
+        minWidth: 1280,
+        maxWidth: 8000,
+        minHeight: 720,
+        maxHeight: 8000
+      }
+    }
+  });
+
+  console.log("Stream: " + stream);
+
+  // Use video element to capture frame
+  const video = document.createElement('video');
+  video.srcObject = stream;
+  video.onloadedmetadata = () => {
+    video.play();
+
+    // Capture image once vid playing
+    const canvas = document.createElement('canvas');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+
+    // Draw video frame onto canvas
+    const context = canvas.getContext('2d');
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    // Get image as PNG buffer
+    canvas.toBlob((blob) => {
+      const reader = new FileReader();
+      reader.onloadend = function () {
+        const buffer = Buffer.from(reader.result);
+
+        saveInDownloadsFolder(buffer);
+      };
+      reader.readAsArrayBuffer(blob);
+    });
+
+    // Stop all video tracks to release resources
+    stream.getTracks().forEach(track => track.stop());
+  };
+}
+
+async function screenshotAndSave() {
+  try {
+    const { width, height } = screen.getPrimaryDisplay().workAreaSize;
+    const dispScaleFactor = screen.getPrimaryDisplay().scaleFactor;
+    const fullWidth = width * dispScaleFactor;
+    const fullHeight = height * dispScaleFactor;
+
+    const sources = await desktopCapturer.getSources({ types: ['screen'], thumbnailSize: { width: fullWidth, height: fullHeight }});
+
+    // Primary Display
+    const screenSource = sources.find(source => source.name === 'Entire screen' || source.name === 'Screen 1');
+    console.log(sources);
+
+    if (!screenSource) {
+      throw new Error('No screen source found: ' + screenSource);
+    }
+
+
+    let currToolbarSize = mainWindow.getSize();
+    console.log(currToolbarSize);
+
+    console.log("Screenshot Size: " + fullWidth + "x" + fullHeight);
+
+    mainWindow.setResizable(true);
+    mainWindow.setSize(0, 0);
+
+    const screenshot = screenSource.thumbnail.resize({
+      width: fullWidth,
+      height: fullHeight
+    }).toPNG();
+
+    // await getScreenshotFromVideo();
+
+    mainWindow.setSize(currToolbarSize[0], currToolbarSize[1]);
+    mainWindow.setResizable(false);
+
+    saveInDownloadsFolder(screenshot);
+
+  } catch (error) {
+    console.error('Failed to take screenshot:', error);
+    mainWindow.setSize(dynamicToolbarWidth, dynamicToolbarHeight);
+    mainWindow.setResizable(false);
+  }
 }
 
 
@@ -676,10 +765,10 @@ ipcMain.on("change-drawing-mode-color", (event, args) => {
   changeCurrDrawingModeColor(selectedColor);
 })
 
-ipcMain.on("save-curr-screenshot", (event, args) => {
+ipcMain.on("save-curr-screenshot", async (event, args) => {
   console.log("Saving Screenshot Event RECEIVED");
 
-  screenshotAndSave();
+  await screenshotAndSave();
 })
 
 ipcMain.on("set-pen-brush-size-absolute", (event, args) => {
