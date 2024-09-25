@@ -1,5 +1,5 @@
 
-![Live Annotation Tools](../assets/docs/Live%20Annotation%20Tools%20Logo.png)
+![Live Annotation Tools](./images/Live%20Annotation%20Tools%20Logo.png)
 
 # Draw anywhere on your screen! 
 ## Upgrade your presentations.
@@ -16,6 +16,12 @@ can be extended to any type of live presentation as well.
 Get Live Annotation Tools while it is still free in early access! Complete the form here to receive your download link! 
 
 [Download Form](https://forms.gle/39RNj5MoSbQNW1Ar9)
+
+After trying out the tool do leave some feedback in this feedback form! 
+I would really appreciate the feedback, and it helps me to improve the tool for everyone!
+It is really short and would only take **1 minute** to fill up:
+
+[Feedback Form](https://forms.gle/nc8PiJuzXu7RKDPi8)
 
 
 # Updates and Features
