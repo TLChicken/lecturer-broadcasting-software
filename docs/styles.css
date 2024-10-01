@@ -2,9 +2,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Bakbak+One&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Bakbak+One&family=Coda:wght@400;800&display=swap');
 
+@import url('https://fonts.googleapis.com/css2?family=Teko:wght@300..700&display=swap');
+
 .bakbak-one-regular {
     font-family: "Bakbak One", sans-serif;
     font-weight: 400;
+    font-style: normal;
+}
+
+.teko-extrabold {
+    font-family: "Teko", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 600;
     font-style: normal;
 }
 
@@ -66,20 +75,26 @@ header nav ul li a {
 }
 
 header .download-btn a {
-    background-color: #1ed87e;
-    border: 3px solid #396E55;
+    background-color: #1ED87E;
+    border: 1px solid #434343;
     color: #000;
     padding: 10px 20px;
     border-radius: 15px;
     font-weight: bold;
+    font-size: 32px;
 }
 
 nav {
-    font-family: "Bakbak One", sans-serif;
-    font-weight: 400;
+    /*font-family: "Bakbak One", sans-serif;*/
+    /*font-weight: 400;*/
     font-style: normal;
-    font-size: 24px;
+    font-size: 28px;
     width: 60%;
+
+    font-family: "Teko", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    /*font-style: normal;*/
 }
 
 h1 {
@@ -105,6 +120,82 @@ h1 {
     display: block;
     margin: 0 auto;
     width: 70%;
+}
+
+.slideshow-container {
+    display: block;
+    margin: 0 auto;
+    width: 65%;
+}
+
+.slideshow-slide {
+    display: none;
+}
+
+.slideshow-prev, .slideshow-next {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    width: auto;
+    margin-top: -22px;
+    padding: 16px;
+    color: #BF0000;
+    font-weight: bold;
+    font-size: 18px;
+    transition: 0.6s ease;
+    user-select: none;
+}
+
+.slideshow-prev {
+    left: 0;
+    border-radius: 0 3px 3px 0;
+}
+
+.slideshow-next {
+    right: 0;
+    border-radius: 3px 0 0 3px;
+}
+
+.slideshow-prev:hover, .slideshow-next:hover {
+    background-color: rgba(0,0,0,0.8);
+}
+
+.slideshow-caption {
+    color: #434343;
+    font-size: 20px;
+    padding: 8px 12px;
+    position: relative;
+    width: 100%;
+    text-align: center;
+}
+
+.slideshow-caption .highlight {
+    color: #BF0000;
+}
+
+.slideshow-dot {
+    cursor: pointer;
+    height: 12px;
+    width: 12px;
+    margin: 0 5px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+    transition: background-color 0.6s ease;
+}
+
+.dot-active, .slideshow-dot:hover {
+    background-color: #717171;
+}
+
+.fade {
+    animation-name: fade;
+    animation-duration: 1.5s;
+}
+
+@keyframes fade {
+    from {opacity: .4}
+    to {opacity: 1}
 }
 
 /* Video Area */
@@ -160,9 +251,9 @@ h1 {
 }
 
 .download-section .download-box {
-    background-color: #1ed87e;
+    background-color: #1ED87E;
     padding: 20px; /* top right bot left */
-    border: 3px solid #396E55;
+    border: 1px solid #434343;
     border-radius: 15px;
     font-weight: bold;
     font-size: 1.2rem;
@@ -204,6 +295,7 @@ h1 {
     font-weight: 400;
     font-style: normal;
     font-size: 32px;
+
 }
 
 .features .feature p {

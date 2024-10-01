@@ -5,10 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Live Annotation Tools</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="index.js"></script>
 </head>
 <body>
 
-    <header class="bakbak-one-regular">
+    <header class="teko-extrabold">
         <div class="logo">
             <img src="./images/LAT%20Logo%20Rect.png" alt="Live Annotation Tools Logo">
         </div>
@@ -34,18 +35,58 @@
 <!--    </section>-->
 
     <section class="static-hero">
-        <div>
-            <img src="./images/example-usage-1.png" alt="Example Usage featuring tool being used in a CS2105 tutorial class">
+<!--        <div>-->
+<!--            <img src="./images/example-usage-1.png" alt="Example Usage featuring tool being used in a CS2105 tutorial class">-->
+<!--        </div>-->
+
+        <div class="slideshow-container">
+
+            <div class="slideshow-slide fade">
+                <img src="./images/example-usage/tut-cs2105-tut8-bit-time-1.jpg" style="width:100%">
+                <div class="slideshow-caption">Using LAT for <span class="highlight">writing workings</span> in a Computer Networks Tutorial Class (CS2105)</div>
+            </div>
+
+            <div class="slideshow-slide fade">
+                <img src="./images/example-usage/tut-wireshark-cs2105-1.jpg" style="width:100%">
+                <div class="slideshow-caption">Using LAT to <span class="highlight">demonstrate how to use</span> Wireshark's interface to complete tasks</div>
+            </div>
+
+            <div class="slideshow-slide fade">
+                <img src="./images/example-usage/tut-writing-japanese-1-sm.png" style="width:100%">
+                <div class="slideshow-caption">
+                    <p>Using LAT to <span class="highlight">annotate Japanese characters</span> in PDF files </p>
+                    <p>while tutoring basic Japanese classes</p>
+                </div>
+            </div>
+
+            <div class="slideshow-slide fade">
+                <img src="./images/example-usage/tut-highlighting-clean-code-1-sm.png" style="width:100%">
+                <div class="slideshow-caption">
+                    <p>Using LAT to <span class="highlight">highlight and capture the audience's attention</span></p>
+                    <p>to specific parts of a PDF file during a class on Software Engineering</p>
+                </div>
+            </div>
+
+            <a class="slideshow-prev" onclick="plusSlides(-1)">&#10094;</a>
+            <a class="slideshow-next" onclick="plusSlides(1)">&#10095;</a>
+        </div>
+        <br>
+
+        <div style="text-align:center">
+            <span class="slideshow-dot" onclick="goToSlide(0)"></span>
+            <span class="slideshow-dot" onclick="goToSlide(1)"></span>
+            <span class="slideshow-dot" onclick="goToSlide(2)"></span>
+            <span class="slideshow-dot" onclick="goToSlide(3)"></span>
         </div>
     </section>
 
     <section class="main-content">
         <div class="intro-section">
             <h1>Draw Anywhere!</h1>
-            <h2 class="bakbak-one-regular">Upgrade your live presentations to the next level.</h2>
+            <h2 class="teko-extrabold">Upgrade your live presentations to the next level.</h2>
         </div>
         <div class="download-section">
-            <a href="https://forms.gle/39RNj5MoSbQNW1Ar9" class="download-box bakbak-one-regular">
+            <a href="https://forms.gle/39RNj5MoSbQNW1Ar9" class="download-box teko-extrabold">
                 Download while it is free!
             </a>
             <p>Currently supports Windows only.</p>
