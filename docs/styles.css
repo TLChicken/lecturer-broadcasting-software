@@ -141,26 +141,26 @@ h1 {
     padding: 16px;
     color: #BF0000;
     font-weight: bold;
-    font-size: 18px;
+    font-size: 36px;
     transition: 0.6s ease;
     user-select: none;
 }
 
 .slideshow-prev {
     left: 0;
-    border-radius: 0 3px 3px 0;
+    border-radius: 0 5px 5px 0;
 }
 
 .slideshow-next {
     right: 0;
-    border-radius: 3px 0 0 3px;
+    border-radius: 5px 0 0 5px;
 }
 
 .slideshow-prev:hover, .slideshow-next:hover {
     background-color: rgba(0,0,0,0.8);
 }
 
-.slideshow-caption {
+.slideshow-caption, .quick-start-caption {
     color: #434343;
     font-size: 20px;
     padding: 8px 12px;
@@ -170,6 +170,10 @@ h1 {
 }
 
 .slideshow-caption .highlight {
+    color: #BF0000;
+}
+
+.quick-start-caption .highlight {
     color: #BF0000;
 }
 
@@ -274,6 +278,54 @@ h1 {
     color: #e62117;
 }
 
+.quick-start-text {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    justify-content: space-around;
+    padding: 20px 10%;
+    background-color: #f5f5f5;
+}
+
+.quick-start-text h2 {
+    color: #e62117;
+    margin-bottom: 10px;
+    font-family: "Bakbak One", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 32px;
+}
+
+.quick-start-text .highlight {
+    color: #e62117;
+}
+
+.quick-start-img {
+    width: 80%;
+    display: block;
+    margin: 0 auto;
+
+}
+
+.quick-start-section ul {
+    padding-left: 10px;
+}
+
+.quick-start-section ul li {
+    padding-left: 15px;
+}
+
+.quick-start-section table, .quick-start-section td {
+    border: 1px solid black;
+    border-collapse: collapse;
+    padding: 0px 5px;
+}
+
+.quick-start-tbl-header-item {
+    color: #e62117;
+}
+
+
 /* Features Bottom Part */
 .features {
     display: flex;
@@ -286,6 +338,16 @@ h1 {
 .features .feature {
     width: 45%;
     margin-bottom: 30px;
+}
+
+.features h2 {
+    color: #e62117;
+    margin-bottom: 40px;
+    font-family: "Bakbak One", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 32px;
+
 }
 
 .features .feature h2 {
