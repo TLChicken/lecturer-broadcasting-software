@@ -291,56 +291,56 @@ app.on('ready', () => {
 
   })
 
-  uIOhook.on('mousemove', (event) => {
-    drawAt(event.x, event.y);
-
-
-    if (!mouseMoveTriggerOverlayMovedOnTop && isInDrawingMode) {
-      uIOhook.keyToggle(UiohookKey.Ctrl, "up");
-
-      if (!isFullMinimized) {
-        mainWindow.show();
-      }
-
-      // mainOverlayWindow.show();
-      // mainOverlayWindow.moveTop();
-      // mainWindow.moveTop();
-
-      mouseMoveTriggerOverlayMovedOnTop = true;
-    }
-
-  });
-
-  uIOhook.on('mousedown', (event) => {
-    isMouseDown = true;
-    console.log("Pressed mouse");
-    drawAt(event.x, event.y);
-
-    uIOhook.keyToggle(UiohookKey.Ctrl, "up");
-    // mainWindow.show();
-    // mainOverlayWindow.show();
-    // mainOverlayWindow.moveTop();
-    if (!isFullMinimized) {
-      mainWindow.moveTop();
-    }
-
-  });
-
-  uIOhook.on('mouseup', (event) => {
-    isMouseDown = false;
-
-    lastDrawnCoors = { x: -1, y: -1}; // So I can draw on the same location again by clicking again
-
-    uIOhook.keyToggle(UiohookKey.Ctrl, "up");
-    // mainWindow.show();
-    // mainOverlayWindow.show();
-    // mainOverlayWindow.moveTop();
-    if (!isFullMinimized) {
-      mainWindow.moveTop();
-    }
-
-    mouseMoveTriggerOverlayMovedOnTop = false;
-  });
+  // uIOhook.on('mousemove', (event) => {
+  //   drawAt(event.x, event.y);
+  //
+  //
+  //   if (!mouseMoveTriggerOverlayMovedOnTop && isInDrawingMode) {
+  //     uIOhook.keyToggle(UiohookKey.Ctrl, "up");
+  //
+  //     if (!isFullMinimized) {
+  //       mainWindow.show();
+  //     }
+  //
+  //     // mainOverlayWindow.show();
+  //     // mainOverlayWindow.moveTop();
+  //     // mainWindow.moveTop();
+  //
+  //     mouseMoveTriggerOverlayMovedOnTop = true;
+  //   }
+  //
+  // });
+  //
+  // uIOhook.on('mousedown', (event) => {
+  //   isMouseDown = true;
+  //   console.log("Pressed mouse");
+  //   drawAt(event.x, event.y);
+  //
+  //   uIOhook.keyToggle(UiohookKey.Ctrl, "up");
+  //   // mainWindow.show();
+  //   // mainOverlayWindow.show();
+  //   // mainOverlayWindow.moveTop();
+  //   if (!isFullMinimized) {
+  //     mainWindow.moveTop();
+  //   }
+  //
+  // });
+  //
+  // uIOhook.on('mouseup', (event) => {
+  //   isMouseDown = false;
+  //
+  //   lastDrawnCoors = { x: -1, y: -1}; // So I can draw on the same location again by clicking again
+  //
+  //   uIOhook.keyToggle(UiohookKey.Ctrl, "up");
+  //   // mainWindow.show();
+  //   // mainOverlayWindow.show();
+  //   // mainOverlayWindow.moveTop();
+  //   if (!isFullMinimized) {
+  //     mainWindow.moveTop();
+  //   }
+  //
+  //   mouseMoveTriggerOverlayMovedOnTop = false;
+  // });
 
   uIOhook.on('wheel', (event) => {
     if (isInDrawingMode) {
@@ -780,6 +780,56 @@ ipcMain.on("set-pen-brush-size-absolute", (event, args) => {
 
 ipcMain.on("set-menu-brush-size-slider-value", (event, args) => {
   mainWindow.webContents.send("set-pen-brush-size-slider-value-absolute", args.newBrushSize);
+})
+
+
+ipcMain.on("pointer-down-at", (event, args) => {
+  let x = args.x;
+  let y = args.y;
+
+  isMouseDown = true;
+  console.log("Pressed mouse");
+  drawAt(x, y);
+
+  uIOhook.keyToggle(UiohookKey.Ctrl, "up");
+
+  if (!isFullMinimized) {
+    mainWindow.moveTop();
+  }
+})
+
+ipcMain.on("pointer-move-at", (event, args) => {
+  let x = args.x;
+  let y = args.y;
+
+  drawAt(x, y);
+
+
+  if (!mouseMoveTriggerOverlayMovedOnTop && isInDrawingMode) {
+    uIOhook.keyToggle(UiohookKey.Ctrl, "up");
+
+    if (!isFullMinimized) {
+      mainWindow.show();
+    }
+
+    mouseMoveTriggerOverlayMovedOnTop = true;
+  }
+
+})
+
+ipcMain.on("pointer-up-at", (event, args) => {
+  
+  isMouseDown = false;
+
+  lastDrawnCoors = { x: -1, y: -1}; // So I can draw on the same location again by clicking again
+
+  uIOhook.keyToggle(UiohookKey.Ctrl, "up");
+
+  if (!isFullMinimized) {
+    mainWindow.moveTop();
+  }
+
+  mouseMoveTriggerOverlayMovedOnTop = false;
 })
 
 

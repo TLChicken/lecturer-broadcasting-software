@@ -402,6 +402,18 @@ document.addEventListener('DOMContentLoaded', (event) => {
     console.log(window);
     console.log(window.innerWidth);
 
+    canvasLayers.topMostLayer.addEventListener("pointerdown", ( e ) => {
+        window.ipcRender.send("pointer-down-at", { x: e.x, y: e.y })
+    })
+
+    canvasLayers.topMostLayer.addEventListener("pointermove", ( e ) => {
+        window.ipcRender.send("pointer-move-at", { x: e.x, y: e.y })
+    })
+
+    canvasLayers.topMostLayer.addEventListener("pointerup", ( e ) => {
+        window.ipcRender.send("pointer-up-at", { x: e.x, y: e.y })
+    })
+
     window.ipcRender.receive('canvas-draw', ( coors ) => {
         console.log("Canvas Draw Event Received");
         drawAtCoor(canvasLayers, coors.x, coors.y, coors.prevCoors);

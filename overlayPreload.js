@@ -13,7 +13,10 @@ const ipc = {
     'render': {
         // Renderer -> Main
         'send': [
-            'set-menu-brush-size-slider-value'
+            'set-menu-brush-size-slider-value',
+            'pointer-down-at',
+            'pointer-move-at',
+            'pointer-up-at'
         ],
         // Main -> Renderer
         'receive': [
