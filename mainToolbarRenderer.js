@@ -12,6 +12,8 @@ let dynamicToolbarMinimizedHeight = Math.floor(dynamicToolbarWidth * 1);
 
 let afterGetUserSettingsCallback = null;
 
+let colorThemeDropdownMenu = null;
+
 document.addEventListener('DOMContentLoaded', () => {
     const buttonActions = {
         mouse: () => {
@@ -127,6 +129,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // toggleButtonOn("mouse");
     toggleButtonOn("pen");
 
+    colorThemeDropdownMenu = document.getElementById("color-themes-dropdown");
+    colorThemeDropdownMenu.addEventListener("change", changeColorTheme);
 });
 
 function toggleButtonOn(buttonId) {
@@ -240,6 +244,12 @@ function maximiseToolbar() {
     document.getElementById('minimized-container').style.display = 'none';
 
     window.ipcRender.send("resize-window-absolute", { width: dynamicToolbarWidth, height: dynamicToolbarHeight });
+}
+
+function changeColorTheme(event) {
+    let changedTo = colorThemeDropdownMenu.value;
+
+    window.ipcRender.send("set-color-theme", { colorThemeId: changedTo });
 }
 
 function changeColorKeybind(htmlIndexEle) {

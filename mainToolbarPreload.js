@@ -36,6 +36,7 @@ const ipc = {
             'change-drawing-mode-color',
             'save-curr-screenshot',
 
+            'set-color-theme',
         ],
         // Main -> Renderer
         'receive': [

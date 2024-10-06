@@ -879,3 +879,12 @@ ipcMain.on("resize-window-absolute", (event, args) => {
   mainWindow.setResizable(false);
 
 })
+
+
+ipcMain.on("set-color-theme", (event, args) => {
+  console.log("Change Color Theme Event RECEIVED");
+  console.log(args);
+
+  setColorsFromTheme(args.colorThemeId);
+})
+

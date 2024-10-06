@@ -223,8 +223,71 @@ body {
     to { opacity: 1; }
 }
 
+/* Settings Colors Tab */
 
-/* Settings Keybind Tab */
+.settings-dropdown {
+    /*background-color: #525252;*/
+    /*font-size: 24px;*/
+    /*font-family: Ubuntu-Bold;*/
+
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-btn {
+    background-color: #484848;
+    color: #CACACA;
+    padding: 16px 14px;
+
+    cursor: pointer;
+    font-size: 20px;
+    font-family: Ubuntu-Bold;
+}
+
+.dropdown-options {
+    display: none;
+    position: absolute;
+    background-color: #585858;
+
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropdown-options button {
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-options button:hover {
+    background-color: #5399A2
+}
+
+.settings-dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.settings-dropdown:hover .dropdown-btn {
+    background-color: #5399A2;
+}
+
+
+.settings-color-bar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: #383838;
+    /*padding: 10px 2px 2px 10px;*/
+    margin: 13px 0px 13px 0px;
+    /*height: 100vh;*/
+    /*width: 90px;*/
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+
+}
+
+
+
+/* Settings Keybinds Tab */
 
 table {
     width: 100%;
