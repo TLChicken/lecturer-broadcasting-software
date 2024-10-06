@@ -61,139 +61,160 @@
 </div>
 
 <div id="settings-container">
+
     <button class="close-button" onclick="closeSettings()">
         <img src="assets/icons/close-btn-1.png" alt="Exit">
     </button>
-    <h2>Colors and Keybinds</h2>
-    <div class="settings-table-wrapper">
-    <table>
-        <thead>
-        <tr>
-            <th>Color / Action</th>
-            <th>Keybind</th>
-        </tr>
-        </thead>
-    </table>
-        <div class="settings-table-container">
+
+    <div class="settings-tab-holder">
+        <button class="settings-tab-btn unactivated-btn" onclick="switchSettingsTab(this, 'settings-colors-tab')">Colors</button>
+        <button class="settings-tab-btn unactivated-btn" onclick="switchSettingsTab(this, 'settings-keybinds-tab')">Keybinds</button>
+        <button class="settings-tab-btn unactivated-btn" onclick="switchSettingsTab(this, 'settings-others-tab')">Others</button>
+
+    </div>
+
+    <div id="settings-colors-tab" class="settings-tab-content">
+        <h1>Colors!</h1>
+    </div>
+
+    <div id="settings-others-tab" class="settings-tab-content">
+        <h1>Others Tab is Work in Progress!</h1>
+    </div>
+
+    <div id="settings-keybinds-tab" class="settings-tab-content">
+
+        <div class="settings-table-wrapper">
         <table>
-            <tbody>
-
+            <thead>
             <tr>
-                <td>
-                    Color 1: <div class="color-box" id="color1"></div>
-                </td>
-                <td>
-                    <button class="keybind-btn" id="kb-color-1" onclick="changeColorKeybind('kb-color-1')">1</button>
-                </td>
+                <th>Color / Action</th>
+                <th>Keybind</th>
             </tr>
-
-            <tr>
-                <td>
-                    Color 2: <div class="color-box" id="color2"></div>
-                </td>
-                <td>
-                    <button class="keybind-btn" id="kb-color-2" onclick="changeColorKeybind('kb-color-2')">2</button>
-                </td>
-            </tr>
-
-            <tr>
-                <td>
-                    Color 3: <div class="color-box" id="color3"></div>
-                </td>
-                <td>
-                    <button class="keybind-btn" id="kb-color-3" onclick="changeColorKeybind('kb-color-3')">3</button>
-                </td>
-            </tr>
-
-            <tr>
-                <td>
-                    Color 4: <div class="color-box" id="color4"></div>
-                </td>
-                <td>
-                    <button class="keybind-btn" id="kb-color-4" onclick="changeColorKeybind('kb-color-4')">4</button>
-                </td>
-            </tr>
-
-            <tr>
-                <td>
-                    Color 5: <div class="color-box" id="color5"></div>
-                </td>
-                <td>
-                    <button class="keybind-btn" id="kb-color-5" onclick="changeColorKeybind('kb-color-5')">5</button>
-                </td>
-            </tr>
-
-            <tr>
-                <td>
-                    Color 6: <div class="color-box" id="color6"></div>
-                </td>
-                <td>
-                    <button class="keybind-btn" id="kb-color-6" onclick="changeColorKeybind('kb-color-6')">6</button>
-                </td>
-            </tr>
-
-            <tr>
-                <td>
-                    Color 7: <div class="color-box" id="color7"></div>
-                </td>
-                <td>
-                    <button class="keybind-btn" id="kb-color-7" onclick="changeColorKeybind('kb-color-7')">7</button>
-                </td>
-            </tr>
-
-            <tr>
-                <td>
-                    Color 8:
-<!--                    Color 8: <div class="color-box" id="color8" style="background-color: #00FFFF;" onclick="openColorPicker(8)"></div>-->
-                </td>
-                <td>
-                    <button class="keybind-btn" id="kb-color-8" onclick="changeColorKeybind('kb-color-8')">8</button>
-                </td>
-            </tr>
-
-            <tr>
-                <td>
-                    Color 9:
-<!--                    Color 9: <div class="color-box" id="color9" style="background-color: #FFA500;" onclick="openColorPicker(9)"></div>-->
-                </td>
-                <td>
-                    <button class="keybind-btn" id="kb-color-9" onclick="changeColorKeybind('kb-color-9')">9</button>
-                </td>
-            </tr>
-
-            <tr>
-                <td>
-                    Color 10:
-<!--                    Color 10: <div class="color-box" id="color10" style="background-color: #FFFFFF;" onclick="openColorPicker(10)"></div>-->
-                </td>
-                <td>
-                    <button class="keybind-btn" id="kb-color-10" onclick="changeColorKeybind('kb-color-10')">0</button>
-                </td>
-            </tr>
-
-            <!-- Other Actions -->
-            <tr>
-                <td>Toggle Drawing Mode:</td>
-                <td>
-                    <span style="font-family: Ubuntu-Bold">CTRL + </span>
-                    <button class="keybind-btn" id="kb-toggle-drawing" onclick="changeKeybind('kb-toggle-drawing', 11)">Shift</button></td>
-            </tr>
-            <tr>
-                <td>Select Pen:</td>
-                <td><button class="keybind-btn" id="kb-select-pen" onclick="changeKeybind('kb-select-pen', 12)">P</button></td>
-            </tr>
-            <tr>
-                <td>Select Highlighter:</td>
-                <td><button class="keybind-btn" id="kb-select-highlighter" onclick="changeKeybind('kb-select-highlighter', 13)">H</button></td>
-            </tr>
-            <tr>
-                <td>Select Eraser:</td>
-                <td><button class="keybind-btn" id="kb-select-eraser" onclick="changeKeybind('kb-select-eraser', 14)">E</button></td>
-            </tr>
-            </tbody>
+            </thead>
         </table>
+            <div class="settings-table-container">
+            <table>
+                <tbody>
+
+                <tr>
+                    <td>
+                        Color 1: <div class="color-box" id="color1"></div>
+                    </td>
+                    <td>
+                        <button class="keybind-btn" id="kb-color-1" onclick="changeColorKeybind('kb-color-1')">1</button>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        Color 2: <div class="color-box" id="color2"></div>
+                    </td>
+                    <td>
+                        <button class="keybind-btn" id="kb-color-2" onclick="changeColorKeybind('kb-color-2')">2</button>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        Color 3: <div class="color-box" id="color3"></div>
+                    </td>
+                    <td>
+                        <button class="keybind-btn" id="kb-color-3" onclick="changeColorKeybind('kb-color-3')">3</button>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        Color 4: <div class="color-box" id="color4"></div>
+                    </td>
+                    <td>
+                        <button class="keybind-btn" id="kb-color-4" onclick="changeColorKeybind('kb-color-4')">4</button>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        Color 5: <div class="color-box" id="color5"></div>
+                    </td>
+                    <td>
+                        <button class="keybind-btn" id="kb-color-5" onclick="changeColorKeybind('kb-color-5')">5</button>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        Color 6: <div class="color-box" id="color6"></div>
+                    </td>
+                    <td>
+                        <button class="keybind-btn" id="kb-color-6" onclick="changeColorKeybind('kb-color-6')">6</button>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        Color 7: <div class="color-box" id="color7"></div>
+                    </td>
+                    <td>
+                        <button class="keybind-btn" id="kb-color-7" onclick="changeColorKeybind('kb-color-7')">7</button>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        Color 8:
+    <!--                    Color 8: <div class="color-box" id="color8" style="background-color: #00FFFF;" onclick="openColorPicker(8)"></div>-->
+                    </td>
+                    <td>
+                        <button class="keybind-btn" id="kb-color-8" onclick="changeColorKeybind('kb-color-8')">8</button>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        Color 9:
+    <!--                    Color 9: <div class="color-box" id="color9" style="background-color: #FFA500;" onclick="openColorPicker(9)"></div>-->
+                    </td>
+                    <td>
+                        <button class="keybind-btn" id="kb-color-9" onclick="changeColorKeybind('kb-color-9')">9</button>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        Color 10:
+    <!--                    Color 10: <div class="color-box" id="color10" style="background-color: #FFFFFF;" onclick="openColorPicker(10)"></div>-->
+                    </td>
+                    <td>
+                        <button class="keybind-btn" id="kb-color-10" onclick="changeColorKeybind('kb-color-10')">0</button>
+                    </td>
+                </tr>
+
+                <!-- Other Actions -->
+                <tr>
+                    <td>Toggle Drawing Mode:</td>
+                    <td>
+                        <span style="font-family: Ubuntu-Bold">CTRL + </span>
+                        <button class="keybind-btn" id="kb-toggle-drawing" onclick="changeKeybind('kb-toggle-drawing', 11)">Shift</button></td>
+                </tr>
+                <tr>
+                    <td>Select Pen:</td>
+                    <td><button class="keybind-btn" id="kb-select-pen" onclick="changeKeybind('kb-select-pen', 12)">P</button></td>
+                </tr>
+                <tr>
+                    <td>Select Highlighter:</td>
+                    <td><button class="keybind-btn" id="kb-select-highlighter" onclick="changeKeybind('kb-select-highlighter', 13)">H</button></td>
+                </tr>
+                <tr>
+                    <td>Select Eraser:</td>
+                    <td><button class="keybind-btn" id="kb-select-eraser" onclick="changeKeybind('kb-select-eraser', 14)">E</button></td>
+                </tr>
+                </tbody>
+            </table>
+            </div>
         </div>
     </div>
+
+
 </div>
 
 </body>

@@ -6,7 +6,7 @@ let dispHeight = params.get("dispHeight");
 
 let dynamicToolbarWidth = Math.floor(dispWidth / 30);
 let dynamicToolbarHeight = Math.floor(dispHeight / 2);
-let settingsWidth = Math.floor(dispWidth / 5);
+let settingsWidth = Math.floor(dispWidth / 3.8);
 let settingsHeight = Math.floor(dispHeight / 1.8);
 let dynamicToolbarMinimizedHeight = Math.floor(dynamicToolbarWidth * 1);
 
@@ -197,6 +197,27 @@ function openSettings() {
 
     window.ipcRender.send("resize-window-absolute", { width: settingsWidth, height: settingsHeight });
 
+}
+
+function switchSettingsTab(clickedBtn, toTabName) {
+    var i, tabcontent, tabbtns;
+
+    tabcontent = document.getElementsByClassName("settings-tab-content");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+
+    tabbtns = document.getElementsByClassName("settings-tab-btn");
+    for (i = 0; i < tabbtns.length; i++) {
+        tabbtns[i].className = tabbtns[i].className.replace(" activated-btn", " unactivated-btn");
+    }
+
+    console.log(clickedBtn.className);
+
+    document.getElementById(toTabName).style.display = "block";
+
+    // FIX THIS
+    clickedBtn.className.replace(" unactivated-btn", " activated-btn");;
 }
 
 function closeSettings() {

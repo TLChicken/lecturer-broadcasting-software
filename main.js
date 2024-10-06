@@ -818,7 +818,7 @@ ipcMain.on("pointer-move-at", (event, args) => {
 })
 
 ipcMain.on("pointer-up-at", (event, args) => {
-  
+
   isMouseDown = false;
 
   lastDrawnCoors = { x: -1, y: -1}; // So I can draw on the same location again by clicking again
