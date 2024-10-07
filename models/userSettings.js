@@ -13,12 +13,13 @@ class SettingsBrushType {
     }
 }
 
+let defaultKeybinds = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, UiohookKey.Shift, UiohookKey.P, UiohookKey.H, UiohookKey.E, UiohookKey.ArrowRight, UiohookKey.M, UiohookKey.Delete, UiohookKey.PrintScreen];
 
 class UserSettings {
 
     constructor(saveFileJson) {
         if (saveFileJson == null) {
-            this.colorKeyBinds = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, UiohookKey.Shift, UiohookKey.P, UiohookKey.H, UiohookKey.E, UiohookKey.ArrowRight, UiohookKey.M, UiohookKey.Delete, UiohookKey.PrintScreen]; // Numpad 1 to 0
+            this.colorKeyBinds = defaultKeybinds; // Numpad 1 to 0
             this.selectedColors = lbsConsts.colorThemes_themeColors['original'];
 
             this.currColor = rgba(255, 0, 0, 0);
@@ -29,6 +30,13 @@ class UserSettings {
 
             this.currColor = saveFileJson.currColor;
             this.brushSizes = saveFileJson.brushSizes;
+
+            // For when new keybinds are added
+            if (this.colorKeyBinds.length < defaultKeybinds.length) {
+                for (let i = this.colorKeyBinds.length; i < defaultKeybinds.length; i++) {
+                    this.colorKeyBinds.push(defaultKeybinds[i]);
+                }
+            }
         }
 
         this.isInDrawingMode = false;
