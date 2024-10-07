@@ -781,8 +781,21 @@ ipcMain.on("set-color-to", (event, args) => {
 
 ipcMain.on("get-user-settings", (event, args) => {
   console.log("Getting User Settings Event RECEIVED");
+  let currUserSettings = userSettings;
+  let keybindStrings = [];
 
-  mainWindow.webContents.send('response-get-user-settings', userSettings);
+  for (let i = 0; i < currUserSettings.colorKeyBinds.length; i++) {
+    const currKeybind = currUserSettings.colorKeyBinds[i];
+    const keybindString = lbsConsts.UiohookKeyREVERSE[currKeybind];
+
+    keybindStrings.push(keybindString);
+  }
+
+  currUserSettings['keybindStrings'] = keybindStrings;
+
+  console.log("Sending: " + currUserSettings.keybindStrings);
+
+  mainWindow.webContents.send('response-get-user-settings', currUserSettings);
 })
 
 ipcMain.on("change-drawing-mode-color", (event, args) => {

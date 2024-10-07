@@ -240,6 +240,10 @@ function switchSettingsTab(clickedBtn, toTabName) {
     if (toTabName == "settings-colors-tab") {
         openSettingsColorTab();
     }
+
+    if (toTabName == "settings-keybinds-tab") {
+        openSettingsKeybindTab();
+    }
 }
 
 
@@ -296,6 +300,35 @@ function openSettingsColorTab() {
     }
 
     window.ipcRender.send("get-user-settings");
+}
+
+function openSettingsKeybindTab() {
+    // Load all keybinds
+
+    const keybindBtnsAll = document.querySelectorAll('[id^="kb-color-"]');
+
+    while (afterGetUserSettingsCallback != null) {
+        console.log("Waiting for previous user settings request to finish")
+    }
+
+    afterGetUserSettingsCallback = ( newUserSettings ) => {
+        let currKeybindStr = newUserSettings.keybindStrings;
+
+        for (let i = 0; i < keybindBtnsAll.length; i++) {
+            const currKeybindBtn = keybindBtnsAll[i];
+            console.log("Processing key: " + currKeybindBtn.id);
+
+            const idStr = parseInt(currKeybindBtn.id.slice(9), 10);
+            console.log("with id no: " + idStr);
+
+            currKeybindBtn.innerHTML = currKeybindStr[idStr - 1];
+        }
+
+        // AColorPicker.from('.color-picker');
+    }
+
+    window.ipcRender.send("get-user-settings");
+
 }
 
 function setupColorEntry(r, g, b, callback) {
