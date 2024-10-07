@@ -37,6 +37,7 @@ const ipc = {
             'save-curr-screenshot',
 
             'set-color-theme',
+            'set-color-to',
         ],
         // Main -> Renderer
         'receive': [

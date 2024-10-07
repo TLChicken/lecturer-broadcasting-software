@@ -203,7 +203,18 @@ function openSettings() {
 
 }
 
+
+function closeSettings() {
+    document.getElementById('settings-container').style.display = 'none';
+    document.getElementById('toolbar-container').style.display = 'block';
+
+
+    window.ipcRender.send("resize-window-absolute", { width: dynamicToolbarWidth, height: dynamicToolbarHeight });
+}
+
+
 function switchSettingsTab(clickedBtn, toTabName) {
+
     var i, tabcontent, tabbtns;
 
     tabcontent = document.getElementsByClassName("settings-tab-content");
@@ -222,14 +233,96 @@ function switchSettingsTab(clickedBtn, toTabName) {
 
     // FIX THIS
     clickedBtn.className.replace(" unactivated-btn", " activated-btn");;
+
+    if (toTabName == "settings-colors-tab") {
+        openSettingsColorTab();
+    }
 }
 
-function closeSettings() {
-    document.getElementById('settings-container').style.display = 'none';
-    document.getElementById('toolbar-container').style.display = 'block';
+
+function openSettingsColorTab() {
+
+    const colorPaletteToolbar = document.getElementById('settings-color-container');
+    colorPaletteToolbar.innerHTML = '';
+
+    while (afterGetUserSettingsCallback != null) {
+        console.log("Waiting for previous user settings request to finish")
+    }
+
+    afterGetUserSettingsCallback = ( newUserSettings ) => {
+        let currColors = newUserSettings.selectedColors;
+
+        for (let i = 1; i <= 10; i++) {
+            const colorButton = document.createElement('button');
+            // colorButton.type = 'color';
+
+            colorButton.classList.add('select-color-button');
+            colorButton.id = `select-color${i}`;
+
+            // Create color box in button
+            const colorBox = document.createElement('div');
+            colorBox.classList.add('select-color-button-color-div');
+            colorBox.style.backgroundColor = currColors[i - 1];
 
 
-    window.ipcRender.send("resize-window-absolute", { width: dynamicToolbarWidth, height: dynamicToolbarHeight });
+            colorButton.addEventListener('click', () => {
+
+                let [r,g,b] = currColors[i - 1].match(/[\d\.]+/g);
+
+                // Tell main window a color has changed
+                setupColorEntry(r, g, b, (newR, newG, newB) => {
+                    let newRGBA = `rgba(${newR}, ${newG}, ${newB}, 255)`;
+
+                    console.log("Setting " + colorBox + " to " + newRGBA);
+                    colorBox.style.backgroundColor = newRGBA;
+
+                    window.ipcRender.send("set-color-to", { colorIndex: i, newColor: newRGBA });
+                })
+
+            });
+
+            colorButton.appendChild(colorBox);
+            colorPaletteToolbar.appendChild(colorButton);
+        }
+
+        // AColorPicker.from('.color-picker');
+    }
+
+    window.ipcRender.send("get-user-settings");
+}
+
+function setupColorEntry(r, g, b, callback) {
+
+    document.getElementById('color-entry-area').style.display = 'flex';
+    document.getElementById('settings-color-container-wrapper').style.display = 'none';
+
+    document.getElementById('red-input').value = r;
+    document.getElementById('green-input').value = g;
+    document.getElementById('blue-input').value = b;
+
+    let okBtn = document.getElementById('finish-setting-color-btn');
+
+    // Clear all old event listeners
+    let newOkBtn = okBtn.cloneNode(true);
+    okBtn.parentNode.replaceChild(newOkBtn, okBtn);
+
+    newOkBtn.addEventListener("click", () => {
+        const red = document.getElementById('red-input').value;
+        const green = document.getElementById('green-input').value;
+        const blue = document.getElementById('blue-input').value;
+
+        if (red == null || green == null || blue == null) {
+            alert('RGB values must be set between 0 and 255');
+            return;
+        }
+
+        callback(red, green, blue);
+
+        document.getElementById('color-entry-area').style.display = 'none';
+        document.getElementById('settings-color-container-wrapper').style.display = 'block';
+
+    })
+
 }
 
 function minimiseToolbar() {

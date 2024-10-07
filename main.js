@@ -593,11 +593,20 @@ function changeKeybind(keybindIndex, changedSuccessfullyCallback) {
 
 }
 
-function changeColor(colorIndex, newColor, changedSuccessfullyCallback) {
-  // Next time pop up a please enter key window
+function changeColorFromHex(colorIndex, newColor, changedSuccessfullyCallback) {
+  // Unused
 
   userSettings.selectedColors[colorIndex - 1] = hexToRgba(newColor);
   console.log("Color " + colorIndex + " Changed Successfully to " + newColor + "   converted: " + hexToRgba(newColor));
+  console.log("New value in arr: " + userSettings.selectedColors[colorIndex - 1]);
+  changedSuccessfullyCallback(newColor);
+
+}
+
+function changeColor(colorIndex, newColor, changedSuccessfullyCallback) {
+
+  userSettings.selectedColors[colorIndex - 1] = newColor;
+  console.log("Color " + colorIndex + " Changed Successfully to " + newColor);
   console.log("New value in arr: " + userSettings.selectedColors[colorIndex - 1]);
   changedSuccessfullyCallback(newColor);
 
@@ -745,8 +754,16 @@ ipcMain.on("change-keybind", (event, args) => {
 ipcMain.on("change-color", (event, args) => {
   console.log("Change Color Event RECEIVED");
   console.log(args);
-  changeColor(args.colorIndex, args.newColor, ( newColorString ) => {
+  changeColorFromHex(args.colorIndex, args.newColor, ( newColorString ) => {
     mainWindow.webContents.send('response-get-color', rgbToHex(rgbaToRbg(newColorString)), args.textHtmlEle)
+  });
+})
+
+ipcMain.on("set-color-to", (event, args) => {
+  console.log("Change Color Event 2 RECEIVED");
+  console.log(args);
+  changeColor(args.colorIndex, args.newColor, ( newColorString ) => {
+
   });
 })
 

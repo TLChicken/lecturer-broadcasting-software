@@ -82,12 +82,6 @@
                 <option value="darks">Darks</option>
             </select>
 
-            <div id="settings-colors-container">
-                <div class="color-palette-toolbar settings-color-bar">
-
-                </div>
-            </div>
-
         </div>
 
 <!--        <div class="settings-dropdown">-->
@@ -99,6 +93,37 @@
 <!--            </div>-->
 
 <!--        </div>-->
+
+        <div id="set-color-section">
+            <div id="settings-color-container-wrapper">
+                <div id="settings-color-container" class="settings-color-bar">
+
+                </div>
+            </div>
+
+<!--            <div class="color-picker">-->
+
+<!--            </div>-->
+
+            <div id="color-entry-area" class="color-entry-area">
+                <div>
+                    <label for="red-input">R:</label>
+                    <input type="number" id="red-input" min="0" max="255" placeholder="0-255">
+                </div>
+                <div>
+                    <label for="green-input">G:</label>
+                    <input type="number" id="green-input" min="0" max="255" placeholder="0-255">
+                </div>
+                <div>
+                    <label for="blue-input">B:</label>
+                    <input type="number" id="blue-input" min="0" max="255" placeholder="0-255">
+                </div>
+
+                <button id="finish-setting-color-btn">OK</button>
+
+            </div>
+
+        </div>
 
     </div>
 
