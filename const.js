@@ -4,6 +4,8 @@ exports.keybindIndex_selectHighlighter = 12;
 exports.keybindIndex_selectEraser = 13;
 exports.keybindIndex_nextSlide = 14;
 exports.keybindIndex_minimizeToolbar = 15;
+exports.keybindIndex_deleteAll = 16;
+exports.keybindIndex_saveScreenshot = 17;
 
 exports.saveFileName = "lbs_save_v1.5.json";
 

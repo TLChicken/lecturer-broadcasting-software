@@ -276,6 +276,11 @@ app.on('ready', () => {
 
       }
 
+      if (userSettings.colorKeyBinds[lbsConsts.keybindIndex_deleteAll] === e.keycode) {
+        console.log("Delete All Drawings Keybind Toggled");
+        selectEraseAll();
+      }
+
       let colorSelectedCheck = userSettings.colorKeyBinds.findIndex((n) => n == e.keycode);
       if (colorSelectedCheck != -1 && colorSelectedCheck < 10) { // Check less than 10 as we only want to check for color keybinds
         // Change color according to selected color index
