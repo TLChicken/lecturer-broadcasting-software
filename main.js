@@ -247,6 +247,13 @@ app.on('ready', () => {
       }
     }
 
+    if (userSettings.colorKeyBinds[lbsConsts.keybindIndex_saveScreenshot] === e.keycode) {
+      console.log("Save Screenshot detected");
+
+      let unusedPromise = screenshotAndSave();
+    }
+
+
     if (isInDrawingMode) {
 
       if (userSettings.colorKeyBinds[lbsConsts.keybindIndex_selectPen] === e.keycode) {
