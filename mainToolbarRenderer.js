@@ -1,4 +1,6 @@
 
+// import { AColorPicker } from "./acolorpicker";
+
 const params = new URLSearchParams(window.location.search);
 
 let dispWidth = params.get("dispWidth");
@@ -131,6 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     colorThemeDropdownMenu = document.getElementById("color-themes-dropdown");
     colorThemeDropdownMenu.addEventListener("change", changeColorTheme);
+
 });
 
 function toggleButtonOn(buttonId) {
@@ -275,6 +278,10 @@ function openSettingsColorTab() {
 
                     console.log("Setting " + colorBox + " to " + newRGBA);
                     colorBox.style.backgroundColor = newRGBA;
+                    currColors[i - 1] = newRGBA;
+
+                    // Reset Color Themes Dropdown
+                    document.getElementById('color-themes-dropdown').selectedIndex = 0;
 
                     window.ipcRender.send("set-color-to", { colorIndex: i, newColor: newRGBA });
                 })
@@ -343,6 +350,8 @@ function changeColorTheme(event) {
     let changedTo = colorThemeDropdownMenu.value;
 
     window.ipcRender.send("set-color-theme", { colorThemeId: changedTo });
+
+    openSettingsColorTab();
 }
 
 function changeColorKeybind(htmlIndexEle) {
