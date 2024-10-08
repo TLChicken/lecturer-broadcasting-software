@@ -301,6 +301,14 @@ body {
     gap: 10px;
 
     font-family: Ubuntu-Bold;
+
+    padding-top: 30px;
+}
+
+input[type="number"] {
+    background-color: #383838;
+    font-family: Ubuntu-Bold;
+    color: #CACACA;
 }
 
 .color-picker {
