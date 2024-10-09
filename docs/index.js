@@ -38,5 +38,21 @@ function showSlides(n) {
 }
 
 document.addEventListener('DOMContentLoaded', (event) => {
+
+    let slides = document.getElementsByClassName("slideshow-slide");
+    let dotContainer = document.getElementById("slideshow-dot-container");
+
+    for (let i = 0; i < slides.length; i++) {
+        let newDot = document.createElement("span");
+        newDot.classList.add("slideshow-dot");
+        newDot.addEventListener("click", () => {
+            goToSlide(i);
+        });
+
+        dotContainer.appendChild(newDot);
+    }
+
+
     showSlides(currSlideIndex);
+
 });
