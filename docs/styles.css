@@ -387,8 +387,85 @@ hr {
 }
 
 
+/* Features Page */
 
-/* Features Bottom Part */
+.img-center-65-container {
+    display: block;
+    margin: 0 auto;
+    width: 65%;
+}
+
+.features-listing-container {
+    margin: 0 auto;
+    width: 90%;
+}
+
+.features-icon-desc-pair {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    align-items: center;
+    justify-content: center;
+
+    padding-top: 10px;
+}
+
+.features-icon-desc-text {
+    color: #484848;
+    margin-bottom: 10px;
+    font-family: "Bakbak One", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 24px;
+}
+
+.features-listing-container {
+
+}
+
+.features-flex-row-30px {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+    align-items: center;
+    justify-content: center;
+
+    padding-top: 10px;
+}
+
+.toolbar-left-side-sth-right-side {
+    display: flex;
+    flex-direction: row;
+    gap: 10%;
+    justify-content: center;
+
+}
+
+.flex-col-center-udlr {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.color-themes-display {
+    display: flex;
+    flex-direction: row;
+    gap: 10%;
+    align-items: center;
+    justify-content: center;
+
+    margin: 30px;
+}
+
+.color-themes-display-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Main Page Bottom Part */
 .features {
     display: flex;
     flex-wrap: wrap;
@@ -425,6 +502,27 @@ hr {
 .features .feature p {
     color: #333;
 }
+
+.secondary-text {
+
+}
+
+.inline-link {
+    color: #5399A2;
+    text-underline: #5399A2;
+    text-decoration: underline;
+}
+
+
+.section-ud-margin {
+    margin-top: 10vh;
+    margin-bottom: 10vh;
+}
+
+.spacer {
+    flex-grow: 1;
+}
+
 
 /* Footer */
 footer {
