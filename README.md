@@ -1,6 +1,6 @@
 
 
-<img src="./docs/images/LAT%20Logo%202.png">
+<img src="./docs/images/LAT%20Logo%202.png" width="256">
 <img src="./assets/docs/Live%20Annotation%20Tools%20Logo.png">
 
 The new name Live Annotation Tools was chosen as this app can now be used in any
