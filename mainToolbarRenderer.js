@@ -61,6 +61,37 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    let closeBtn = document.getElementById("close-settings-btn");
+    closeBtn.addEventListener('click', () => {
+        closeSettings();
+    })
+
+    let tabbtns = document.getElementsByClassName("settings-tab-btn");
+    for (let i = 0; i < tabbtns.length; i++) {
+        let currId = tabbtns[i].id;
+        tabbtns[i].addEventListener('click', () => {
+            switchSettingsTab(tabbtns[i], currId.replace("-btn", ""));
+        })
+    }
+
+    // let kbBtnList = Array.from(document.querySelectorAll('.keybind-btn'));
+    let kbBtnList = document.getElementsByClassName("keybind-btn");
+    for (let i = 0; i < kbBtnList.length; i++) {
+        let currKbBtn = kbBtnList[i];
+
+        if (i < 10) {
+            // Color Keybind calls different function - FIX PLS
+            currKbBtn.addEventListener('click', () => {
+                changeColorKeybind(currKbBtn.id);
+            })
+        } else {
+            currKbBtn.addEventListener('click', () => {
+                changeKeybind(currKbBtn.id, i + 1);
+            })
+        }
+
+
+    }
 
 
     window.ipcRender.receive("enter-drawing-mode", () => {
