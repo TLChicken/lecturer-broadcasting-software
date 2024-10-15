@@ -527,6 +527,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
         eraseBorder(ctx);
         drawBorder(ctx, borderColor);
 
+        clearCanvas(mouseCursorCanvas, mouseCursorCtx);
+
         isInDrawingMode = false;
     });
 
