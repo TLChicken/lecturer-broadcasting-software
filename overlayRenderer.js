@@ -209,6 +209,13 @@ class TLCHighlighter extends Brush {
         }
     }
 
+    getMouseCursorPath(x, y) {
+        let cursorPath = new Path2D();
+
+        cursorPath.rect(x, y - this.size, 3, this.size * 2);
+
+        return cursorPath;
+    }
 }
 
 class SingleOpacityHighlighter extends TLCHighlighter {
