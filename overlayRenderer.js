@@ -494,6 +494,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
         window.ipcRender.send("set-menu-brush-size-slider-value", { newBrushSize: drawingBrushSize });
 
+        if (isInDrawingMode) {
+            redrawMouseCursor(mouseCursorCanvas, mouseCursorCtx);
+        }
     });
 
     window.ipcRender.receive('canvas-choose-highlighter', ( param ) => {
@@ -502,6 +505,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
         window.ipcRender.send("set-menu-brush-size-slider-value", { newBrushSize: drawingBrushSize });
 
+        if (isInDrawingMode) {
+            redrawMouseCursor(mouseCursorCanvas, mouseCursorCtx);
+        }
     });
 
     window.ipcRender.receive('canvas-choose-eraser', ( param ) => {
@@ -510,6 +516,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
         window.ipcRender.send("set-menu-brush-size-slider-value", { newBrushSize: erasingBrushSize });
 
+        if (isInDrawingMode) {
+            redrawMouseCursor(mouseCursorCanvas, mouseCursorCtx);
+        }
     });
 
     window.ipcRender.receive('draw-mode-activated', ( param ) => {
