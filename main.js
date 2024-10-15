@@ -844,6 +844,8 @@ ipcMain.on("pointer-move-at", (event, args) => {
   let x = args.x;
   let y = args.y;
 
+  // console.log("POINTER MOVE EVENT: " + x + ", " + y);
+
   drawAt(x, y);
 
 

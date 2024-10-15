@@ -94,6 +94,10 @@ class Brush {
     drawAtCoor(x, y, prevCoors) {
         throw new Error("Must override drawAtCoor method");
     }
+
+    getMouseCursorPath(x, y) {
+        throw new Error("Must override getMouseCursorPath method");
+    }
 }
 
 class TLCBrush extends Brush {
@@ -142,6 +146,14 @@ class TLCBrush extends Brush {
 
             return drawCoors;
         }
+    }
+
+    getMouseCursorPath(x, y) {
+        let cursorPath = new Path2D();
+
+        cursorPath.arc(x, y, this.size / 2, 0, 2 * Math.PI);
+
+        return cursorPath;
     }
 
 }
@@ -385,6 +397,25 @@ function eraseBorder(ctx) {
 
 }
 
+function redrawMouseCursor(c, ctx, x = previousRedrawX, y = previousRedrawY) {
+
+    clearCanvas(c, ctx);
+
+    let canvasCoor = getPointOnCanvas(c, x, y);
+
+    let currPath = currBrush.getMouseCursorPath(canvasCoor.x, canvasCoor.y);
+
+    console.log(currPath);
+
+    ctx.stroke(currPath);
+
+}
+
+function clearCanvas(c, ctx) {
+    ctx.clearRect(0, 0, c.width, c.height);
+}
+
+
 document.addEventListener('DOMContentLoaded', (event) => {
 
     const c = document.getElementById('overlayCanvas');
@@ -397,17 +428,28 @@ document.addEventListener('DOMContentLoaded', (event) => {
     highlighterCanvas.width = window.innerWidth;
     highlighterCanvas.height = window.innerHeight;
 
-    const canvasLayers = { mainC: c, highlighterC: highlighterCanvas, topMostLayer: highlighterCanvas };
+    const mouseCursorCanvas = document.getElementById('mouseCursorCanvas');
+    const mouseCursorCtx = mouseCursorCanvas.getContext('2d');
+    mouseCursorCanvas.width = window.innerWidth;
+    mouseCursorCanvas.height = window.innerHeight;
+    mouseCursorCtx.strokeStyle = 'black';
+
+    const canvasLayers = { mainC: c, highlighterC: highlighterCanvas, mouseCursorC: mouseCursorCanvas, topMostLayer: mouseCursorCanvas };
 
     console.log(window);
     console.log(window.innerWidth);
+
 
     canvasLayers.topMostLayer.addEventListener("pointerdown", ( e ) => {
         window.ipcRender.send("pointer-down-at", { x: e.x, y: e.y })
     })
 
     canvasLayers.topMostLayer.addEventListener("pointermove", ( e ) => {
-        window.ipcRender.send("pointer-move-at", { x: e.x, y: e.y })
+        window.ipcRender.send("pointer-move-at", { x: e.x, y: e.y });
+
+        if (isInDrawingMode) {
+            redrawMouseCursor(mouseCursorCanvas, mouseCursorCtx, e.x, e.y);
+        }
     })
 
     canvasLayers.topMostLayer.addEventListener("pointerup", ( e ) => {
