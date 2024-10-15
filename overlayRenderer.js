@@ -412,7 +412,14 @@ function eraseBorder(ctx) {
 
 }
 
+
+// So I can redraw mouse cursor when scroll wheel is used even though mouse did not move
+let previousRedrawX = 0;
+let previousRedrawY = 0;
+
 function redrawMouseCursor(c, ctx, x = previousRedrawX, y = previousRedrawY) {
+    previousRedrawX = x;
+    previousRedrawY = y;
 
     clearCanvas(c, ctx);
 
@@ -580,6 +587,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
             console.log("Unknown Brush Type Detected - Changing size of brush");
         }
 
+
+        if (isInDrawingMode) {
+            redrawMouseCursor(mouseCursorCanvas, mouseCursorCtx);
+        }
     });
 
     window.ipcRender.receive('canvas-erase-all', () => {
