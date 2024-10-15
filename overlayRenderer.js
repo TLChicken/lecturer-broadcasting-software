@@ -295,6 +295,14 @@ class TLCEraser extends Brush {
             return drawCoors;
         }
     }
+
+    getMouseCursorPath(x, y) {
+        let cursorPath = new Path2D();
+
+        cursorPath.rect(Math.floor(x - (this.size / 2)), Math.floor(y - (this.size / 2)), this.size, this.size);
+
+        return cursorPath;
+    }
 }
 
 const params = new URLSearchParams(window.location.search);
