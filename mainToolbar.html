@@ -7,7 +7,9 @@
     <title>Live Annotation Tools</title>
 
 <!--    <script type="text/javascript" src="acolorpicker.d.ts"></script>-->
-<!--    <script type="text/javascript" src="acolorpicker.js"></script>-->
+<!--    <script type="module" src="acolorpicker.js"></script>-->
+    <link rel="stylesheet" href="./coloris.css"/>
+    <script src="./coloris.js"></script>
     <script type="module" src="mainToolbarRenderer.js"></script>
     <link rel="stylesheet" href="mainToolbar.css">
 </head>
@@ -111,23 +113,26 @@
                 </div>
             </div>
 
-<!--            <div class="color-picker">-->
-
-<!--            </div>-->
 
             <div id="color-entry-area" class="color-entry-area">
-                <div>
-                    <label for="red-input">R:</label>
-                    <input type="number" id="red-input" min="0" max="255" placeholder="0-255">
+
+                <div class="color-picker">
+                    <input id="custom-color-input" class="dark-input" type="text" data-coloris style="display: none">
                 </div>
-                <div>
-                    <label for="green-input">G:</label>
-                    <input type="number" id="green-input" min="0" max="255" placeholder="0-255">
-                </div>
-                <div>
-                    <label for="blue-input">B:</label>
-                    <input type="number" id="blue-input" min="0" max="255" placeholder="0-255">
-                </div>
+
+
+<!--                <div>-->
+<!--                    <label for="red-input">R:</label>-->
+<!--                    <input type="number" id="red-input" min="0" max="255" placeholder="0-255">-->
+<!--                </div>-->
+<!--                <div>-->
+<!--                    <label for="green-input">G:</label>-->
+<!--                    <input type="number" id="green-input" min="0" max="255" placeholder="0-255">-->
+<!--                </div>-->
+<!--                <div>-->
+<!--                    <label for="blue-input">B:</label>-->
+<!--                    <input type="number" id="blue-input" min="0" max="255" placeholder="0-255">-->
+<!--                </div>-->
 
                 <button id="finish-setting-color-btn">OK</button>
 

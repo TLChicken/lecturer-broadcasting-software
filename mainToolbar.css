@@ -305,6 +305,7 @@ body {
     padding-top: 30px;
 }
 
+.dark-input,
 input[type="number"] {
     background-color: #383838;
     font-family: Ubuntu-Bold;

@@ -1,5 +1,6 @@
 
 // import { AColorPicker } from "./acolorpicker";
+// const AColorPicker = require('a-color-picker');
 
 const params = new URLSearchParams(window.location.search);
 
@@ -92,6 +93,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     }
+
+
+    Coloris({
+        themeMode: 'dark',
+        alpha: false,
+        // format: 'rgb'
+    })
 
 
     window.ipcRender.receive("enter-drawing-mode", () => {
@@ -367,9 +375,20 @@ function setupColorEntry(r, g, b, callback) {
     document.getElementById('color-entry-area').style.display = 'flex';
     document.getElementById('settings-color-container-wrapper').style.display = 'none';
 
-    document.getElementById('red-input').value = r;
-    document.getElementById('green-input').value = g;
-    document.getElementById('blue-input').value = b;
+    // document.getElementById('red-input').value = r;
+    // document.getElementById('green-input').value = g;
+    // document.getElementById('blue-input').value = b;
+
+    let rgbStr = "rgb(" + r + "," + g + "," + b + ")";
+    console.log(rgbStr);
+    let hexedStr = rgbToHex(rgbStr)
+    console.log(hexedStr)
+
+    Coloris({
+        parent: '.color-picker',
+        inline: true,
+        defaultColor: hexedStr
+    });
 
     let okBtn = document.getElementById('finish-setting-color-btn');
 
@@ -378,9 +397,23 @@ function setupColorEntry(r, g, b, callback) {
     okBtn.parentNode.replaceChild(newOkBtn, okBtn);
 
     newOkBtn.addEventListener("click", () => {
-        const red = document.getElementById('red-input').value;
-        const green = document.getElementById('green-input').value;
-        const blue = document.getElementById('blue-input').value;
+        const aftPickingValue = document.getElementById('clr-color-value').value;
+
+        console.log(aftPickingValue);
+
+        const convertedToRBG = rgbaToRbg(hexToRgba(aftPickingValue));
+
+        let rgbRegex = /^rgb\(\s*(-?\d+)(%?)\s*,\s*(-?\d+)(%?)\s*,\s*(-?\d+)(%?)\s*\)$/;
+        let result, red, green, blue = null;
+        if ( (result = rgbRegex.exec(convertedToRBG)) ) {
+            red = componentFromStr(result[1], result[2]);
+            green = componentFromStr(result[3], result[4]);
+            blue = componentFromStr(result[5], result[6]);
+        }
+
+        // const red = document.getElementById('red-input').value;
+        // const green = document.getElementById('green-input').value;
+        // const blue = document.getElementById('blue-input').value;
 
         if (red == null || green == null || blue == null) {
             alert('RGB values must be set between 0 and 255');
@@ -446,4 +479,52 @@ function openColorPicker(colorId) {
 
     });
     colorPicker.click();
+}
+
+
+
+
+
+
+
+
+
+function hexToRgba(hexString) {
+    var c;
+    if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hexString)){
+        c= hexString.substring(1).split('');
+        if(c.length== 3){
+            c= [c[0], c[0], c[1], c[1], c[2], c[2]];
+        }
+        c= '0x'+c.join('');
+        return 'rgba('+[(c>>16)&255, (c>>8)&255, c&255].join(',')+',1)';
+    }
+    throw new Error('Hex String not in correct format: ' + hexString);
+}
+
+
+function componentFromStr(numStr, percent) {
+    var num = Math.max(0, parseInt(numStr, 10));
+    return percent ?
+        Math.floor(255 * Math.min(100, num) / 100) : Math.min(255, num);
+}
+
+
+function rgbToHex(rgb) {
+    var rgbRegex = /^rgb\(\s*(-?\d+)(%?)\s*,\s*(-?\d+)(%?)\s*,\s*(-?\d+)(%?)\s*\)$/;
+    var result, r, g, b, hex = "";
+    if ( (result = rgbRegex.exec(rgb)) ) {
+        r = componentFromStr(result[1], result[2]);
+        g = componentFromStr(result[3], result[4]);
+        b = componentFromStr(result[5], result[6]);
+
+        hex = "#" + (0x1000000 + (r << 16) + (g << 8) + b).toString(16).slice(1);
+    }
+    return hex;
+}
+
+function rgbaToRbg(rgbaStr) {
+    let edited = rgbaStr.replace(/,(?=[^,]+$).*/, ')'); // Regex from me courtesy of CS4248 (might possibly be wrong but I think its correct)
+    edited = edited.replace("rgba", "rgb");
+    return edited;
 }
