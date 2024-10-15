@@ -465,6 +465,49 @@ hr {
     justify-content: center;
 }
 
+.section-with-nav {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.features-nav {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    flex-grow: 1;
+    align-self: stretch;
+    background-color: #CACACA;
+    border-radius: 10px;
+
+    padding-left: 20px;
+    padding-right: 20px;
+
+    text-align: center;
+}
+
+.features-nav a {
+    transition: 0.2s;
+    width: 100%;
+    padding: 2px 0px 2px 0px; /* Top Right Bottom Left */
+    border-radius: 5px;
+}
+
+.features-nav a:hover {
+    background-color: #FFFFFF;
+}
+
+.features-nav a:active {
+    background-color: #5399A2;
+    color: #FFFFFF;
+}
+
+
 /* Main Page Bottom Part */
 .features {
     display: flex;
