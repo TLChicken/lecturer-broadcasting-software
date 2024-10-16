@@ -313,6 +313,7 @@ h1 {
 
 .quick-start-section ul li {
     padding-left: 15px;
+    margin-left: 15px;
 }
 
 .quick-start-section table, .quick-start-section td {
@@ -544,6 +545,10 @@ hr {
 
 .features .feature p {
     color: #333;
+}
+
+.features .highlight {
+    color: #e62117;
 }
 
 .secondary-text {
