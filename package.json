@@ -1,7 +1,7 @@
 {
   "name": "live-annotation-tools",
   "version": "1.0.0",
-  "description": "Annotation Tools specially made for Lecturers to use live during lessons",
+  "description": "Annotation Tools specially made for Lecturers or presenters to use live during lessons or demonstrations",
   "main": "main.js",
   "author": "TLC",
   "scripts": {
@@ -12,7 +12,7 @@
     "pack": "electron-builder --dir",
     "start": "electron-forge start"
   },
-  "repository": "https://github.com/agracio/electron-edge-js-quick-start",
+  "repository": "https://github.com/TLChicken/lecturer-broadcasting-software",
   "keywords": [
     "Electron",
     "quick",
@@ -22,7 +22,7 @@
     "Edge",
     "Edge.js"
   ],
-  "license": "MIT",
+  "license": "GPL-3.0-only",
   "dependencies": {
     "a-color-picker": "^1.2.1",
     "electron-squirrel-startup": "^1.0.1",
@@ -47,6 +47,7 @@
   "devDependencies": {
     "@electron-forge/cli": "^7.4.0",
     "@electron-forge/maker-deb": "^7.4.0",
+    "@electron-forge/maker-dmg": "^7.5.0",
     "@electron-forge/maker-rpm": "^7.4.0",
     "@electron-forge/maker-squirrel": "^7.4.0",
     "@electron-forge/maker-zip": "^7.4.0",

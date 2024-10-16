@@ -23,6 +23,13 @@ module.exports = {
       name: '@electron-forge/maker-rpm',
       config: {},
     },
+    {
+      name: '@electron-forge/maker-dmg',
+      config: {
+        background: './assets/icons/dmg-icon.png',
+        format: 'ULFO'
+      }
+    },
   ],
   plugins: [
     {
