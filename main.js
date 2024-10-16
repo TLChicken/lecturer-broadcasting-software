@@ -149,7 +149,7 @@ function createOverlayWindow() {
   mainOverlayWindow.loadURL(`file://${__dirname}/overlayStart.html?beginBrushColor=${userSettings.currColor}&beginBrushSize=${userSettings.brushSizes[0]}`);
 
   mainOverlayWindow.setAlwaysOnTop(true, "pop-up-menu");
-  mainOverlayWindow.setFullScreen(true);
+  // mainOverlayWindow.setFullScreen(true);  // Cannot fullscreen otherwise the overlay will open in a new desktop instance thing on Mac and it looks like black screen
   mainOverlayWindow.setMinimizable(false);
   mainOverlayWindow.setResizable(false);
   mainOverlayWindow.setIgnoreMouseEvents(true, {
