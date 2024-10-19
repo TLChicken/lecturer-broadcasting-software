@@ -155,16 +155,23 @@ h1 {
     display: none;
 }
 
+.slideshow-body-area {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .slideshow-prev, .slideshow-next {
     cursor: pointer;
     position: absolute;
-    top: 50%;
+    /*top: 50%;*/
     width: auto;
-    margin-top: -22px;
+    /*margin-top: -22px;*/
     padding: 16px;
     color: #BF0000;
     font-weight: bold;
-    font-size: 36px;
+    font-size: 4vw;
     transition: 0.6s ease;
     user-select: none;
 }
@@ -185,8 +192,8 @@ h1 {
 
 .slideshow-caption, .quick-start-caption {
     color: #434343;
-    font-size: 20px;
-    padding: 8px 12px;
+    font-size: clamp(0.25rem, 1.5vw, 1.5rem);
+    padding: 8px;
     position: relative;
     width: 100%;
     text-align: center;
@@ -258,7 +265,7 @@ h1 {
     display: flex;
     justify-content: space-around;
     gap: 10px;
-    padding: 40px 50px;
+    padding: 2vw 2.5vw;
     background-color: #f5f5f5;
 }
 
@@ -283,7 +290,7 @@ h1 {
     border: 1px solid #434343;
     border-radius: 15px;
     font-weight: bold;
-    font-size: 1.2rem;
+    font-size: clamp(1.2rem, 2vw, 2.5rem);
     color: #000;
     margin-bottom: 10px;
 }
@@ -316,8 +323,15 @@ h1 {
     font-family: "Bakbak One", sans-serif;
     font-weight: 400;
     font-style: normal;
-    font-size: 32px;
+    /*font-size: 32px;*/
+    font-size: clamp(1.5rem, 3vw, 4rem);
 }
+/*@media screen and (min-width: 1000px) {*/
+/*    .quick-start-text h2 {*/
+/*        font-size: 2vw;*/
+/*    }*/
+
+/*}*/
 
 .quick-start-text .highlight {
     color: #e62117;
@@ -358,8 +372,16 @@ h1 {
     font-family: "Bakbak One", sans-serif;
     font-weight: 400;
     font-style: normal;
-    font-size: 32px;
+    /*font-size: 32px;*/
+    font-size: 3vw;
 }
+@media screen and (min-width: 1000px) {
+    .quick-start-text h3 {
+        font-size: 2vw;
+    }
+
+}
+
 
 .quick-start-text h4 {
     color: #484848;
@@ -416,7 +438,8 @@ hr {
 .img-center-65-container {
     display: block;
     margin: 0 auto;
-    width: 65%;
+    /*width: 65%;*/
+    padding: 0 5vw;
 }
 
 .features-listing-container {
@@ -440,8 +463,15 @@ hr {
     font-family: "Bakbak One", sans-serif;
     font-weight: 400;
     font-style: normal;
-    font-size: 24px;
+    /*font-size: 24px;*/
+    font-size: clamp(1.5rem, 2vw, 3rem);
 }
+/*@media screen and (min-width: 1000px) {*/
+/*    .features-icon-desc-text {*/
+/*        font-size: 1.5vw;*/
+/*    }*/
+
+/*}*/
 
 .features-listing-container {
 
@@ -463,6 +493,12 @@ hr {
     gap: 10%;
     justify-content: center;
 
+}
+
+.toolbar-left-side-img {
+    max-height: 70vh;
+    max-width: 50%;
+    object-fit: contain;
 }
 
 .flex-col-center-udlr {
@@ -539,10 +575,11 @@ hr {
     justify-content: space-around;
     padding: 40px;
     background-color: #f0f0f0;
+    gap: 2vw;
 }
 
 .features .feature {
-    width: 45%;
+    max-width: 500px;
     margin-bottom: 30px;
 }
 
@@ -552,7 +589,7 @@ hr {
     font-family: "Bakbak One", sans-serif;
     font-weight: 400;
     font-style: normal;
-    font-size: 32px;
+    font-size: 2.5vw;
 
 }
 
@@ -562,7 +599,7 @@ hr {
     font-family: "Bakbak One", sans-serif;
     font-weight: 400;
     font-style: normal;
-    font-size: 32px;
+    font-size: 3vw;
 
 }
 
