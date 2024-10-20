@@ -374,6 +374,7 @@ function setupColorEntry(r, g, b, callback) {
 
     document.getElementById('color-entry-area').style.display = 'flex';
     document.getElementById('settings-color-container-wrapper').style.display = 'none';
+    document.getElementById('color-themes-dropdown').style.display = 'none';
 
     // document.getElementById('red-input').value = r;
     // document.getElementById('green-input').value = g;
@@ -424,6 +425,7 @@ function setupColorEntry(r, g, b, callback) {
 
         document.getElementById('color-entry-area').style.display = 'none';
         document.getElementById('settings-color-container-wrapper').style.display = 'block';
+        document.getElementById('color-themes-dropdown').style.display = 'block';
 
     })
 
