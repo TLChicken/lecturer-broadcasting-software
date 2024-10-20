@@ -151,7 +151,11 @@ class TLCBrush extends Brush {
     getMouseCursorPath(x, y) {
         let cursorPath = new Path2D();
 
-        cursorPath.arc(x, y, this.size / 2, 0, 2 * Math.PI);
+        // cursorPath.arc(x, y, this.size / 2, 0, 2 * Math.PI);
+
+        // Temp Square Cursor
+        cursorPath.rect(Math.floor(x - (this.size / 2)), Math.floor(y - (this.size / 2)), this.size, this.size);
+
 
         return cursorPath;
     }
