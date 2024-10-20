@@ -151,6 +151,10 @@ document.addEventListener('DOMContentLoaded', () => {
         kbBtnList.forEach(btn => btn.disabled = false);
 
         document.getElementById(textHtmlEle).style.backgroundColor = "inherit";
+
+        document.getElementById("close-settings-btn").style.display = "block";
+        let settingsTabBtnList = Array.from(document.querySelectorAll('.settings-tab-btn'));
+        settingsTabBtnList.forEach(btn => btn.disabled = false);
     });
 
     window.ipcRender.receive("response-get-user-settings", ( userSettings ) => {
@@ -467,6 +471,10 @@ function changeKeybind(htmlIndexEle, keybindArrIndexPlusOne) {
     // Make button not clickable while choosing key
     let kbBtnList = Array.from(document.querySelectorAll('.keybind-btn'));
     kbBtnList.forEach(btn => btn.disabled = true);
+
+    document.getElementById("close-settings-btn").style.display = "none";
+    let settingsTabBtnList = Array.from(document.querySelectorAll('.settings-tab-btn'));
+    settingsTabBtnList.forEach(btn => btn.disabled = true);
 
     document.getElementById(htmlIndexEle).style.backgroundColor = "#FF0000";
 }

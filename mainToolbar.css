@@ -200,6 +200,10 @@ body {
     background-color: #39686E
 }
 
+.settings-tab-holder button:disabled {
+    background-color: #242424;
+}
+
 .unactivated-btn {
     background-color: #434343;
 }
@@ -232,6 +236,12 @@ body {
 
     position: relative;
     display: inline-block;
+}
+
+select { /* color-themes-dropdown */
+    background-color: #383838;
+    font-family: Ubuntu-Bold;
+    color: #CACACA;
 }
 
 .dropdown-btn {
