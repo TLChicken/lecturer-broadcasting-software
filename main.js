@@ -28,6 +28,7 @@ console.log(userSettings.convertToSaveJson());
 let isInDrawingMode = false;
 let isMouseDown = false;
 let lastDrawnCoors = { x: -1, y: -1};
+let isInSlideshowRecMode = false;
 
 let currentlyChangingKeybindCallback = null;
 
@@ -931,4 +932,24 @@ ipcMain.on("set-color-theme", (event, args) => {
 
   setColorsFromTheme(args.colorThemeId);
 })
+
+
+ipcMain.on("toggle-slideshow-recording", (event, args) => {
+  console.log("Toggle Slideshow Recording Event RECEIVED");
+  console.log(args);
+
+ if (isInSlideshowRecMode) {
+   // Turn off
+   isInSlideshowRecMode = false;
+   mainWindow.webContents.send("response-slideshow-recording-btn", { isSetToOn: false });
+   console.log("Turned Off");
+ } else {
+   // Turn on
+   isInSlideshowRecMode = true;
+   mainWindow.webContents.send("response-slideshow-recording-btn", { isSetToOn: true });
+   console.log("Turned On");
+ }
+
+})
+
 

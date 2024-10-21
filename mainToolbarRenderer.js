@@ -31,7 +31,9 @@ document.addEventListener('DOMContentLoaded', () => {
         eraser: () =>  {
             window.ipcRender.send("select-eraser");
         },
-        startPresentation: () => console.log('Screen capture tool activated'),
+        startPresentation: () => {
+            window.ipcRender.send("toggle-slideshow-recording");
+        },
         colorOptions: () => {
             openColorPaletteToolbar();
         },
@@ -140,6 +142,20 @@ document.addEventListener('DOMContentLoaded', () => {
         toggleButtonOff("pen");
         toggleButtonOff("highlighter");
         toggleButtonOn("eraser");
+    })
+
+    window.ipcRender.receive("response-slideshow-recording-btn", (args) => {
+        console.log(args);
+
+        let isSetToOn = args.isSetToOn;
+
+
+
+        if (isSetToOn) {
+            toggleButtonOn("startPresentation");
+        } else {
+            toggleButtonOff("startPresentation");
+        }
     })
 
     window.ipcRender.receive("response-get-keybind-key", ( keyString, textHtmlEle ) => {

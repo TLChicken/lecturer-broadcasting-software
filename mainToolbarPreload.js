@@ -38,6 +38,8 @@ const ipc = {
 
             'set-color-theme',
             'set-color-to',
+
+            'toggle-slideshow-recording',
         ],
         // Main -> Renderer
         'receive': [
@@ -51,6 +53,7 @@ const ipc = {
             'activate-pen',
             'activate-highlighter',
             'activate-eraser',
+            'response-slideshow-recording-btn',
 
             'response-get-keybind-key',
             'response-get-color',
