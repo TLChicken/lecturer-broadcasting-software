@@ -254,6 +254,14 @@ app.on('ready', () => {
       let unusedPromise = screenshotAndSave();
     }
 
+    if (userSettings.colorKeyBinds[lbsConsts.keybindIndex_nextSlide] === e.keycode) {
+      if (isInSlideshowRecMode) {
+        console.log("Next Slide Detected");
+
+        recordSlideAndGoNextSlide(e.keycode);
+      }
+    }
+
 
     if (isInDrawingMode) {
 
@@ -680,6 +688,14 @@ async function screenshotAndSave() {
     const fullWidth = width * dispScaleFactor;
     const fullHeight = height * dispScaleFactor;
 
+
+    let currToolbarSize = mainWindow.getSize();
+    console.log(currToolbarSize);
+    
+    mainWindow.setResizable(true);
+    mainWindow.setSize(0, 0);
+
+
     const sources = await desktopCapturer.getSources({ types: ['screen'], thumbnailSize: { width: fullWidth, height: fullHeight }});
 
     // Primary Display
@@ -691,13 +707,11 @@ async function screenshotAndSave() {
     }
 
 
-    let currToolbarSize = mainWindow.getSize();
-    console.log(currToolbarSize);
+
 
     console.log("Screenshot Size: " + fullWidth + "x" + fullHeight);
 
-    mainWindow.setResizable(true);
-    mainWindow.setSize(0, 0);
+
 
     const screenshot = screenSource.thumbnail.resize({
       width: fullWidth,
@@ -716,6 +730,26 @@ async function screenshotAndSave() {
     mainWindow.setSize(dynamicToolbarWidth, dynamicToolbarHeight);
     mainWindow.setResizable(false);
   }
+}
+
+
+function recordSlideAndGoNextSlide(keyPress) {
+  let unusedPromise = screenshotAndSave();
+
+  if (unusedPromise.then(() => {
+    // Screenshot Successfully
+    console.log("Current Slide recorded SUCCESS");
+
+    if (isInDrawingMode) {
+      // Need to pass keypress down to next window
+      console.log("Attempt Passing next slide keypress down");
+
+    }
+
+  }), () => {
+    // Screenshot Fail
+    console.log("Current Slide FAILED to record");
+  });
 }
 
 
