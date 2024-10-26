@@ -2,7 +2,7 @@ process.env['ELECTRON_DISABLE_SECURITY_WARNINGS']=true
 const {app, BrowserWindow, ipcMain, screen, Menu, MenuItem, desktopCapturer} = require("electron");
 const shell = require('electron').shell;
 // const runner = require('./app.js');
-// const robot = require("robotjs");
+const robot = require("robotjs");
 
 const lbsConsts = require('./const');
 const { rgba, rgbaToRbg, hexToRgba, rgba2hex, rgbToHex } = require("./models/colorUtils")
@@ -255,7 +255,7 @@ app.on('ready', () => {
     }
 
     if (userSettings.colorKeyBinds[lbsConsts.keybindIndex_nextSlide] === e.keycode) {
-      if (isInSlideshowRecMode) {
+      if (isInSlideshowRecMode && isInDrawingMode) {
         console.log("Next Slide Detected");
 
         recordSlideAndGoNextSlide(e.keycode);
@@ -740,10 +740,21 @@ function recordSlideAndGoNextSlide(keyPress) {
     // Screenshot Successfully
     console.log("Current Slide recorded SUCCESS");
 
+
+
     if (isInDrawingMode) {
       // Need to pass keypress down to next window
       console.log("Attempt Passing next slide keypress down");
 
+      mainWindow.minimize();
+      mainOverlayWindow.minimize();
+
+      selectEraseAll();
+
+      robot.keyTap("down");  // Now only ArrowRight is supported
+
+      mainWindow.restore();
+      mainOverlayWindow.restore();
     }
 
   }), () => {
