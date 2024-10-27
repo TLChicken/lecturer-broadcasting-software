@@ -95,6 +95,10 @@ class Brush {
         throw new Error("Must override drawAtCoor method");
     }
 
+    getPathsToDraw(x, y, prevCoors) {
+        throw new Error("Must override getPathsToDraw method");
+    }
+
     getMouseCursorPath(x, y) {
         throw new Error("Must override getMouseCursorPath method");
     }
@@ -145,6 +149,37 @@ class TLCBrush extends Brush {
             console.log(drawCoors);
 
             return drawCoors;
+        }
+    }
+
+    internalGetPathToDraw(x, y) {
+        let fillPath = new Path2D();
+
+        fillPath.arc(x, y, this.size / 2, 0, 2 * Math.PI);
+
+        return {
+            path2d: fillPath,
+            color: this.color
+        };
+    }
+
+    getPathsToDraw(x, y, prevCoors) {
+        if (prevCoors.x == -1 && prevCoors.y == -1) {
+            return [this.internalGetPathToDraw(x, y)];
+        } else {
+            console.log(prevCoors);
+            // Mouse was moved fast, need to fill in the area in between
+            let intermediateCoors = getIntermediateCoordinates(prevCoors, {x: x, y: y}, 1);
+
+            console.log(intermediateCoors);
+
+            let pathsToDraw = intermediateCoors.map(( coor ) => {
+                return this.internalGetPathToDraw(coor.x, coor.y);
+            });
+
+            console.log(pathsToDraw);
+
+            return pathsToDraw;
         }
     }
 
@@ -210,6 +245,37 @@ class TLCHighlighter extends Brush {
             console.log(drawCoors);
 
             return drawCoors;
+        }
+    }
+
+    internalGetPathToDraw(x, y) {
+        let fillPath = new Path2D();
+
+        fillPath.rect(x, y - this.size, 3, this.size * 2);
+
+        return {
+            path2d: fillPath,
+            color: this.color
+        };
+    }
+
+    getPathsToDraw(x, y, prevCoors) {
+        if (prevCoors.x == -1 && prevCoors.y == -1) {
+            return [this.internalGetPathToDraw(x, y)];
+        } else {
+            console.log(prevCoors);
+            // Mouse was moved fast, need to fill in the area in between
+            let intermediateCoors = getIntermediateCoordinates(prevCoors, {x: x, y: y}, 1);
+
+            console.log(intermediateCoors);
+
+            let pathsToDraw = intermediateCoors.map(( coor ) => {
+                return this.internalGetPathToDraw(coor.x, coor.y);
+            });
+
+            console.log(pathsToDraw);
+
+            return pathsToDraw;
         }
     }
 
@@ -345,23 +411,33 @@ function drawAtCoor(canvasLayers, x, y, lastDrawnCoors) {
     let canvasCoors = getPointOnCanvas(canvasLayers.topMostLayer, x, y);
     console.log("Drawing pixel at x: ", canvasCoors.x, "  y: ", canvasCoors.y);
 
-    let brushResults = currBrush.drawAtCoor(canvasCoors.x, canvasCoors.y, lastDrawnCoors);
 
     if (currBrush.getBrushType() == BrushType.ADD_PIXEL) {
         const selectedLayerNo = currBrush.getCanvasLayer();
 
+        // Refactored and redid implementation for drawing to use Path2D instead of coors as its more efficient
+        let brushResults = currBrush.getPathsToDraw(canvasCoors.x, canvasCoors.y, lastDrawnCoors);
+
         if (selectedLayerNo != CanvasLayerOrdering.ALL_LAYERS) {
             brushResults.forEach((brushResult) => {
-                if (brushResult.x >= 0 && brushResult.y >= 0) {
-                    drawRectangle(contextLayers[selectedLayerNo], brushResult.color, brushResult.x, brushResult.y, brushResult.w, brushResult.h);
-                }
+                // if (brushResult.x >= 0 && brushResult.y >= 0) {
+                    // drawRectangle(contextLayers[selectedLayerNo], brushResult.color, brushResult.x, brushResult.y, brushResult.w, brushResult.h);
+
+                contextLayers[selectedLayerNo].fillStyle = brushResult.color;
+                contextLayers[selectedLayerNo].fill(brushResult.path2d);
+                // }
             })
         } else {
             // Draw on all layers (This would never be used)
+            console.log("WARNING: ADD PIXEL on all layers called");
 
         }
     } else if (currBrush.getBrushType() == BrushType.REMOVE_PIXEL) {
         const selectedLayerNo = currBrush.getCanvasLayer();
+
+        // Erasing cannot be done using Path2Ds
+        let brushResults = currBrush.drawAtCoor(canvasCoors.x, canvasCoors.y, lastDrawnCoors);
+
 
         if (selectedLayerNo != CanvasLayerOrdering.ALL_LAYERS) {
             // Erase from 1 layer only - CURRENTLY UNUSED
@@ -431,7 +507,7 @@ function redrawMouseCursor(c, ctx, x = previousRedrawX, y = previousRedrawY) {
 
     let currPath = currBrush.getMouseCursorPath(canvasCoor.x, canvasCoor.y);
 
-    console.log(currPath);
+    // console.log(currPath);
 
     ctx.stroke(currPath);
 
