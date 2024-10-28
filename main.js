@@ -169,11 +169,15 @@ function createOverlayWindow() {
   lastDrawnCoors = { x: -1, y: -1};
 
   // Set up Overlay Window vars from UserSettings
-  for (let i = 0; i < userSettings.brushSizes.length; i++) {
-    mainOverlayWindow.webContents.send('canvas-set-brush-size', userSettings.brushSizes[i], i);
-  }
+  // for (let i = 0; i < userSettings.brushSizes.length; i++) {
+  //   mainOverlayWindow.webContents.send('canvas-set-brush-size', userSettings.brushSizes[i], i);
+  // }
 
-  mainOverlayWindow.webContents.send('canvas-changeColor', userSettings.currColor);
+  mainOverlayWindow.webContents.once('dom-ready', () => {
+    selectUsingBrushKey("pen_round");
+  });
+
+  // mainOverlayWindow.webContents.send('canvas-changeColor', userSettings.currColor);
 
 }
 
