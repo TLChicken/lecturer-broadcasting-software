@@ -937,6 +937,13 @@ ipcMain.on("pointer-up-at", (event, args) => {
 })
 
 
+ipcMain.on("selected-brush-by-brush-key", (event, args) => {
+  let brushKey = args;
+  let brushType = lbsConsts.brushes_keys_to_types[brushKey];
+  mainWindow.webContents.send(lbsConsts.brush_types_to_overlaypreload_command[brushType]);
+
+})
+
 
 
 

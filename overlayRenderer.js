@@ -83,6 +83,10 @@ class Brush {
         return CanvasLayerOrdering.MAIN_LAYER;
     }
 
+    getBrushKey() {
+        return "unknown-brush";
+    }
+
     setColor(newColor) {
         throw new Error("Must override setColor method");
     }
@@ -112,6 +116,10 @@ class TLCBrush extends Brush {
 
         this.color = adjustedOpacityColor;
         this.size = size;
+    }
+
+    getBrushKey() {
+        return "pen_round";
     }
 
     setColor(newColor) {
@@ -207,6 +215,10 @@ class TLCSquareBrush extends Brush {
         this.size = size;
     }
 
+    getBrushKey() {
+        return "pen_square";
+    }
+
     setColor(newColor) {
         this.color = newColor;
     }
@@ -264,6 +276,10 @@ class TLCHighlighter extends Brush {
 
         this.color = adjustedOpacityColor;
         this.size = size;
+    }
+
+    getBrushKey() {
+        return "multiple_opac_highlighter";
     }
 
     setColor(newColor) {
@@ -358,6 +374,10 @@ class SingleOpacityHighlighter extends TLCHighlighter {
         this.size = size;
     }
 
+    getBrushKey() {
+        return "single_opac_highlighter";
+    }
+
     getCanvasLayer() {
         return CanvasLayerOrdering.SINGLE_OPACITY_HIGHLIGHTER_LAYER;
     }
@@ -382,6 +402,10 @@ class TLCEraser extends Brush {
 
     getCanvasLayer() {
         return CanvasLayerOrdering.ALL_LAYERS;
+    }
+
+    getBrushKey() {
+        return "eraser";
     }
 
     setColor(newColor) {
@@ -642,7 +666,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
             currBrush = previousBrush;
             redrawMouseCursor(mouseCursorCanvas, mouseCursorCtx);
 
-            window.ipcRender.send('selected-brush-by-brush-key', "brushkey");
+            window.ipcRender.send('selected-brush-by-brush-key', currBrush.getBrushKey());
         }
 
         currBrush.setColor(newColor);
