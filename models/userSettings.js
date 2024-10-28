@@ -60,11 +60,31 @@ class UserSettings {
             this.currColor = saveFileJson.currColor;
             this.brushSizes = saveFileJson.brushSizes;
 
+            // Upgrade save file
+            if ('brushData' in saveFileJson) {
+                console.log("Loading existing brush data from save");
+                this.brushData = saveFileJson.brushData;
+            } else {
+                console.log("Upgrading existing save by adding default brush data");
+                this.brushData = defaultBrushData;
+            }
+
+
             // For when new keybinds are added
             if (this.colorKeyBinds.length < defaultKeybinds.length) {
                 for (let i = this.colorKeyBinds.length; i < defaultKeybinds.length; i++) {
                     this.colorKeyBinds.push(defaultKeybinds[i]);
                 }
+            }
+
+            // For when new brushes are added
+            let brushDataKeys = Object.keys(this.brushData);
+            let defaultBrushDataKeys = Object.keys(defaultBrushData);
+            let missingKeys = defaultBrushDataKeys.filter(x => !brushDataKeys.includes(x));
+
+            for (const missingKey of missingKeys) {
+                console.log("Adding new brush to existing data: " + missingKey.toString());
+                this.brushData[missingKey] = defaultBrushData[missingKey];
             }
         }
 
