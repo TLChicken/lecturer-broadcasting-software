@@ -434,6 +434,16 @@ class TLCEraser extends Brush {
     }
 }
 
+let brushKeyToBrush = {
+    'pen_square': TLCSquareBrush,
+    'pen_round': TLCBrush,
+
+    'multiple_opac_highlighter': TLCHighlighter,
+    'single_opac_highlighter': SingleOpacityHighlighter,
+
+    'eraser': TLCEraser,
+}
+
 const params = new URLSearchParams(window.location.search);
 
 let currBrush = new TLCBrush(params.get("beginBrushColor"), params.get("beginBrushSize"));
@@ -627,38 +637,54 @@ document.addEventListener('DOMContentLoaded', (event) => {
         currBrush.setColor(newColor);
     });
 
-    window.ipcRender.receive('canvas-choose-pen', ( param ) => {
-        console.log("PEN chosen");
-        currBrush = new TLCBrush(changeAlphaRgba(currBrush.color, 1), drawingBrushSize);
+    // window.ipcRender.receive('canvas-choose-pen', ( param ) => {
+    //     console.log("PEN chosen");
+    //     currBrush = new TLCBrush(changeAlphaRgba(currBrush.color, 1), drawingBrushSize);
+    //
+    //     window.ipcRender.send("set-menu-brush-size-slider-value", { newBrushSize: drawingBrushSize });
+    //
+    //     if (isInDrawingMode) {
+    //         redrawMouseCursor(mouseCursorCanvas, mouseCursorCtx);
+    //     }
+    // });
+    //
+    // window.ipcRender.receive('canvas-choose-highlighter', ( param ) => {
+    //     console.log("Highlighter chosen");
+    //     currBrush = new SingleOpacityHighlighter(changeAlphaRgba(currBrush.color, 0.2), drawingBrushSize);
+    //
+    //     window.ipcRender.send("set-menu-brush-size-slider-value", { newBrushSize: drawingBrushSize });
+    //
+    //     if (isInDrawingMode) {
+    //         redrawMouseCursor(mouseCursorCanvas, mouseCursorCtx);
+    //     }
+    // });
+    //
+    // window.ipcRender.receive('canvas-choose-eraser', ( param ) => {
+    //     console.log("Eraser chosen");
+    //     currBrush = new TLCEraser(currBrush.color, erasingBrushSize);
+    //
+    //     window.ipcRender.send("set-menu-brush-size-slider-value", { newBrushSize: erasingBrushSize });
+    //
+    //     if (isInDrawingMode) {
+    //         redrawMouseCursor(mouseCursorCanvas, mouseCursorCtx);
+    //     }
+    // });
 
-        window.ipcRender.send("set-menu-brush-size-slider-value", { newBrushSize: drawingBrushSize });
+    window.ipcRender.receive('canvas-choose-by-brush-key', ( args ) => {
+        console.log("BRUSH KEY chosen: " + args.toString());
+        let theNewBrushClass = brushKeyToBrush[args.brushKey];
+        let currBrushData = args.currBrushData;
+
+        currBrush = new theNewBrushClass(currBrushData.color, currBrushData.size);
+
+        // window.ipcRender.send("set-menu-brush-size-slider-value", { newBrushSize: currBrushData.size });
 
         if (isInDrawingMode) {
             redrawMouseCursor(mouseCursorCanvas, mouseCursorCtx);
         }
     });
 
-    window.ipcRender.receive('canvas-choose-highlighter', ( param ) => {
-        console.log("Highlighter chosen");
-        currBrush = new SingleOpacityHighlighter(changeAlphaRgba(currBrush.color, 0.2), drawingBrushSize);
 
-        window.ipcRender.send("set-menu-brush-size-slider-value", { newBrushSize: drawingBrushSize });
-
-        if (isInDrawingMode) {
-            redrawMouseCursor(mouseCursorCanvas, mouseCursorCtx);
-        }
-    });
-
-    window.ipcRender.receive('canvas-choose-eraser', ( param ) => {
-        console.log("Eraser chosen");
-        currBrush = new TLCEraser(currBrush.color, erasingBrushSize);
-
-        window.ipcRender.send("set-menu-brush-size-slider-value", { newBrushSize: erasingBrushSize });
-
-        if (isInDrawingMode) {
-            redrawMouseCursor(mouseCursorCanvas, mouseCursorCtx);
-        }
-    });
 
     window.ipcRender.receive('draw-mode-activated', ( param ) => {
         console.log("Draw Mode activated");

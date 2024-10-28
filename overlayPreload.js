@@ -25,6 +25,9 @@ const ipc = {
             'canvas-choose-pen',
             'canvas-choose-highlighter',
             'canvas-choose-eraser',
+
+            'canvas-choose-by-brush-key',
+
             'canvas-change-size-by',
             'canvas-set-brush-size',
 

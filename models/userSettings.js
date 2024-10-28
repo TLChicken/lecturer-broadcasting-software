@@ -15,6 +15,32 @@ class SettingsBrushType {
 
 let defaultKeybinds = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, UiohookKey.Shift, UiohookKey.P, UiohookKey.H, UiohookKey.E, UiohookKey.ArrowRight, UiohookKey.M, UiohookKey.Delete, UiohookKey.PrintScreen];
 
+let defaultBrushData = {
+    'pen_square': {
+        size: 10,
+        color: rgba(255, 0, 0, 0)
+    },
+    'pen_round': {
+        size: 10,
+        color: rgba(255, 0, 0, 0)
+    },
+
+    'multiple_opac_highlighter': {
+        size: 20,
+        color: rgba(255, 255, 0, 0)
+    },
+    'single_opac_highlighter': {
+        size: 10,
+        color: rgba(255, 255, 0, 0)
+    },
+
+    'eraser': {
+        size: 30,
+        color: rgba(255, 0, 0, 0)
+    },
+}
+
+
 class UserSettings {
 
     constructor(saveFileJson) {
@@ -24,6 +50,9 @@ class UserSettings {
 
             this.currColor = rgba(255, 0, 0, 0);
             this.brushSizes = [10, 30];
+
+            this.brushData = defaultBrushData;
+
         } else {
             this.colorKeyBinds = saveFileJson.colorKeyBinds;
             this.selectedColors = saveFileJson.selectedColors;
@@ -41,8 +70,10 @@ class UserSettings {
 
         this.isInDrawingMode = false;
 
-        this.brushType = SettingsBrushType.ADD_PIXEL;
+        this.brushType = SettingsBrushType.ADD_PIXEL;  // REMOVE THIS SOON
         this.brushSizeScrollWheelOffset = 1;
+
+        this.currentBrush = "pen_round";
 
     }
 
@@ -52,37 +83,73 @@ class UserSettings {
             selectedColors: this.selectedColors,
 
             currColor: this.currColor,
-            brushSizes: this.brushSizes
+            brushSizes: this.brushSizes,
+
+            brushData: this.brushData
         }
     }
 
-    brushSizeUp() {
-        let currBrushSize = this.brushSizes[this.brushType];
+    brushSizeUp(currBrushKey) {
+        let currBrushSize = this.brushData[currBrushKey].size;
         let newBrushSize = currBrushSize + this.brushSizeScrollWheelOffset;
 
         if (newBrushSize <= 200) {
-            this.brushSizes[this.brushType] = newBrushSize;
+            this.brushData[currBrushKey].size = newBrushSize;
             return newBrushSize;
         } else {
             return currBrushSize;
         }
     }
 
-    brushSizeDown() {
-        let currBrushSize = this.brushSizes[this.brushType];
+    brushSizeDown(currBrushKey) {
+        let currBrushSize = this.brushData[currBrushKey].size;
         let newBrushSize = currBrushSize - this.brushSizeScrollWheelOffset;
 
         if (newBrushSize >= 1) {
-            this.brushSizes[this.brushType] = newBrushSize;
+            this.brushData[currBrushKey].size = newBrushSize;
             return newBrushSize;
         } else {
             return currBrushSize;
         }
     }
 
-    setColor(rgbaStr) {
+    setColor(rgbaStr, currBrushKey) {
         this.currColor = rgbaStr;
+
+        this.brushData[currBrushKey].color = rgbaStr;
     }
+
+    getBrushData() {
+        return this.brushData;
+    }
+
+    // brushSizeUp() {
+    //     let currBrushSize = this.brushSizes[this.brushType];
+    //     let newBrushSize = currBrushSize + this.brushSizeScrollWheelOffset;
+    //
+    //     if (newBrushSize <= 200) {
+    //         this.brushSizes[this.brushType] = newBrushSize;
+    //         return newBrushSize;
+    //     } else {
+    //         return currBrushSize;
+    //     }
+    // }
+    //
+    // brushSizeDown() {
+    //     let currBrushSize = this.brushSizes[this.brushType];
+    //     let newBrushSize = currBrushSize - this.brushSizeScrollWheelOffset;
+    //
+    //     if (newBrushSize >= 1) {
+    //         this.brushSizes[this.brushType] = newBrushSize;
+    //         return newBrushSize;
+    //     } else {
+    //         return currBrushSize;
+    //     }
+    // }
+    //
+    // setColor(rgbaStr) {
+    //     this.currColor = rgbaStr;
+    // }
 
 }
 

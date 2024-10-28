@@ -190,3 +190,63 @@ exports.colorThemes_themeColors = {
             rgba(182, 0, 188, 1)],
 
 };
+
+
+// class BrushCategory {
+//     static get PEN () {
+//         return 0;
+//     }
+//
+//     static get HIGHLIGHTER () {
+//         return 1;
+//     }
+//
+//     static get ERASER () {
+//         return 2;
+//     }
+// }
+//
+// class PenSubCat {
+//     static get MAIN_PEN () {
+//         return "MAIN_PEN";
+//     }
+// }
+//
+// class HighlighterSubCat {
+//     static get MAIN_HIGHLIGHTER () {
+//         return "MAIN_HIGHLIGHTER";
+//     }
+//
+//     static get SINGLE_OPACITY_HIGHLIGHTER () {
+//         return "SINGLE_OPACITY_HIGHLIGHTER";
+//     }
+// }
+//
+// class EraserSubCat {
+//     static get MAIN_ERASER () {
+//         return "MAIN_ERASER";
+//     }
+// }
+
+exports.brushes_keys = ['pen', 'highlighter', 'eraser'];
+
+exports.brushes_keys_to_types = {
+    'pen_square': "pen",
+    'pen_round': "pen",
+
+    'multiple_opac_highlighter': "highlighter",
+    'single_opac_highlighter': "highlighter",
+
+    'eraser': "eraser",
+};
+
+exports.brush_types_to_overlaypreload_command = {
+    'pen': "activate-pen",
+    'highlighter': "activate-highlighter",
+    'eraser': "activate-eraser",
+}
+
+// module.exports.BrushCategory = BrushCategory;
+// module.exports.PenSubCat = PenSubCat;
+// module.exports.HighlighterSubCat = HighlighterSubCat;
+// module.exports.EraserSubCat = EraserSubCat;

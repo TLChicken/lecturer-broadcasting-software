@@ -20,6 +20,7 @@ const ipc = {
             'select-pen',
             'select-highlighter',
             'select-eraser',
+            'select-using-brushkey',
 
             'select-erase-all',
 

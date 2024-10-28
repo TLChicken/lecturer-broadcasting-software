@@ -268,29 +268,24 @@ app.on('ready', () => {
       if (userSettings.colorKeyBinds[lbsConsts.keybindIndex_selectPen] === e.keycode) {
         // Toggle Pen
         console.log("Pen Toggled");
-        selectPen();
+        // selectPen();
+        selectUsingBrushKey("pen_round");
       }
 
       if (userSettings.colorKeyBinds[lbsConsts.keybindIndex_selectHighlighter] === e.keycode) {
         // Toggle Highlighter
         console.log("Highlighter Toggled");
-        selectHighlighter();
+        // selectHighlighter();
+        selectUsingBrushKey("single_opac_highlighter");
       }
 
       if (userSettings.colorKeyBinds[lbsConsts.keybindIndex_selectEraser] === e.keycode) {
         // Toggle Eraser
         console.log("Eraser Toggled");
-        selectEraser();
+        // selectEraser();
+        selectUsingBrushKey("eraser");
       }
 
-      if (userSettings.colorKeyBinds[lbsConsts.keybindIndex_nextSlide] === e.keycode) {
-        // Take screenshot
-
-        // Clear Overlay
-
-        // Use automation to go to the next slide
-
-      }
 
       if (userSettings.colorKeyBinds[lbsConsts.keybindIndex_deleteAll] === e.keycode) {
         console.log("Delete All Drawings Keybind Toggled");
@@ -373,10 +368,10 @@ app.on('ready', () => {
 
         if (mainOverlayWindow != null) {
           if (-event.rotation > 0) {
-            let newBrushSize = userSettings.brushSizeUp();
+            let newBrushSize = userSettings.brushSizeUp(userSettings.currentBrush);
             mainOverlayWindow.webContents.send('canvas-set-brush-size', newBrushSize, null);
           } else if (-event.rotation < 0) {
-            let newBrushSize = userSettings.brushSizeDown();
+            let newBrushSize = userSettings.brushSizeDown(userSettings.currentBrush);
             mainOverlayWindow.webContents.send('canvas-set-brush-size', newBrushSize, null);
           } else {
             console.log("Wheel event with 0 vertical rotation")
@@ -583,9 +578,24 @@ function selectEraser() {
   userSettings.brushType = 1;
 }
 
+function selectUsingBrushKey(brushKey) {
+  // TELL OVERLAY WINDOW to choose brush
+  console.log("Selecting with brush key: " + brushKey.toString());
+  mainOverlayWindow.webContents.send('canvas-choose-by-brush-key', {
+    brushKey: brushKey,
+    currBrushData: userSettings.getBrushData()[brushKey]
+  });
+
+  let brushType = lbsConsts.brushes_keys_to_types[brushKey];
+  mainWindow.webContents.send(lbsConsts.brush_types_to_overlaypreload_command[brushType]);
+
+  userSettings.currentBrush = brushKey;
+}
+
+
 function changeCurrDrawingModeColor(newColorRgba) {
   mainOverlayWindow.webContents.send('canvas-changeColor', newColorRgba);
-  userSettings.setColor(newColorRgba);
+  userSettings.setColor(newColorRgba, userSettings.currentBrush);
 }
 
 function selectEraseAll() {
@@ -946,6 +956,10 @@ ipcMain.on("select-highlighter", (event, args) => {
 
 ipcMain.on("select-eraser", (event, args) => {
   selectEraser();
+})
+
+ipcMain.on("select-using-brushkey", (event, args) => {
+  selectUsingBrushKey(args.brushkey);
 })
 
 ipcMain.on("select-erase-all", (event, args) => {

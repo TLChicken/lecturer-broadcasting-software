@@ -23,13 +23,25 @@ document.addEventListener('DOMContentLoaded', () => {
             window.ipcRender.send("toggle-drawing-mode");
         },
         pen: () =>  {
-            window.ipcRender.send("select-pen");
+            // window.ipcRender.send("select-pen");
+
+            window.ipcRender.send("select-using-brushkey", {
+                brushkey: "pen_round",
+            });
         },
         highlighter: () =>  {
-            window.ipcRender.send("select-highlighter");
+            // window.ipcRender.send("select-highlighter");
+
+            window.ipcRender.send("select-using-brushkey", {
+                brushkey: "single_opac_highlighter",
+            });
         },
         eraser: () =>  {
-            window.ipcRender.send("select-eraser");
+            // window.ipcRender.send("select-eraser");
+
+            window.ipcRender.send("select-using-brushkey",{
+                brushkey: "eraser",
+            });
         },
         startPresentation: () => {
             window.ipcRender.send("toggle-slideshow-recording");
