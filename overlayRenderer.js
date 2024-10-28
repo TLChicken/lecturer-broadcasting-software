@@ -197,6 +197,65 @@ class TLCBrush extends Brush {
 
 }
 
+class TLCSquareBrush extends Brush {
+    constructor(color = rgba(255, 0, 0, 1), size = 10) {
+        super();
+
+        let adjustedOpacityColor = changeAlphaRgba(color, 1);
+
+        this.color = adjustedOpacityColor;
+        this.size = size;
+    }
+
+    setColor(newColor) {
+        this.color = newColor;
+    }
+
+    setSize(newSize) {
+        this.size = newSize;
+    }
+
+    internalGetPathToDraw(x, y) {
+        let fillPath = new Path2D();
+
+        fillPath.rect(Math.floor(x - (this.size / 2)), Math.floor(y - (this.size / 2)), this.size, this.size);
+
+        return {
+            path2d: fillPath,
+            color: this.color
+        };
+    }
+
+    getPathsToDraw(x, y, prevCoors) {
+        if (prevCoors.x == -1 && prevCoors.y == -1) {
+            return [this.internalGetPathToDraw(x, y)];
+        } else {
+            console.log(prevCoors);
+            // Mouse was moved fast, need to fill in the area in between
+            let intermediateCoors = getIntermediateCoordinates(prevCoors, {x: x, y: y}, 1);
+
+            console.log(intermediateCoors);
+
+            let pathsToDraw = intermediateCoors.map(( coor ) => {
+                return this.internalGetPathToDraw(coor.x, coor.y);
+            });
+
+            console.log(pathsToDraw);
+
+            return pathsToDraw;
+        }
+    }
+
+    getMouseCursorPath(x, y) {
+        let cursorPath = new Path2D();
+
+        cursorPath.rect(Math.floor(x - (this.size / 2)), Math.floor(y - (this.size / 2)), this.size, this.size);
+
+        return cursorPath;
+    }
+
+}
+
 class TLCHighlighter extends Brush {
     constructor(color = rgba(255, 0, 0, 0.2), size = 10) {
         super();
