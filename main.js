@@ -614,6 +614,13 @@ function changeKeybind(keybindIndex, changedSuccessfullyCallback) {
     if (userSettings.colorKeyBinds.includes(detectedKey)) {
       // Display Error
       console.log("Keybind not changed, CONFLICTING KEY")
+
+      let unusedResult = dialog.showMessageBox(mainWindow, {
+        title: "LAT Tips",
+        type: "info",
+        message: "Conflicting Key! You have chosen " + lbsConsts.UiohookKeyREVERSE[detectedKey],
+      })
+
       return false;
 
     } else {
