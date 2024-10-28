@@ -447,6 +447,9 @@ let brushKeyToBrush = {
 const params = new URLSearchParams(window.location.search);
 
 let currBrush = new TLCBrush(params.get("beginBrushColor"), params.get("beginBrushSize"));
+
+let previousBrush = new TLCBrush(params.get("beginBrushColor"), params.get("beginBrushSize"));
+
 let drawingBrushSize = 10;
 let erasingBrushSize = 30;
 
@@ -634,6 +637,14 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
     window.ipcRender.receive('canvas-changeColor', ( newColor ) => {
         console.log('Canvas Change Color Event Received');
+
+        if (currBrush.getBrushType() == BrushType.REMOVE_PIXEL) {
+            currBrush = previousBrush;
+            redrawMouseCursor(mouseCursorCanvas, mouseCursorCtx);
+
+            window.ipcRender.send('selected-brush-by-brush-key', "brushkey");
+        }
+
         currBrush.setColor(newColor);
     });
 
@@ -674,6 +685,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
         console.log("BRUSH KEY chosen: " + args.toString());
         let theNewBrushClass = brushKeyToBrush[args.brushKey];
         let currBrushData = args.currBrushData;
+
+        if (currBrush.getBrushType() != BrushType.REMOVE_PIXEL) {
+            previousBrush = currBrush;
+        }
 
         currBrush = new theNewBrushClass(currBrushData.color, currBrushData.size);
 

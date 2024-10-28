@@ -16,7 +16,9 @@ const ipc = {
             'set-menu-brush-size-slider-value',
             'pointer-down-at',
             'pointer-move-at',
-            'pointer-up-at'
+            'pointer-up-at',
+
+            'selected-brush-by-brush-key',
         ],
         // Main -> Renderer
         'receive': [
