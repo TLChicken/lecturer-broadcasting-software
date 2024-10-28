@@ -1,5 +1,5 @@
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS']=true
-const {app, BrowserWindow, ipcMain, screen, Menu, MenuItem, desktopCapturer} = require("electron");
+const {app, BrowserWindow, ipcMain, screen, Menu, MenuItem, desktopCapturer, clipboard, dialog} = require("electron");
 const shell = require('electron').shell;
 // const runner = require('./app.js');
 const robot = require("robotjs");
@@ -72,8 +72,8 @@ function createToolbar() {
   const { width, height } = screen.getPrimaryDisplay().workAreaSize;
   const dispScaleFactor = screen.getPrimaryDisplay().scaleFactor;
 
-  dynamicToolbarWidth = width * dispScaleFactor / 30;   // 64
-  dynamicToolbarHeight = height * dispScaleFactor / 2;   // 500 (540)
+  dynamicToolbarWidth = Math.round(width * dispScaleFactor / 30);   // 64
+  dynamicToolbarHeight = Math.round(height * dispScaleFactor / 1.85);   // 500 (540)
 
   // Create the browser window.
   mainWindow = new BrowserWindow({
@@ -596,6 +596,30 @@ function selectUsingBrushKey(brushKey) {
   userSettings.currentBrush = brushKey;
 }
 
+function insertTextFromClipboard() {
+  console.log("Activate insert text from clipboard");
+
+  let clipboardContents = clipboard.readText();
+  console.log(clipboardContents);
+
+  if (clipboardContents.length == 0) {
+    let unusedResult = dialog.showMessageBox(mainWindow, {
+      title: "LAT Tips",
+      type: "info",
+      message: "Clipboard is empty. Copy some text first, then use the Insert Text button to paste it on the overlay.",
+    })
+
+    return;
+  }
+
+  // Perform automatic line wrapping if contents is too long (whats the limit?)
+
+  // Makes the text become the mouse overlay in light gray color
+
+  // Left click to put text down permanently on canvas
+
+}
+
 
 function changeCurrDrawingModeColor(newColorRgba) {
   mainOverlayWindow.webContents.send('canvas-changeColor', newColorRgba);
@@ -978,6 +1002,10 @@ ipcMain.on("select-eraser", (event, args) => {
 
 ipcMain.on("select-using-brushkey", (event, args) => {
   selectUsingBrushKey(args.brushkey);
+})
+
+ipcMain.on("insert-text-from-clipboard", (event, args) => {
+  insertTextFromClipboard();
 })
 
 ipcMain.on("select-erase-all", (event, args) => {

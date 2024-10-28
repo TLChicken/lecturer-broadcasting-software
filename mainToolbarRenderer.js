@@ -8,7 +8,7 @@ let dispWidth = params.get("dispWidth");
 let dispHeight = params.get("dispHeight");
 
 let dynamicToolbarWidth = Math.floor(dispWidth / 30);
-let dynamicToolbarHeight = Math.floor(dispHeight / 2);
+let dynamicToolbarHeight = Math.floor(dispHeight / 1.85);
 let settingsWidth = Math.floor(dispWidth / 3.8);
 let settingsHeight = Math.floor(dispHeight / 1.8);
 let dynamicToolbarMinimizedHeight = Math.floor(dynamicToolbarWidth * 1);
@@ -48,6 +48,9 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         colorOptions: () => {
             openColorPaletteToolbar();
+        },
+        addText: () => {
+            window.ipcRender.send("insert-text-from-clipboard");
         },
         clearAll: () => {
             window.ipcRender.send("select-erase-all");
@@ -506,6 +509,8 @@ function changeKeybind(htmlIndexEle, keybindArrIndexPlusOne) {
 
     document.getElementById(htmlIndexEle).style.backgroundColor = "#FF0000";
 }
+
+
 
 function openColorPicker(colorId) {
     const colorPicker = document.createElement('input');

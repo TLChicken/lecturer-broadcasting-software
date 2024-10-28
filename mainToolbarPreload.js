@@ -22,6 +22,8 @@ const ipc = {
             'select-eraser',
             'select-using-brushkey',
 
+            'insert-text-from-clipboard',
+
             'select-erase-all',
 
             'close-toolbar',
