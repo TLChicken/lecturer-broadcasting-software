@@ -479,6 +479,8 @@ let erasingBrushSize = 30;
 
 let isInDrawingMode = false;
 
+let settingTextInfo = null;
+
 
 function getPointOnCanvas(c, x, y) {
     let box = c.getBoundingClientRect();
@@ -613,6 +615,16 @@ function clearCanvas(c, ctx) {
     ctx.clearRect(0, 0, c.width, c.height);
 }
 
+function drawTextOnCanvas(c, ctx, x, y, theText, fontSize, fontColor) {
+    ctx.save();
+    ctx.font = fontSize.toString() + "px serif";
+    ctx.fillStyle = fontColor;
+
+    ctx.fillText(theText, x, y);
+
+    ctx.restore();
+}
+
 
 document.addEventListener('DOMContentLoaded', (event) => {
 
@@ -639,11 +651,35 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
 
     canvasLayers.topMostLayer.addEventListener("pointerdown", ( e ) => {
+        if (settingTextInfo != null) {
+
+            let canvasCoor = getPointOnCanvas(mouseCursorCanvas, e.x, e.y);
+
+            clearCanvas(mouseCursorCanvas, mouseCursorCtx);
+            drawTextOnCanvas(c, ctx, canvasCoor.x, canvasCoor.y, settingTextInfo.theText, settingTextInfo.fontSize, settingTextInfo.fontColor);
+
+            // Stop text drawing action
+            settingTextInfo = null;
+
+            return;
+        }
+
         window.ipcRender.send("pointer-down-at", { x: e.x, y: e.y })
     })
 
     canvasLayers.topMostLayer.addEventListener("pointermove", ( e ) => {
         window.ipcRender.send("pointer-move-at", { x: e.x, y: e.y });
+
+        if (settingTextInfo != null) {
+
+            let canvasCoor = getPointOnCanvas(mouseCursorCanvas, e.x, e.y);
+
+            clearCanvas(mouseCursorCanvas, mouseCursorCtx);
+            drawTextOnCanvas(mouseCursorCanvas, mouseCursorCtx, canvasCoor.x, canvasCoor.y, settingTextInfo.theText, settingTextInfo.fontSize, changeAlphaRgba(settingTextInfo.fontColor, 0.6));
+
+            // Dont draw the normal mouse cursor anymore
+            return;
+        }
 
         if (isInDrawingMode) {
             redrawMouseCursor(mouseCursorCanvas, mouseCursorCtx, e.x, e.y);
@@ -722,6 +758,17 @@ document.addEventListener('DOMContentLoaded', (event) => {
             redrawMouseCursor(mouseCursorCanvas, mouseCursorCtx);
         }
     });
+
+    window.ipcRender.receive('canvas-insert-text', ( args ) => {
+        console.log("Insert Text received: " + args.toString());
+
+        settingTextInfo = {
+            theText: args.theText,
+            fontColor: args.fontColor,
+            fontSize: args.fontSize
+        }
+
+    })
 
 
 

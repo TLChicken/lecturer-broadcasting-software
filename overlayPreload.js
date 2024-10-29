@@ -29,6 +29,7 @@ const ipc = {
             'canvas-choose-eraser',
 
             'canvas-choose-by-brush-key',
+            'canvas-insert-text',
 
             'canvas-change-size-by',
             'canvas-set-brush-size',

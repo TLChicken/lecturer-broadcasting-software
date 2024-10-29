@@ -602,6 +602,16 @@ function insertTextFromClipboard() {
   let clipboardContents = clipboard.readText();
   console.log(clipboardContents);
 
+  if (!isInDrawingMode) {
+    let unusedResult = dialog.showMessageBox(mainWindow, {
+      title: "LAT Tips",
+      type: "info",
+      message: "Insert Text only works while Drawing Mode is ON. Copy some text first, then use the Insert Text button to paste it on the overlay.",
+    })
+
+    return;
+  }
+
   if (clipboardContents.length == 0) {
     let unusedResult = dialog.showMessageBox(mainWindow, {
       title: "LAT Tips",
@@ -617,6 +627,12 @@ function insertTextFromClipboard() {
   // Makes the text become the mouse overlay in light gray color
 
   // Left click to put text down permanently on canvas
+
+  mainOverlayWindow.webContents.send("canvas-insert-text", {
+    theText: clipboardContents,
+    fontColor: userSettings.brushData[userSettings.currentBrush].color,
+    fontSize: userSettings.brushData[userSettings.currentBrush].size,
+  });
 
 }
 
