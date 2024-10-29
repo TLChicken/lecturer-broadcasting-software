@@ -366,6 +366,7 @@ h1 {
 /* About Page */
 
 
+.comparison-table-header,
 .quick-start-text h3 {
     color: #484848;
     margin-bottom: 10px;
@@ -569,6 +570,64 @@ hr {
 
 
 /* Main Page Bottom Part */
+
+.comparison-table-img {
+    height: clamp(64px, 7vw, 256px);
+    margin: 10px;
+}
+
+.features-comparison-table {
+    line-height: 150%;
+    border-collapse: collapse;
+    text-align: center;
+
+    --tblcolor: #E0E0E0;
+
+    caption-side: bottom;
+
+}
+
+.features-comparison-table tr {
+    /*border-bottom: 1px solid;*/
+}
+
+.features-comparison-table th, .features-comparison-table td {
+    border: 2px solid;
+    padding: 0.75rem 0.75rem;
+
+    /*vertical-align: baseline;*/
+}
+
+.features-comparison-table thead {
+    border-block-end: 3px solid;
+    background-color: #FFFFFF;
+
+    vertical-align: baseline;
+}
+
+.features-comparison-table thead th {
+    width: max(400px, 25vw);
+}
+
+/* Set 2nd - 4th column widths */
+.features-comparison-table thead td {
+    width: max(256px, 15vw);
+}
+
+/* Feature Desc */
+.features-comparison-table tr th {
+    font-weight: normal;
+    text-align: left;
+}
+
+.features-comparison-table tbody tr:nth-child(even) {
+    background: color-mix(in srgb, var(--tblcolor), transparent 60%);
+}
+
+
+
+
+
 .features {
     display: flex;
     flex-wrap: wrap;
@@ -629,6 +688,10 @@ hr {
 
 .spacer {
     flex-grow: 1;
+}
+
+.overflow-auto {
+    overflow: auto;
 }
 
 
