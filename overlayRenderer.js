@@ -622,6 +622,8 @@ function drawTextOnCanvas(c, ctx, x, y, theText, fontSize, fontColor) {
 
     ctx.fillText(theText, x, y);
 
+    window.ipcRender.send("console-log", "Text: " + theText + "  " + ctx.font + "    " + ctx.fillStyle)
+
     ctx.restore();
 }
 
@@ -664,11 +666,14 @@ document.addEventListener('DOMContentLoaded', (event) => {
             return;
         }
 
-        window.ipcRender.send("pointer-down-at", { x: e.x, y: e.y })
+        window.ipcRender.send("pointer-down-at", { x: e.x, y: e.y });
     })
 
     canvasLayers.topMostLayer.addEventListener("pointermove", ( e ) => {
         window.ipcRender.send("pointer-move-at", { x: e.x, y: e.y });
+
+        // window.ipcRender.send("console-log", "Setting-text-info: " + settingTextInfo.theText + "  " + settingTextInfo.fontSize + "  " + settingTextInfo.fontColor);
+
 
         if (settingTextInfo != null) {
 
@@ -760,12 +765,12 @@ document.addEventListener('DOMContentLoaded', (event) => {
     });
 
     window.ipcRender.receive('canvas-insert-text', ( args ) => {
-        console.log("Insert Text received: " + args.toString());
+        // window.ipcRender.send("console-log", "Insert Text received: " + args.theText + "  " + args.fontColor + "  " + args.fontSize);
 
         settingTextInfo = {
             theText: args.theText,
-            fontColor: args.fontColor,
-            fontSize: args.fontSize
+            fontColor: args.fontColor, // After going through ipcRenderer everything is converted to String automatically
+            fontSize:  Math.max(parseInt(args.fontSize) * 2, 20)
         }
 
     })
