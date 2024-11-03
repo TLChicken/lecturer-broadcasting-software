@@ -19,6 +19,7 @@ const ipc = {
             'pointer-up-at',
 
             'selected-brush-by-brush-key',
+            'console-log',
         ],
         // Main -> Renderer
         'receive': [

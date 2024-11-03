@@ -998,6 +998,12 @@ ipcMain.on("selected-brush-by-brush-key", (event, args) => {
 })
 
 
+ipcMain.on("console-log", (event, args) => {
+  let logThis = args;
+  console.log(logThis);
+})
+
+
 
 
 
