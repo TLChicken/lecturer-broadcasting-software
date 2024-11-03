@@ -296,6 +296,11 @@ app.on('ready', () => {
         selectUsingBrushKey("eraser");
       }
 
+      if (userSettings.colorKeyBinds[lbsConsts.keybindIndex_toggleSlideshowRecording] === e.keycode) {
+        console.log("Slideshow Recording Toggled");
+        toggleSlideshowRecording();
+      }
+
 
       if (userSettings.colorKeyBinds[lbsConsts.keybindIndex_deleteAll] === e.keycode) {
         console.log("Delete All Drawings Keybind Toggled");
@@ -601,6 +606,21 @@ function selectUsingBrushKey(brushKey) {
 
   userSettings.currentBrush = brushKey;
 }
+
+function toggleSlideshowRecording() {
+  if (isInSlideshowRecMode) {
+    // Turn off
+    isInSlideshowRecMode = false;
+    mainWindow.webContents.send("response-slideshow-recording-btn", { isSetToOn: false });
+    console.log("Turned Off");
+  } else {
+    // Turn on
+    isInSlideshowRecMode = true;
+    mainWindow.webContents.send("response-slideshow-recording-btn", { isSetToOn: true });
+    console.log("Turned On");
+  }
+}
+
 
 function insertTextFromClipboard() {
   console.log("Activate insert text from clipboard");
@@ -1071,17 +1091,7 @@ ipcMain.on("toggle-slideshow-recording", (event, args) => {
   console.log("Toggle Slideshow Recording Event RECEIVED");
   console.log(args);
 
- if (isInSlideshowRecMode) {
-   // Turn off
-   isInSlideshowRecMode = false;
-   mainWindow.webContents.send("response-slideshow-recording-btn", { isSetToOn: false });
-   console.log("Turned Off");
- } else {
-   // Turn on
-   isInSlideshowRecMode = true;
-   mainWindow.webContents.send("response-slideshow-recording-btn", { isSetToOn: true });
-   console.log("Turned On");
- }
+ toggleSlideshowRecording();
 
 })
 
