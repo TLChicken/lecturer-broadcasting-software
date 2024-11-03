@@ -43,6 +43,7 @@ const ipc = {
             'set-color-to',
 
             'toggle-slideshow-recording',
+            'console-log',
         ],
         // Main -> Renderer
         'receive': [

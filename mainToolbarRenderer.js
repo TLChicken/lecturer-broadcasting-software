@@ -97,17 +97,23 @@ document.addEventListener('DOMContentLoaded', () => {
     for (let i = 0; i < kbBtnList.length; i++) {
         let currKbBtn = kbBtnList[i];
 
-        if (i < 10) {
-            // Color Keybind calls different function - FIX PLS
-            currKbBtn.addEventListener('click', () => {
-                changeColorKeybind(currKbBtn.id);
-            })
-        } else {
-            currKbBtn.addEventListener('click', () => {
-                changeKeybind(currKbBtn.id, i + 1);
-            })
-        }
+        const buttonId = currKbBtn.id;
+        window.ipcRender.send('console-log', 'Keybind Button setup:' + buttonId.slice(9));
 
+        currKbBtn.addEventListener('click', () => {
+            changeKeybind(buttonId, buttonId.slice(9));
+        })
+
+        // if (i < 10) {
+        //     // Color Keybind calls different function - FIX PLS
+        //     currKbBtn.addEventListener('click', () => {
+        //         changeColorKeybind(currKbBtn.id);
+        //     })
+        // } else {
+        //     currKbBtn.addEventListener('click', () => {
+        //         changeKeybind(currKbBtn.id, i + 1);
+        //     })
+        // }
 
     }
 
@@ -163,8 +169,6 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log(args);
 
         let isSetToOn = args.isSetToOn;
-
-
 
         if (isSetToOn) {
             toggleButtonOn("startPresentation");
