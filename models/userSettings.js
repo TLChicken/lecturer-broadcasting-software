@@ -13,7 +13,7 @@ class SettingsBrushType {
     }
 }
 
-let defaultKeybinds = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, UiohookKey.Shift, UiohookKey.P, UiohookKey.H, UiohookKey.E, UiohookKey.ArrowRight, UiohookKey.M, UiohookKey.Delete, UiohookKey.PrintScreen, UiohookKey.R];
+let defaultKeybinds = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, UiohookKey.Shift, UiohookKey.P, UiohookKey.H, UiohookKey.E, UiohookKey.ArrowRight, UiohookKey.M, UiohookKey.Delete, UiohookKey.PrintScreen, UiohookKey.R, UiohookKey.W, UiohookKey.L];
 
 let defaultBrushData = {
     'pen_square': {
@@ -94,6 +94,8 @@ class UserSettings {
         this.brushSizeScrollWheelOffset = 1;
 
         this.currentBrush = "pen_round";
+
+        this.isWhiteboardOn = false;
 
     }
 

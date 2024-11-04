@@ -630,6 +630,11 @@ function drawTextOnCanvas(c, ctx, x, y, theText, fontSize, fontColor) {
 
 document.addEventListener('DOMContentLoaded', (event) => {
 
+    const whiteboardCanvas = document.getElementById('whiteboardCanvas');
+    const whiteboardCtx = whiteboardCanvas.getContext('2d');
+    whiteboardCanvas.width = window.innerWidth;
+    whiteboardCanvas.height = window.innerHeight;
+
     const c = document.getElementById('overlayCanvas');
     const ctx = c.getContext('2d');
     c.width = window.innerWidth;
@@ -876,6 +881,19 @@ document.addEventListener('DOMContentLoaded', (event) => {
             drawBorder(ctx, borderColor);
         })
     });
+
+
+    window.ipcRender.receive('canvas-toggle-whiteboard', ( isToggleOn ) => {
+        window.ipcRender.send("console-log", "Toggle Whiteboard received in Overlay to: " + isToggleOn);
+
+        if (!isToggleOn) {
+            clearCanvas(whiteboardCanvas, whiteboardCtx);
+        } else {
+            drawRectangle(whiteboardCtx, rgb(255, 255, 255), 0, 0, whiteboardCanvas.width, whiteboardCanvas.height);
+        }
+
+    })
+
 
     const borderColor = rgba(170, 170, 170, 0.3);
     drawBorder(ctx, borderColor);

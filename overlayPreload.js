@@ -38,7 +38,9 @@ const ipc = {
             'canvas-erase-all',
 
             'draw-mode-activated',
-            'draw-mode-unactivated'
+            'draw-mode-unactivated',
+
+            'canvas-toggle-whiteboard',
         ],
         // Renderer -> Main -> Renderer
         'sendReceive': []

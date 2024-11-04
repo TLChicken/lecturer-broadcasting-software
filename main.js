@@ -301,6 +301,10 @@ app.on('ready', () => {
         toggleSlideshowRecording();
       }
 
+      if (userSettings.colorKeyBinds[lbsConsts.keybindIndex_toggleWhiteboard] === e.keycode) {
+        console.log("Whiteboard Toggled");
+        toggleWhiteboard();
+      }
 
       if (userSettings.colorKeyBinds[lbsConsts.keybindIndex_deleteAll] === e.keycode) {
         console.log("Delete All Drawings Keybind Toggled");
@@ -567,6 +571,14 @@ function drawingModeOff() {
   }
 
   mainWindow.webContents.send("exit-drawing-mode");
+
+  // Close Whiteboard if its open
+
+  if (userSettings.isWhiteboardOn) {
+    userSettings.isWhiteboardOn = false;
+
+    mainOverlayWindow.webContents.send("canvas-toggle-whiteboard", false);
+  }
 }
 
 function selectPen() {
@@ -619,6 +631,12 @@ function toggleSlideshowRecording() {
     mainWindow.webContents.send("response-slideshow-recording-btn", { isSetToOn: true });
     console.log("Turned On");
   }
+}
+
+function toggleWhiteboard() {
+  userSettings.isWhiteboardOn = !userSettings.isWhiteboardOn;
+
+  mainOverlayWindow.webContents.send("canvas-toggle-whiteboard", userSettings.isWhiteboardOn);
 }
 
 
