@@ -41,6 +41,7 @@ const ipc = {
             'draw-mode-unactivated',
 
             'canvas-toggle-whiteboard',
+            'canvas-toggle-laser-pointer',
         ],
         // Renderer -> Main -> Renderer
         'sendReceive': []

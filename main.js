@@ -306,6 +306,12 @@ app.on('ready', () => {
         toggleWhiteboard();
       }
 
+      if (userSettings.colorKeyBinds[lbsConsts.keybindIndex_toggleLaserPointer] === e.keycode) {
+        console.log("Laser Pointer Toggled");
+        toggleLaserPointer();
+      }
+
+
       if (userSettings.colorKeyBinds[lbsConsts.keybindIndex_deleteAll] === e.keycode) {
         console.log("Delete All Drawings Keybind Toggled");
         selectEraseAll();
@@ -637,6 +643,10 @@ function toggleWhiteboard() {
   userSettings.isWhiteboardOn = !userSettings.isWhiteboardOn;
 
   mainOverlayWindow.webContents.send("canvas-toggle-whiteboard", userSettings.isWhiteboardOn);
+}
+
+function toggleLaserPointer() {
+  mainOverlayWindow.webContents.send('canvas-toggle-laser-pointer', null);
 }
 
 

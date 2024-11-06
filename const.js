@@ -8,6 +8,8 @@ exports.keybindIndex_deleteAll = 16;
 exports.keybindIndex_saveScreenshot = 17;
 exports.keybindIndex_toggleSlideshowRecording = 18;
 exports.keybindIndex_toggleWhiteboard = 19;
+exports.keybindIndex_toggleLaserPointer = 20;
+
 
 exports.saveFileName = "lbs_save_v1.5.json";
 
