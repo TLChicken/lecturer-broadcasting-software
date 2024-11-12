@@ -700,6 +700,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
         window.ipcRender.send("pointer-up-at", { x: e.x, y: e.y })
     })
 
+    canvasLayers.topMostLayer.addEventListener("wheel", ( e ) => {
+        window.ipcRender.send("mouse-wheel-at", { scrollAmt: e.deltaY })
+    })
+
     window.ipcRender.receive('canvas-draw', ( coors ) => {
         console.log("Canvas Draw Event Received");
         drawAtCoor(canvasLayers, coors.x, coors.y, coors.prevCoors);

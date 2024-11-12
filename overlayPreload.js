@@ -17,6 +17,7 @@ const ipc = {
             'pointer-down-at',
             'pointer-move-at',
             'pointer-up-at',
+            'mouse-wheel-at',
 
             'selected-brush-by-brush-key',
             'console-log',

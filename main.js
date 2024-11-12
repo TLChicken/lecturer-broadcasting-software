@@ -386,31 +386,33 @@ app.on('ready', () => {
   //   mouseMoveTriggerOverlayMovedOnTop = false;
   // });
 
-  uIOhook.on('wheel', (event) => {
-    if (isInDrawingMode) {
-      // Change brush size
-      if (event.direction == WheelDirection.VERTICAL) {
-        // console.log("SCROLL Rotation: " + event.rotation);
-        // Scroll UP = -1
-        // Scroll DOWN = 1  (page moves down when u scroll on windows)
 
-        if (mainOverlayWindow != null) {
-          if (-event.rotation > 0) {
-            let newBrushSize = userSettings.brushSizeUp(userSettings.currentBrush);
-            mainOverlayWindow.webContents.send('canvas-set-brush-size', newBrushSize, null);
-          } else if (-event.rotation < 0) {
-            let newBrushSize = userSettings.brushSizeDown(userSettings.currentBrush);
-            mainOverlayWindow.webContents.send('canvas-set-brush-size', newBrushSize, null);
-          } else {
-            console.log("Wheel event with 0 vertical rotation")
-          }
-
-          // mainOverlayWindow.webContents.send('canvas-change-size-by', -event.rotation);
-        }
-
-      }
-    }
-  });
+  
+  // uIOhook.on('wheel', (event) => {
+  //   if (isInDrawingMode) {
+  //     // Change brush size
+  //     if (event.direction == WheelDirection.VERTICAL) {
+  //       // console.log("SCROLL Rotation: " + event.rotation);
+  //       // Scroll UP = -1
+  //       // Scroll DOWN = 1  (page moves down when u scroll on windows)
+  //
+  //       if (mainOverlayWindow != null) {
+  //         if (-event.rotation > 0) {
+  //           let newBrushSize = userSettings.brushSizeUp(userSettings.currentBrush);
+  //           mainOverlayWindow.webContents.send('canvas-set-brush-size', newBrushSize, null);
+  //         } else if (-event.rotation < 0) {
+  //           let newBrushSize = userSettings.brushSizeDown(userSettings.currentBrush);
+  //           mainOverlayWindow.webContents.send('canvas-set-brush-size', newBrushSize, null);
+  //         } else {
+  //           console.log("Wheel event with 0 vertical rotation")
+  //         }
+  //
+  //         // mainOverlayWindow.webContents.send('canvas-change-size-by', -event.rotation);
+  //       }
+  //
+  //     }
+  //   }
+  // });
 
   uIOhook.start()
 
@@ -612,6 +614,16 @@ function selectEraser() {
   mainWindow.webContents.send("activate-eraser");
 
   userSettings.brushType = 1;
+}
+
+function brushSizeIncreaseOneUnit() {
+  let newBrushSize = userSettings.brushSizeUp(userSettings.currentBrush);
+  mainOverlayWindow.webContents.send('canvas-set-brush-size', newBrushSize, null);
+}
+
+function brushSizeDecreaseOneUnit() {
+  let newBrushSize = userSettings.brushSizeDown(userSettings.currentBrush);
+  mainOverlayWindow.webContents.send('canvas-set-brush-size', newBrushSize, null);
 }
 
 function selectUsingBrushKey(brushKey) {
@@ -1045,6 +1057,21 @@ ipcMain.on("pointer-up-at", (event, args) => {
   }
 
   mouseMoveTriggerOverlayMovedOnTop = false;
+})
+
+ipcMain.on("mouse-wheel-at", (event, args) => {
+
+  let scrollAmt = args.scrollAmt;
+
+  if (scrollAmt > 0) {
+    // Scrolling Down
+    console.log("Scrolling Down Detected " + scrollAmt.toString());
+    brushSizeDecreaseOneUnit();
+  } else {
+    console.log("Scrolling Up Detected " + scrollAmt.toString());
+    brushSizeIncreaseOneUnit();
+  }
+
 })
 
 
