@@ -9,7 +9,7 @@ const { rgba, rgbaToRbg, hexToRgba, rgba2hex, rgbToHex } = require("./models/col
 
 const { uIOhook, UiohookKey, WheelDirection} = require('uiohook-napi');
 const { UserSettings } = require('./models/userSettings');
-const { readUserData, writeUserData, saveInDownloadsFolder } = require('./models/persistence')
+const { readUserData, writeUserData, saveInDownloadsFolder, startSlideshowPDF, slideshowPDFAddSlide, endSlideshowPDF } = require('./models/persistence')
 
 // var version = process.argv[1].replace('--', '');
 
@@ -36,6 +36,7 @@ let dynamicToolbarWidth = 0;
 let dynamicToolbarHeight = 0;
 
 let isFullMinimized = false;
+
 
 
 function createWindow () {
@@ -117,6 +118,8 @@ function createToolbar() {
     closeOverlayWindow();
 
     writeUserData(userSettings.convertToSaveJson());
+
+    endSlideshowPDF(); // Ends all open PDF files if any
   })
 
   // mainWindow.setResizable(true);
@@ -631,11 +634,15 @@ function toggleSlideshowRecording() {
     isInSlideshowRecMode = false;
     mainWindow.webContents.send("response-slideshow-recording-btn", { isSetToOn: false });
     console.log("Turned Off");
+
+    endSlideshowPDF();
   } else {
     // Turn on
     isInSlideshowRecMode = true;
     mainWindow.webContents.send("response-slideshow-recording-btn", { isSetToOn: true });
     console.log("Turned On");
+
+    startSlideshowPDF();
   }
 }
 
@@ -838,7 +845,10 @@ async function screenshotAndSave() {
     mainWindow.setSize(currToolbarSize[0], currToolbarSize[1]);
     mainWindow.setResizable(false);
 
-    saveInDownloadsFolder(screenshot);
+    const savingPromise = saveInDownloadsFolder(screenshot);
+    savingPromise.then((slideImgPath) => {
+      slideshowPDFAddSlide(slideImgPath, fullWidth, fullHeight);
+    });
 
   } catch (error) {
     console.error('Failed to take screenshot:', error);
