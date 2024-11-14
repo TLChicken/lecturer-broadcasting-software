@@ -96,6 +96,7 @@ class UserSettings {
         this.currentBrush = "pen_round";
 
         this.isWhiteboardOn = false;
+        this.isLaserPointerOn = false;
 
     }
 

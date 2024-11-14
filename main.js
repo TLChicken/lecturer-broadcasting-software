@@ -387,7 +387,7 @@ app.on('ready', () => {
   // });
 
 
-  
+
   // uIOhook.on('wheel', (event) => {
   //   if (isInDrawingMode) {
   //     // Change brush size
@@ -665,7 +665,9 @@ function toggleWhiteboard() {
 }
 
 function toggleLaserPointer() {
-  mainOverlayWindow.webContents.send('canvas-toggle-laser-pointer', null);
+  userSettings.isLaserPointerOn = !userSettings.isLaserPointerOn;
+
+  mainOverlayWindow.webContents.send('canvas-toggle-laser-pointer', userSettings.isLaserPointerOn);
 }
 
 

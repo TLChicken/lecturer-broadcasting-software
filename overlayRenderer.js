@@ -481,6 +481,8 @@ let isInDrawingMode = false;
 
 let settingTextInfo = null;
 
+let isLaserPointerOn = false;
+
 
 function getPointOnCanvas(c, x, y) {
     let box = c.getBoundingClientRect();
@@ -611,6 +613,31 @@ function redrawMouseCursor(c, ctx, x = previousRedrawX, y = previousRedrawY) {
 
 }
 
+function redrawLaserPointer(laserPointerCanvas, laserPointerCtx, x = previousRedrawX, y = previousRedrawY) {
+    clearCanvas(laserPointerCanvas, laserPointerCtx);
+
+    let canvasCoor = getPointOnCanvas(laserPointerCanvas, x, y);
+
+    let laserPath = new Path2D();
+    laserPath.arc(x, y, 12, 0, 2 * Math.PI);
+    const innerGradient = laserPointerCtx.createRadialGradient(x, y, 10, x, y, 2);
+    innerGradient.addColorStop(0, "red");
+    innerGradient.addColorStop(1, "white");
+
+    laserPointerCtx.fillStyle = innerGradient;
+    laserPointerCtx.fill(laserPath);
+
+
+
+    let laserBorder = new Path2D();
+    laserBorder.arc(x, y, 17, 0, 2 * Math.PI);
+    laserBorder.arc(x, y, 15, 0, 2 * Math.PI, true);
+
+    laserPointerCtx.fill(laserBorder);
+
+}
+
+
 function clearCanvas(c, ctx) {
     ctx.clearRect(0, 0, c.width, c.height);
 }
@@ -645,13 +672,18 @@ document.addEventListener('DOMContentLoaded', (event) => {
     highlighterCanvas.width = window.innerWidth;
     highlighterCanvas.height = window.innerHeight;
 
+    const laserPointerCanvas = document.getElementById('laserPointerCanvas');
+    const laserPointerCtx = laserPointerCanvas.getContext('2d');
+    laserPointerCanvas.width = window.innerWidth;
+    laserPointerCanvas.height = window.innerHeight;
+
     const mouseCursorCanvas = document.getElementById('mouseCursorCanvas');
     const mouseCursorCtx = mouseCursorCanvas.getContext('2d');
     mouseCursorCanvas.width = window.innerWidth;
     mouseCursorCanvas.height = window.innerHeight;
     mouseCursorCtx.strokeStyle = 'black';
 
-    const canvasLayers = { mainC: c, highlighterC: highlighterCanvas, mouseCursorC: mouseCursorCanvas, topMostLayer: mouseCursorCanvas };
+    const canvasLayers = { mainC: c, highlighterC: highlighterCanvas, laserPointerC: laserPointerCanvas, mouseCursorC: mouseCursorCanvas, topMostLayer: mouseCursorCanvas };
 
     console.log(window);
     console.log(window.innerWidth);
@@ -693,6 +725,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
         if (isInDrawingMode) {
             redrawMouseCursor(mouseCursorCanvas, mouseCursorCtx, e.x, e.y);
+        }
+
+        if (isLaserPointerOn) {
+            redrawLaserPointer(laserPointerCanvas, laserPointerCtx, e.x, e.y);
         }
     })
 
@@ -894,6 +930,21 @@ document.addEventListener('DOMContentLoaded', (event) => {
             clearCanvas(whiteboardCanvas, whiteboardCtx);
         } else {
             drawRectangle(whiteboardCtx, rgb(255, 255, 255), 0, 0, whiteboardCanvas.width, whiteboardCanvas.height);
+        }
+
+    })
+
+    window.ipcRender.receive('canvas-toggle-laser-pointer', ( isToggleOn ) => {
+        window.ipcRender.send("console-log", "Toggle Laser Pointer received in Overlay to: " + isToggleOn);
+
+        if (!isToggleOn) {
+            // Remove laser pointer
+            isLaserPointerOn = false;
+            clearCanvas(laserPointerCanvas, laserPointerCtx);
+        } else {
+            // Start laser pointer
+            isLaserPointerOn = true;
+            redrawLaserPointer(laserPointerCanvas, laserPointerCtx);
         }
 
     })
