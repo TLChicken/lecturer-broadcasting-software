@@ -601,6 +601,8 @@ function redrawMouseCursor(c, ctx, x = previousRedrawX, y = previousRedrawY) {
     previousRedrawX = x;
     previousRedrawY = y;
 
+    // window.ipcRender.send("console-log", "MOVE Prev Redraw X and Y: " + previousRedrawX.toString() + "  " + previousRedrawY.toString());
+
     clearCanvas(c, ctx);
 
     let canvasCoor = getPointOnCanvas(c, x, y);
@@ -615,6 +617,9 @@ function redrawMouseCursor(c, ctx, x = previousRedrawX, y = previousRedrawY) {
 
 function redrawLaserPointer(laserPointerCanvas, laserPointerCtx, x = previousRedrawX, y = previousRedrawY) {
     clearCanvas(laserPointerCanvas, laserPointerCtx);
+
+    // window.ipcRender.send("console-log", "LASER Prev Redraw X and Y: " + previousRedrawX + "  " + previousRedrawY);
+
 
     let canvasCoor = getPointOnCanvas(laserPointerCanvas, x, y);
 
@@ -642,7 +647,10 @@ function clearCanvas(c, ctx) {
     ctx.clearRect(0, 0, c.width, c.height);
 }
 
-function drawTextOnCanvas(c, ctx, x, y, theText, fontSize, fontColor) {
+function drawTextOnCanvas(c, ctx, theText, fontSize, fontColor, x = previousRedrawX, y = previousRedrawY) {
+    previousRedrawX = x;
+    previousRedrawY = y;
+
     ctx.save();
     ctx.font = fontSize.toString() + "px serif";
     ctx.fillStyle = fontColor;
@@ -695,7 +703,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
             let canvasCoor = getPointOnCanvas(mouseCursorCanvas, e.x, e.y);
 
             clearCanvas(mouseCursorCanvas, mouseCursorCtx);
-            drawTextOnCanvas(c, ctx, canvasCoor.x, canvasCoor.y, settingTextInfo.theText, settingTextInfo.fontSize, settingTextInfo.fontColor);
+            drawTextOnCanvas(c, ctx, settingTextInfo.theText, settingTextInfo.fontSize, settingTextInfo.fontColor, canvasCoor.x, canvasCoor.y);
 
             // Stop text drawing action
             settingTextInfo = null;
@@ -717,7 +725,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
             let canvasCoor = getPointOnCanvas(mouseCursorCanvas, e.x, e.y);
 
             clearCanvas(mouseCursorCanvas, mouseCursorCtx);
-            drawTextOnCanvas(mouseCursorCanvas, mouseCursorCtx, canvasCoor.x, canvasCoor.y, settingTextInfo.theText, settingTextInfo.fontSize, changeAlphaRgba(settingTextInfo.fontColor, 0.6));
+            drawTextOnCanvas(mouseCursorCanvas, mouseCursorCtx, settingTextInfo.theText, settingTextInfo.fontSize, changeAlphaRgba(settingTextInfo.fontColor, 0.6), canvasCoor.x, canvasCoor.y);
 
             // Dont draw the normal mouse cursor anymore
             return;
@@ -900,9 +908,22 @@ document.addEventListener('DOMContentLoaded', (event) => {
         }
 
 
+
         if (isInDrawingMode) {
             redrawMouseCursor(mouseCursorCanvas, mouseCursorCtx);
         }
+
+        if (settingTextInfo != null) {
+            let newSize = Math.max(parseInt(newBrushSize) * 2, 20);
+            settingTextInfo.fontSize = newSize.toString();
+
+            // clearCanvas(mouseCursorCanvas, mouseCursorCtx);
+            drawTextOnCanvas(mouseCursorCanvas, mouseCursorCtx, settingTextInfo.theText, settingTextInfo.fontSize, changeAlphaRgba(settingTextInfo.fontColor, 0.6));
+
+        }
+
+
+
     });
 
     window.ipcRender.receive('canvas-erase-all', () => {
