@@ -764,6 +764,12 @@ document.addEventListener('DOMContentLoaded', (event) => {
         }
 
         currBrush.setColor(newColor);
+
+        if (settingTextInfo != null) {
+            settingTextInfo.fontColor = newColor;
+            
+            drawTextOnCanvas(mouseCursorCanvas, mouseCursorCtx, settingTextInfo.theText, settingTextInfo.fontSize, changeAlphaRgba(settingTextInfo.fontColor, 0.6));
+        }
     });
 
     // window.ipcRender.receive('canvas-choose-pen', ( param ) => {
