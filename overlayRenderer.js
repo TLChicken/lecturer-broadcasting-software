@@ -767,7 +767,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
         if (settingTextInfo != null) {
             settingTextInfo.fontColor = newColor;
-            
+
             drawTextOnCanvas(mouseCursorCanvas, mouseCursorCtx, settingTextInfo.theText, settingTextInfo.fontSize, changeAlphaRgba(settingTextInfo.fontColor, 0.6));
         }
     });
